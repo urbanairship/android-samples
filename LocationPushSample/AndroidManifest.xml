@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      android:versionCode="1"
+      android:versionName="1.0" package="com.urbanairship.push.sample">
+      
+    
+    <!-- minSdkVersion sets runtime compatibility ("will run on API level 4") -->
+    <!-- targetSdkVersion should be set to the latest version tested, to disable compatibility modes 
+            ("was tested with API level 9 features") -->
+    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="9"/>
+    
+    <application android:label="@string/app_name" 
+    	android:icon="@drawable/icon" 
+    	android:name="com.urbanairship.push.sample.MyApplication" 
+    	android:debuggable="true"
+    	android:allowClearUserData="true" 
+    	android:enabled="true">
+    	
+	    <uses-library android:name="com.google.android.maps" />
+
+        <activity android:name="com.urbanairship.push.sample.MainActivity"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <activity android:name="com.urbanairship.push.sample.PushPreferencesActivity" />
+        <activity android:name="com.urbanairship.push.sample.LocationActivity" />
+        
+        <!-- REQUIRED -->
+        <receiver android:name="com.urbanairship.CoreReceiver">
+            <!-- REQUIRED IntentFilter - For Helium and Hybrid -->
+            <intent-filter>
+              <action android:name="android.intent.action.BOOT_COMPLETED" />
+              <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+            </intent-filter>
+        </receiver>
+		
+		<!-- REQUIRED for C2DM and Hybrid -->
+        <receiver android:name="com.urbanairship.push.c2dm.C2DMPushReceiver"
+                android:permission="com.google.android.c2dm.permission.SEND">        
+          <!-- Receive the actual message -->
+          <intent-filter>
+              <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+              <!-- MODIFICATION REQUIRED - Use your package name as the category -->
+              <category android:name="com.urbanairship.push.sample" />
+          </intent-filter>
+          <!-- Receive the registration id -->
+          <intent-filter>
+              <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+              <!-- MODIFICATION REQUIRED - Use your package name as the category -->
+              <category android:name="com.urbanairship.push.sample" />
+          </intent-filter>
+        </receiver>
+
+        <!-- REQUIRED -->
+        <!-- The 'android:process' parameter is optional. Set it to a value starting
+            with a colon (:) to make it run in a separate,
+            private process -->
+        <service android:name="com.urbanairship.push.PushService"
+                android:process=":com.urbanairship.push.process"/>
+        
+        <!-- REQUIRED -->
+        <!-- The 'android:process' parameter is optional. Set it to a value starting
+            with a colon (:) to make it run in a separate,
+            private process -->
+        <service android:name="com.urbanairship.location.LocationService"
+                android:process=":com.urbanairship.location.process"/>
+
+        <!-- OPTIONAL, if you want to receive push, push opened and registration completed intents -->
+        <!-- Replace the receiver below with your package and class name -->
+        <receiver android:name="com.urbanairship.push.sample.IntentReceiver" />
+
+    </application>
+    
+    <!-- REQUIRED -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    
+    <!-- REQUIRED FOR LOCATION -->
+    <!-- Use ACCESS_COARSE_LOCATION if GPS access is not necessary -->
+    <!-- uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!--  REQUIRED for wifi wake functionality -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    
+    <!-- REQUIRED for C2DM  -->
+    <!-- Only this application can receive the messages and registration result -->
+    <!-- MODIFICATION REQUIRED - Replace "com.urbanairship.push.sample" with your package name -->
+    <permission android:name="com.urbanairship.push.sample.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="com.urbanairship.push.sample.permission.C2D_MESSAGE" />
+    
+    <!-- This app has permission to register and receive message -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+</manifest> 
