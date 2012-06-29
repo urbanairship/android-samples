@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/button_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true" >
+        <Button 
+            android:id="@+id/mark_messages_read"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/mark_messages_read"
+        />
+        <Button 
+            android:id="@+id/mark_messages_unread"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/mark_messages_unread"
+        />
+        <Button
+            android:id="@+id/delete_messages"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/delete_messages"
+        />
+    </LinearLayout>
+    <fragment
+        class="com.urbanairship.richpush.sample.InboxFragment"
+        android:id="@+id/inbox"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/button_bar"
+    />
+    <LinearLayout
+        android:id="@+id/bottom_button_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true">
+        <Button
+            android:id="@+id/add_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/add_message"
+        />
+    </LinearLayout>
+    
+</RelativeLayout>

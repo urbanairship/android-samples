@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Rich Push Sample</string>
+    <string name="no_messages">No messages</string>
+    <string name="inbox_title">Your Inbox</string>
+    <string name="mark_messages_read">Mark Read</string>
+    <string name="mark_messages_unread">Mark Unread</string>
+    <string name="delete_messages">Delete</string>
+    <string name="add_message">Add Message</string>
+</resources>
