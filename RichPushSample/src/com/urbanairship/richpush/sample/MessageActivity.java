@@ -3,7 +3,10 @@ package com.urbanairship.richpush.sample;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+@SuppressWarnings("unused")
 public class MessageActivity extends FragmentActivity {
+	protected static final String TAG = "MessageActivity";
+
     public static final String EXTRA_URL_KEY = "com.urbanairship.richpush.sample.EXTRA_URL_KEY";
 
     MessageFragment message;

@@ -1,95 +1,113 @@
 package com.urbanairship.richpush.sample;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.ListView;
 
+import com.urbanairship.UrbanAirshipProvider;
+import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 
-public class InboxFragment extends ListFragment {
+public abstract class InboxFragment extends ListFragment
+		implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String SELECTED_MESSAGE_KEY = "com.urbanairship.richpush.SELECTED_MESSAGE";
+	public static final String EMPTY_COLUMN_NAME = "";
 
-    Bundle state;
+	final int loaderId = 0x1;
+
     OnMessageListener listener;
-
-    public static InboxFragment newInstance() {
-        return new InboxFragment();
-    }
+	RichPushCursorAdapter adapter;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        this.checkActivityForCorrectInterface(activity);
+        this.setActivityAsListener(activity);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.state = savedInstanceState;
         this.setRetainInstance(true);
+		if (this.adapter == null) {
+			this.adapter = new RichPushCursorAdapter(this.getActivity(), R.layout.inbox_message,
+					this.createUIMapping());
+		}
+		this.setListAdapter(this.adapter);
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        this.restoreInstanceState(this.state);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        this.setListAdapter(new RichPushAdapter(this.getActivity(), R.layout.inbox_message));
-        this.setEmptyText(this.getString(R.string.no_messages));
-    }
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		this.setEmptyText(this.getString(R.string.no_messages));
+		this.setListShown(false);
+		this.getLoaderManager().initLoader(this.loaderId, null, this);
+	}
 
     @Override
     public void onListItemClick(ListView list, View view, int position, long id) {
-        list.setItemChecked(position, true);
-        this.listener.onMessageSelected((RichPushMessage)list.getItemAtPosition(position));
+		this.setSelection(position);
+		RichPushMessage message = RichPushManager.shared().getInbox().getMessage(
+				this.convertCursorIdToMessageId(id));
+        this.listener.onMessageSelected(message);
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        ((RichPushAdapter)this.getListAdapter()).save();
+	// actions
+
+	public void setViewBinder(RichPushCursorAdapter.ViewBinder binder) {
+		this.adapter.setViewBinder(binder);
+	}
+
+	public abstract SparseArray<String> createUIMapping();
+
+	// helpers
+
+	private long convertMessageIdToCursorId(String messageId) {
+		return Long.valueOf(messageId.replace(RichPushManager.PUSH_ID_SUFFIX, ""));
+	}
+
+	private String convertCursorIdToMessageId(long cursorId) {
+		return String.valueOf(cursorId) + RichPushManager.PUSH_ID_SUFFIX;
+	}
+
+    private void setActivityAsListener(Activity activity) {
+		try {
+			this.listener = (OnMessageListener) activity;
+		} catch (ClassCastException e) {
+			throw new IllegalStateException("Activities using " + this.getClass().getName() + " must implement" +
+					"the " + this.getClass().getName() + ".OnMessageListener interface.");
+		}
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        ((RichPushAdapter)this.getListAdapter()).cleanup();
-    }
+	@Override
+	public CursorLoader onCreateLoader(int i, Bundle bundle) {
+		return new CursorLoader(this.getActivity(), UrbanAirshipProvider.RICHPUSH_CONTENT_URI,
+				null, null, null, RichPushCursorAdapter.NEWEST_FIRST_ORDER);
+	}
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putInt(SELECTED_MESSAGE_KEY, this.getListView().getCheckedItemPosition());
-    }
+	@Override
+	public void onLoadFinished(Loader loader, Cursor cursor) {
+		this.adapter.swapCursor(cursor);
 
-    // helpers
+		if (this.isResumed()) {
+			this.setListShown(true);
+		} else {
+			this.setListShownNoAnimation(true);
+		}
+	}
 
-    private void restoreInstanceState(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            int position = savedInstanceState.getInt(SELECTED_MESSAGE_KEY, -1);
-            if (position > -1) this.getListView().setItemChecked(position, true);
-        }
-    }
+	@Override
+	public void onLoaderReset(Loader loader) {
+		this.adapter.swapCursor(null);
+	}
 
-    private void checkActivityForCorrectInterface(Activity activity) {
-        // Make sure we can talk to the activity that wants to attach to us
-        if (!(activity instanceof OnMessageListener)) {
-            throw new IllegalStateException("Activities using " + this.getClass().getName() + " must implement" +
-                    "the " + this.getClass().getName() + ".OnMessageListener interface.");
-        }
-    }
-
-    public void setOnMessageListener(OnMessageListener listener) {
-        this.listener = listener;
-    }
-
-    // interfaces
+	// interfaces
 
     public interface OnMessageListener {
         void onMessageSelected(RichPushMessage message);
