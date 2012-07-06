@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import com.urbanairship.UrbanAirshipProvider;
@@ -23,29 +22,23 @@ import java.util.Set;
 public class InboxActivity extends FragmentActivity implements InboxFragment.OnMessageListener {
 
     private static final String STUB_MESSAGE_JSON_STRING =
-            "{\"unread\": true," +
-                    "\"message_sent\": \"2010-09-05 12:13 -0000\"," +
-                    "\"title\": \"Message title\"," +
-                    "\"message\": \"Your full message here.\"," +
-                    "\"message_body_url\": \"https://go.urbanairship.com/api/user/some_user_id/messages/message_id/body/\"," +
-                    "\"message_read_url\": \"https://go.urbanairship.com/api/user/some_user_id/messages/message_id/read/\"," +
-                    "\"extra\": {\"some_key\": \"some_value\"}," +
-                    "\"content_type\": \"text/html\"," +
-                    "\"content_size\": \"128\"}";
+		"{\"unread\": true," +
+		"\"message_sent\": \"2010-09-05 12:13 -0000\"," +
+		"\"title\": \"Message title\"," +
+		"\"message\": \"Your full message here.\"," +
+		"\"message_body_url\": \"https://go.urbanairship.com/api/user/some_user_id/messages/message_id/body/\"," +
+		"\"message_read_url\": \"https://go.urbanairship.com/api/user/some_user_id/messages/message_id/read/\"," +
+		"\"extra\": {\"some_key\": \"some_value\"}," +
+		"\"content_type\": \"text/html\"," +
+		"\"content_size\": \"128\"}";
 
     private static final String[] TITLES = new String[] { "Free Stuff", "Your Tickets", "Urgent!", "Welcome",
-    "This is a really, really long title that should marquee without fucking stuff up." };
+		"This is a really, really long title that should marquee without messing stuff up." };
     private static final String[] MESSAGES = new String[] { "We know you like free stuff, so here you go.",
         "Here are your tickets to tonight's show.", "We can't charge your account. Please act now or we will" +
-                " have to interrupt your service.", "Welcome to the Rich Push Sample App!", "Short message." };
+		" have to interrupt your service.", "Welcome to the Rich Push Sample App!", "Short message." };
     private static final SimpleDateFormat UA_DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd HH:mm Z");
 
-
-    Button markMessagesReadButton;
-    Button markMessagesUnreadButton;
-    Button deleteMessagesButton;
-    Button addMessageButton;
-    InboxFragment inbox;
     Random generator = new Random();
 	final Set<String> checkedIds = new HashSet<String>();
 
@@ -54,15 +47,10 @@ public class InboxActivity extends FragmentActivity implements InboxFragment.OnM
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.main);
 
-        markMessagesReadButton = (Button) this.findViewById(R.id.mark_messages_read);
-        markMessagesUnreadButton = (Button) this.findViewById(R.id.mark_messages_unread);
-        deleteMessagesButton = (Button) this.findViewById(R.id.delete_messages);
-        addMessageButton = (Button) this.findViewById(R.id.add_message);
+        ((RichPushSampleInboxFragment) this.getSupportFragmentManager().findFragmentById(
+				R.id.inbox)).setViewBinder(new MessageBinder());
 
-        inbox = (RichPushSampleInboxFragment) this.getSupportFragmentManager().findFragmentById(R.id.inbox);
-		inbox.setViewBinder(new MessageBinder());
-
-        markMessagesReadButton.setOnClickListener(new OnClickListener() {
+        this.findViewById(R.id.mark_messages_read).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
 				RichPushManager.shared().getInbox().markMessagesRead(InboxActivity.this.checkedIds);
@@ -70,7 +58,7 @@ public class InboxActivity extends FragmentActivity implements InboxFragment.OnM
             }
         });
 
-        markMessagesUnreadButton.setOnClickListener(new OnClickListener() {
+        this.findViewById(R.id.mark_messages_unread).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
 				RichPushManager.shared().getInbox().markMessagesUnread(InboxActivity.this.checkedIds);
@@ -78,7 +66,7 @@ public class InboxActivity extends FragmentActivity implements InboxFragment.OnM
             }
         });
 
-        deleteMessagesButton.setOnClickListener(new OnClickListener() {
+        this.findViewById(R.id.delete_messages).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
 				RichPushManager.shared().getInbox().deleteMessages(InboxActivity.this.checkedIds);
@@ -86,7 +74,7 @@ public class InboxActivity extends FragmentActivity implements InboxFragment.OnM
             }
         });
 
-        addMessageButton.setOnClickListener(new OnClickListener() {
+        this.findViewById(R.id.add_message).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadMessage();

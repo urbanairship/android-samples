@@ -47,11 +47,6 @@ public class RichPushCursorAdapter extends CursorAdapter {
 		}
 	}
 
-	@Override
-	public Cursor swapCursor(Cursor newCursor) {
-		return super.swapCursor(newCursor);
-	}
-
 	// actions
 
 	public void setViewBinder(ViewBinder binder) {

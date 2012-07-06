@@ -68,10 +68,6 @@ public abstract class InboxFragment extends ListFragment
 
 	// helpers
 
-	private long convertMessageIdToCursorId(String messageId) {
-		return Long.valueOf(messageId.replace(RichPushManager.PUSH_ID_SUFFIX, ""));
-	}
-
 	private String convertCursorIdToMessageId(long cursorId) {
 		return String.valueOf(cursorId) + RichPushManager.PUSH_ID_SUFFIX;
 	}

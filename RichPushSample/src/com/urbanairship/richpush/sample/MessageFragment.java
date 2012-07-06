@@ -2,17 +2,14 @@ package com.urbanairship.richpush.sample;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
 import com.urbanairship.UAirship;
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -86,7 +83,7 @@ public class MessageFragment extends Fragment {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				MessageFragment.this.loadUrl(url);
+                MessageFragment.this.loadUrl(url);
                 return true;
             }
 
