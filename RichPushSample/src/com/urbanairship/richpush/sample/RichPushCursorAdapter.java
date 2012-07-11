@@ -7,9 +7,11 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.urbanairship.Logger;
 import com.urbanairship.UrbanAirshipProvider;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
+import org.json.JSONException;
 
 public class RichPushCursorAdapter extends CursorAdapter {
 
@@ -35,8 +37,8 @@ public class RichPushCursorAdapter extends CursorAdapter {
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		RichPushMessage message = RichPushManager.shared().getInbox().getMessage(
-				cursor.getString(this.getKeyColumnId(cursor)));
+        RichPushMessage message = this.getMessage(cursor);
+        if (message == null) return;
 		int count = this.mapping.size();
 		for (int i = 0; i < count; i++) {
 			int key = this.mapping.keyAt(i);
@@ -54,6 +56,21 @@ public class RichPushCursorAdapter extends CursorAdapter {
 	}
 
 	// helpers
+
+    private RichPushMessage getMessage(Cursor cursor) {
+        String messageId = cursor.getString(this.getKeyColumnId(cursor));
+        Logger.debug("Getting message " + messageId);
+        RichPushMessage message = RichPushManager.shared().getRichPushUser().getInbox()
+                .getMessage(messageId);
+        if (message == null) {
+            try {
+                message = RichPushMessage.messageFromCursor(cursor);
+            } catch (JSONException e) {
+                Logger.error(e.getMessage());
+            }
+        }
+        return message;
+    }
 
 	private int getKeyColumnId(Cursor c) {
 		if (this.messageIdCol == -1) {

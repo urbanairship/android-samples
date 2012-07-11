@@ -53,7 +53,8 @@ public class InboxActivity extends FragmentActivity implements InboxFragment.OnM
         this.findViewById(R.id.mark_messages_read).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-				RichPushManager.shared().getInbox().markMessagesRead(InboxActivity.this.checkedIds);
+				RichPushManager.shared().getRichPushUser().getInbox()
+                        .markMessagesRead(InboxActivity.this.checkedIds);
 				InboxActivity.this.checkedIds.clear();
             }
         });
@@ -61,7 +62,8 @@ public class InboxActivity extends FragmentActivity implements InboxFragment.OnM
         this.findViewById(R.id.mark_messages_unread).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-				RichPushManager.shared().getInbox().markMessagesUnread(InboxActivity.this.checkedIds);
+				RichPushManager.shared().getRichPushUser().getInbox()
+                        .markMessagesUnread(InboxActivity.this.checkedIds);
 				InboxActivity.this.checkedIds.clear();
             }
         });
@@ -69,7 +71,8 @@ public class InboxActivity extends FragmentActivity implements InboxFragment.OnM
         this.findViewById(R.id.delete_messages).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-				RichPushManager.shared().getInbox().deleteMessages(InboxActivity.this.checkedIds);
+				RichPushManager.shared().getRichPushUser().getInbox()
+                        .deleteMessages(InboxActivity.this.checkedIds);
 				InboxActivity.this.checkedIds.clear();
             }
         });

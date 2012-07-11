@@ -53,8 +53,8 @@ public abstract class InboxFragment extends ListFragment
     @Override
     public void onListItemClick(ListView list, View view, int position, long id) {
 		this.setSelection(position);
-		RichPushMessage message = RichPushManager.shared().getInbox().getMessage(
-				this.convertCursorIdToMessageId(id));
+		RichPushMessage message = RichPushManager.shared().getRichPushUser()
+                .getInbox().getMessage(this.convertCursorIdToMessageId(id));
         this.listener.onMessageSelected(message);
     }
 
