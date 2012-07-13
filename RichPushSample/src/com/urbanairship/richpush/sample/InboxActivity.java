@@ -11,10 +11,8 @@ import android.widget.TextView;
 import com.urbanairship.UrbanAirshipProvider;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
-import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -76,13 +74,6 @@ public class InboxActivity extends FragmentActivity implements InboxFragment.OnM
 				InboxActivity.this.checkedIds.clear();
             }
         });
-
-        this.findViewById(R.id.add_message).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadMessage();
-            }
-        });
     }
 
     @Override
@@ -94,22 +85,6 @@ public class InboxActivity extends FragmentActivity implements InboxFragment.OnM
         Intent intent = new Intent(this, MessageActivity.class);
         intent.putExtra(MessageActivity.EXTRA_URL_KEY, "http://www.google.com");
         this.startActivity(intent);
-    }
-
-    // helpers
-
-    private void loadMessage() {
-        JSONObject messageJson;
-        try {
-            messageJson = new JSONObject(STUB_MESSAGE_JSON_STRING);
-            int random = generator.nextInt(TITLES.length);
-            messageJson.put("title", TITLES[random]);
-            messageJson.put("message", MESSAGES[random]);
-            messageJson.put("message_sent", UA_DATE_FORMATTER.format(new Date()));
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
-        RichPushManager.deliverPush(System.currentTimeMillis() + "_message_id", messageJson);
     }
 
 	// inner-classes

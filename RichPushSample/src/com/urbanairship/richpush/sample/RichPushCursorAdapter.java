@@ -40,11 +40,6 @@ public class RichPushCursorAdapter extends CursorAdapter {
         Logger.debug("Getting message " + messageId);
         RichPushMessage message = RichPushManager.shared().getRichPushUser().getInbox()
                 .getMessage(messageId);
-        if (message == null) {
-            Logger.debug("Message id " + messageId + " is not yet in the inbox. " +
-                    "Skip it for now and let the inbox restart the loader when it has it.");
-            return;
-        }
 		int count = this.mapping.size();
 		for (int i = 0; i < count; i++) {
 			int key = this.mapping.keyAt(i);

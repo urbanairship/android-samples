@@ -33,6 +33,7 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     
     <application android:label="@string/app_name"
+        android:icon="@drawable/icon"
         android:name="com.urbanairship.richpush.sample.RichPushApplication"
         android:theme="@android:style/Theme">
         
@@ -86,10 +87,6 @@
         <service android:name="com.urbanairship.location.LocationService"
                 android:process=":com.urbanairship.process"/>
 
-        <!-- OPTIONAL, if you want to receive push, push opened and registration completed intents -->
-        <!-- Replace the receiver below with your package and class name -->
-        <receiver android:name="com.urbanairship.push.sample.IntentReceiver" />
-        
         <!-- REQUIRED -->
         <!-- This is required for persisting preferences related to push and location -->
         <provider android:name="com.urbanairship.UrbanAirshipProvider"

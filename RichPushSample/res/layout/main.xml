@@ -39,20 +39,5 @@
         android:layout_height="fill_parent"
         android:layout_below="@+id/button_bar"
     />
-    <LinearLayout
-        android:id="@+id/bottom_button_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true">
-        <Button
-            android:id="@+id/add_message"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/add_message"
-        />
-    </LinearLayout>
-    
+
 </RelativeLayout>
