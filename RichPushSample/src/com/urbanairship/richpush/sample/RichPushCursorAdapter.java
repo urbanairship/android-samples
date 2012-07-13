@@ -11,7 +11,6 @@ import com.urbanairship.Logger;
 import com.urbanairship.UrbanAirshipProvider;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
-import org.json.JSONException;
 
 public class RichPushCursorAdapter extends CursorAdapter {
 
@@ -37,8 +36,15 @@ public class RichPushCursorAdapter extends CursorAdapter {
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-        RichPushMessage message = this.getMessage(cursor);
-        if (message == null) return;
+        String messageId = cursor.getString(this.getKeyColumnId(cursor));
+        Logger.debug("Getting message " + messageId);
+        RichPushMessage message = RichPushManager.shared().getRichPushUser().getInbox()
+                .getMessage(messageId);
+        if (message == null) {
+            Logger.debug("Message id " + messageId + " is not yet in the inbox. " +
+                    "Skip it for now and let the inbox restart the loader when it has it.");
+            return;
+        }
 		int count = this.mapping.size();
 		for (int i = 0; i < count; i++) {
 			int key = this.mapping.keyAt(i);
@@ -57,21 +63,6 @@ public class RichPushCursorAdapter extends CursorAdapter {
 
 	// helpers
 
-    private RichPushMessage getMessage(Cursor cursor) {
-        String messageId = cursor.getString(this.getKeyColumnId(cursor));
-        Logger.debug("Getting message " + messageId);
-        RichPushMessage message = RichPushManager.shared().getRichPushUser().getInbox()
-                .getMessage(messageId);
-        if (message == null) {
-            try {
-                message = RichPushMessage.messageFromCursor(cursor);
-            } catch (JSONException e) {
-                Logger.error(e.getMessage());
-            }
-        }
-        return message;
-    }
-
 	private int getKeyColumnId(Cursor c) {
 		if (this.messageIdCol == -1) {
 			this.messageIdCol = c.getColumnIndex(UrbanAirshipProvider.COLUMN_NAME_KEY);
@@ -79,7 +70,7 @@ public class RichPushCursorAdapter extends CursorAdapter {
 		return this.messageIdCol;
 	}
 
-	// interfaces
+    // interfaces
 
 	public static interface ViewBinder {
 		void setViewValue(View view, RichPushMessage message, String columnName);

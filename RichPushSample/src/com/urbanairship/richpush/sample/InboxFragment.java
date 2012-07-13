@@ -10,7 +10,6 @@ import android.support.v4.content.Loader;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.ListView;
-
 import com.urbanairship.UrbanAirshipProvider;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
@@ -34,11 +33,8 @@ public abstract class InboxFragment extends ListFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setRetainInstance(true);
-		if (this.adapter == null) {
-			this.adapter = new RichPushCursorAdapter(this.getActivity(), R.layout.inbox_message,
-					this.createUIMapping());
-		}
+        this.adapter = new RichPushCursorAdapter(this.getActivity(), R.layout.inbox_message,
+                this.createUIMapping());
 		this.setListAdapter(this.adapter);
     }
 
@@ -53,8 +49,8 @@ public abstract class InboxFragment extends ListFragment
     @Override
     public void onListItemClick(ListView list, View view, int position, long id) {
 		this.setSelection(position);
-		RichPushMessage message = RichPushManager.shared().getRichPushUser()
-                .getInbox().getMessage(this.convertCursorIdToMessageId(id));
+		RichPushMessage message = RichPushManager.shared().getRichPushUser().getInbox()
+                .getMessage(this.convertCursorIdToMessageId(id));
         this.listener.onMessageSelected(message);
     }
 
@@ -76,15 +72,16 @@ public abstract class InboxFragment extends ListFragment
 		try {
 			this.listener = (OnMessageListener) activity;
 		} catch (ClassCastException e) {
-			throw new IllegalStateException("Activities using " + this.getClass().getName() + " must implement" +
-					"the " + this.getClass().getName() + ".OnMessageListener interface.");
+			throw new IllegalStateException("Activities using InboxFragment must implement " +
+					"the InboxFragment.OnMessageListener interface.");
 		}
     }
 
 	@Override
 	public CursorLoader onCreateLoader(int i, Bundle bundle) {
 		return new CursorLoader(this.getActivity(), UrbanAirshipProvider.RICHPUSH_CONTENT_URI,
-				null, null, null, RichPushCursorAdapter.NEWEST_FIRST_ORDER);
+				null, UrbanAirshipProvider.RichPush.COLUMN_NAME_DELETED + " <> ?", new String[] {"1"},
+                RichPushCursorAdapter.NEWEST_FIRST_ORDER);
 	}
 
 	@Override
