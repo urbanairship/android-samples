@@ -87,6 +87,9 @@
         <service android:name="com.urbanairship.location.LocationService"
                 android:process=":com.urbanairship.process"/>
 
+        <service android:name="com.urbanairship.richpush.RichPushUpdateService"
+                 android:process=":com.urbanairship.process"/>
+
         <!-- REQUIRED -->
         <!-- This is required for persisting preferences related to push and location -->
         <provider android:name="com.urbanairship.UrbanAirshipProvider"
