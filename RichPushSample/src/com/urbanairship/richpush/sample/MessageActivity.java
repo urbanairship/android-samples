@@ -1,43 +1,63 @@
 package com.urbanairship.richpush.sample;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.urbanairship.UAirship;
+import com.urbanairship.richpush.RichPushManager;
 
 @SuppressWarnings("unused")
-public class MessageActivity extends FragmentActivity {
+public class MessageActivity extends SherlockFragmentActivity {
 	protected static final String TAG = "MessageActivity";
 
-    public static final String EXTRA_URL_KEY = "com.urbanairship.richpush.sample.EXTRA_URL_KEY";
+    public static final String EXTRA_MESSAGE_ID_KEY = "com.urbanairship.richpush.sample.EXTRA_MESSAGE_ID_KEY";
 
-    MessageFragment message;
-    String url;
+    MessageViewPager messagePager;
+    String currentMessageId;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.message);
-        this.message = (MessageFragment) this.getSupportFragmentManager().findFragmentById(
-                R.id.message_view);
 
-        if (savedInstanceState == null) {
-            this.url = this.getIntent().getStringExtra(EXTRA_URL_KEY);
-        }
+        this.currentMessageId = savedInstanceState == null ? this.getIntent().getStringExtra(EXTRA_MESSAGE_ID_KEY) :
+                savedInstanceState.getString(EXTRA_MESSAGE_ID_KEY);
+        this.messagePager = (MessageViewPager) this.findViewById(R.id.message_pager);
+        this.messagePager.setOnPageChangeListener(new MessageViewPagerListener());
     }
 
     @Override
-    public void onResume() {
+    protected void onStart() {
+        super.onStart();
+        UAirship.shared().getAnalytics().activityStarted(this);
+    }
+
+    @Override
+    protected void onResume() {
         super.onResume();
-        this.message.loadUrl(this.url);
+        this.messagePager.setCurrentMessage(this.currentMessageId);
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putString(EXTRA_URL_KEY, this.url);
+    protected void onStop() {
+        super.onStop();
+        UAirship.shared().getAnalytics().activityStopped(this);
     }
 
     @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        this.url = savedInstanceState.getString(EXTRA_URL_KEY);
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putString(EXTRA_MESSAGE_ID_KEY, this.currentMessageId);
+    }
+
+    // helpers
+
+    class MessageViewPagerListener extends ViewPager.SimpleOnPageChangeListener {
+        @Override
+        public void onPageSelected(int position) {
+            MessageActivity.this.currentMessageId = MessageActivity.this.messagePager.getCurrentMessageId();
+            RichPushManager.shared().getRichPushUser().getInbox()
+                    .getMessage(MessageActivity.this.currentMessageId).markRead();
+        }
     }
 
 }

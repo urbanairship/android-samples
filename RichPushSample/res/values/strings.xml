@@ -3,8 +3,11 @@
     <string name="app_name">Rich Push Sample</string>
     <string name="no_messages">No messages</string>
     <string name="inbox_title">Your Inbox</string>
-    <string name="mark_messages_read">Mark Read</string>
-    <string name="mark_messages_unread">Mark Unread</string>
-    <string name="delete_messages">Delete</string>
     <string name="add_message">Add Message</string>
+    <string name="mark_read">Mark Read</string>
+    <string name="mark_unread">Mark Unread</string>
+    <string name="delete">Delete</string>
+    <string name="preferences">Preferences</string>
+    <string name="alias_label">My friends call me</string>
+    <string name="email_label">and my email address is</string>
 </resources>

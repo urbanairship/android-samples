@@ -3,9 +3,9 @@
       package="com.urbanairship.richpush.sample"
       android:versionCode="1"
       android:versionName="1.0">
-      
-    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="15"/>
-    
+
+    <uses-sdk android:minSdkVersion="7"
+              android:targetSdkVersion="15"/>
         
     <!-- REQUIRED -->
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -22,31 +22,26 @@
     <!--  REQUIRED for wifi wake functionality -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    
-    <!-- REQUIRED for C2DM  -->
-    <!-- Only this application can receive the messages and registration result -->
-    <!-- MODIFICATION REQUIRED - Replace "com.urbanairship.push.sample" with your package name -->
-    <permission android:name="com.urbanairship.push.sample.permission.C2D_MESSAGE" android:protectionLevel="signature" />
-    <uses-permission android:name="com.urbanairship.push.sample.permission.C2D_MESSAGE" />
-    
-    <!-- This app has permission to register and receive message -->
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    
+
     <application android:label="@string/app_name"
         android:icon="@drawable/icon"
         android:name="com.urbanairship.richpush.sample.RichPushApplication"
-        android:theme="@android:style/Theme">
+        android:theme="@style/Theme.Sherlock"
+        android:debuggable="true">
         
-        <activity android:name=".InboxActivity"
-                  android:label="@string/app_name">
+        <activity android:name=".MainActivity"
+                  android:label="@string/app_name"
+        >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
+        <activity android:name=".InboxActivity" />
         <activity android:name=".MessageActivity" />
-                    
+        <activity android:name=".PushPreferencesActivity" />
+
         <!-- REQUIRED -->
         <receiver android:name="com.urbanairship.CoreReceiver">
             <!-- REQUIRED IntentFilter - For Helium and Hybrid -->
@@ -54,23 +49,6 @@
               <action android:name="android.intent.action.BOOT_COMPLETED" />
               <action android:name="android.intent.action.ACTION_SHUTDOWN" />
             </intent-filter>
-        </receiver>
-        
-        <!-- REQUIRED for C2DM and Hybrid -->
-        <receiver android:name="com.urbanairship.push.c2dm.C2DMPushReceiver"
-                android:permission="com.google.android.c2dm.permission.SEND">        
-          <!-- Receive the actual message -->
-          <intent-filter>
-              <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-              <!-- MODIFICATION REQUIRED - Use your package name as the category -->
-              <category android:name="com.urbanairship.push.sample" />
-          </intent-filter>
-          <!-- Receive the registration id -->
-          <intent-filter>
-              <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-              <!-- MODIFICATION REQUIRED - Use your package name as the category -->
-              <category android:name="com.urbanairship.push.sample" />
-          </intent-filter>
         </receiver>
 
         <!-- REQUIRED -->

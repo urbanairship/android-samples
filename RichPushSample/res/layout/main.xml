@@ -4,40 +4,55 @@
     android:layout_height="fill_parent" >
 
     <LinearLayout
-        android:id="@+id/button_bar"
+        android:id="@+id/alias_section"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true" >
-        <Button 
-            android:id="@+id/mark_messages_read"
-            android:layout_width="fill_parent"
+        android:padding="10dp"
+    >
+        <TextView
+            android:id="@+id/alias_label"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/mark_messages_read"
+            android:text="@string/alias_label"
         />
-        <Button 
-            android:id="@+id/mark_messages_unread"
-            android:layout_width="fill_parent"
+        <EditText
+            android:id="@+id/alias_input"
+            android:minWidth="120dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/mark_messages_unread"
-        />
-        <Button
-            android:id="@+id/delete_messages"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/delete_messages"
+            android:inputType="text"
+            android:nextFocusForward="@+id/email_input"
+            android:imeOptions="actionNext"
         />
     </LinearLayout>
-    <fragment
-        class="com.urbanairship.richpush.sample.RichPushSampleInboxFragment"
-        android:id="@+id/inbox"
+
+    <LinearLayout
+        android:id="@+id/email_section"
+        android:orientation="horizontal"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/alias_section"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@+id/button_bar"
-    />
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+    >
+        <TextView
+            android:id="@+id/email_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/email_label"
+        />
+        <EditText
+            android:id="@+id/email_input"
+            android:layout_toRightOf="@id/email_label"
+            android:minWidth="160dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:imeOptions="actionDone"
+        />
+    </LinearLayout>
 
 </RelativeLayout>

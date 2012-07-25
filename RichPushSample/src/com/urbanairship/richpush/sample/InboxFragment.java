@@ -3,18 +3,18 @@ package com.urbanairship.richpush.sample;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.ListView;
+import com.actionbarsherlock.app.SherlockListFragment;
 import com.urbanairship.UrbanAirshipProvider;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 
-public abstract class InboxFragment extends ListFragment
+public abstract class InboxFragment extends SherlockListFragment
 		implements LoaderManager.LoaderCallbacks<Cursor> {
 
 	public static final String EMPTY_COLUMN_NAME = "";

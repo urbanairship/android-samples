@@ -10,6 +10,12 @@ import java.util.List;
 
 public class RichPushApplication extends Application {
 
+    public static final String HOME_ACTIVITY = "Home";
+    public static final String INBOX_ACTIVITY = "Inbox";
+    public static final String[] navList = new String[] {
+            HOME_ACTIVITY, INBOX_ACTIVITY
+    };
+
     @Override
     public void onCreate() {
         UAirship.takeOff(this);
