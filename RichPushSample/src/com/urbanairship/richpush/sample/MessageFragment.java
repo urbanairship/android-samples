@@ -1,19 +1,25 @@
 package com.urbanairship.richpush.sample;
 
 import android.annotation.SuppressLint;
+import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import com.actionbarsherlock.app.SherlockFragment;
+import com.urbanairship.Logger;
 import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
+
+import java.io.DataInputStream;
+import java.io.IOException;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class MessageFragment extends SherlockFragment {
@@ -51,7 +57,7 @@ public class MessageFragment extends SherlockFragment {
     }
 
 	public void dismiss() {
-		this.getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+		this.getSherlockActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 	}
 
     public void loadUrl() {
@@ -59,10 +65,26 @@ public class MessageFragment extends SherlockFragment {
                 .getMessage(this.getArguments().getString(MESSAGE_ID_KEY));
         // TODO Get the url from the message
         //this.browser.loadUrl(url);
-        this.browser.loadData("<h3>" + message.getMessageId() + "</h3>", "text/html", "UTF-8");
+        try {
+            this.browser.loadData(this.buildHtml(message), "text/html", "UTF-8");
+        } catch (IOException e) {
+            Logger.debug(e.getMessage());
+        }
     }
 
     // helpers
+
+    private String buildHtml(RichPushMessage message) throws IOException {
+        AssetManager assetManager = UAirship.shared().getApplicationContext().getResources().getAssets();
+        DataInputStream dis = new DataInputStream(assetManager.open("message.html"));
+        byte[] buffer = new byte[dis.available()];
+        dis.readFully(buffer);
+        String html = new String(buffer);
+        return html.replace("{{ title }}", message.getTitle())
+                .replace("{{ message }}", message.getMessage())
+                .replace("{{ id }}", message.getMessageId())
+                .replace("{{ sent_date }}", message.getSentDate().toString());
+    }
 
     private void initializeBrowser() {
         this.browser.getSettings().setJavaScriptEnabled(true);
@@ -72,6 +94,7 @@ public class MessageFragment extends SherlockFragment {
         this.browser.getSettings().setAppCacheMaxSize(1024*1024*8);
         this.browser.getSettings().setAppCachePath(UAirship.shared().getApplicationContext().getCacheDir().getAbsolutePath());
         this.browser.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        this.browser.setWebChromeClient(new WebChromeClient());
 
         this.browser.setWebViewClient(new WebViewClient() {
 
@@ -115,12 +138,13 @@ public class MessageFragment extends SherlockFragment {
 
             @Override
             public void close() {
-                MessageFragment.this.dismiss();
             }
 
             @Override
             public void navigateTo(String activityName) {
                 if ("home".equals(activityName)) {
+
+                } else if ("inbox".equals(activityName)) {
 
                 }
             }

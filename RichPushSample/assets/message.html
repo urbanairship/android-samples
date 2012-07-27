@@ -1,0 +1,20 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <script type="text/javascript">
+    </script>
+</head>
+<body>
+    <h1>{{ title }}</h1><br>
+    <h3>{{ message }}</h3><br>
+    <h5>{{ id }}</h5><br>
+    <p>{{ sent_date }}</p><br>
+    <a onclick="urbanairship.nextMessage();">Next</a><br>
+    <a onclick="urbanairship.previousMessage();">Previous</a><br>
+    <a onclick="alert(urbanairship.getDeviceOrientation());">Device Orientation</a><br>
+    <a onclick="alert(urbanairship.getViewWidth());">View Width</a><br>
+    <a onclick="alert(urbanairship.getViewHeight());">View Height</a><br>
+    <a onclick="alert(urbanairship.getMessageId());">Message Id</a><br>
+</body>
+</html>

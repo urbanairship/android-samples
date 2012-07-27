@@ -63,7 +63,7 @@ public class InboxActivity extends SherlockFragmentActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        this.setState(this.state);
+        this.setState();
         this.configureActionBar();
     }
 
@@ -77,7 +77,9 @@ public class InboxActivity extends SherlockFragmentActivity implements
     @Override
     protected void onPause() {
         super.onPause();
-        this.messagePager.clearViewPagerTouchListener();
+        if (panedView) {
+            this.messagePager.clearViewPagerTouchListener();
+        }
     }
 
     @Override
@@ -171,15 +173,16 @@ public class InboxActivity extends SherlockFragmentActivity implements
 
     // helpers
 
-    private void setState(Bundle savedInstanceState) {
-        if (savedInstanceState != null && savedInstanceState.getString(MESSAGE_ID_KEY) != null) {
-            Collections.addAll(this.checkedIds, savedInstanceState.getStringArray(CHECKED_IDS_KEY));
-            this.startActionModeIfNecessary(savedInstanceState.getString(MESSAGE_ID_KEY));
+    private void setState() {
+        if (this.state != null && this.state.getString(MESSAGE_ID_KEY) != null) {
+            Collections.addAll(this.checkedIds, this.state.getStringArray(CHECKED_IDS_KEY));
+            this.startActionModeIfNecessary(this.state.getString(MESSAGE_ID_KEY));
         }
 
+        this.inbox = (InboxFragment) this.getSupportFragmentManager().findFragmentById(R.id.inbox);
+        this.inbox.setViewBinder(new MessageBinder());
+
         if (panedView) {
-            this.inbox = (InboxFragment) this.getSupportFragmentManager().findFragmentById(R.id.inbox);
-            this.inbox.setViewBinder(new MessageBinder());
             this.inbox.getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             this.inbox.getListView().setBackgroundColor(Color.BLACK);
             this.messagePager = (MessageViewPager) this.findViewById(R.id.message_pager);
