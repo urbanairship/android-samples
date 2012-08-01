@@ -126,5 +126,10 @@
             android:textSize="16dip"/>
 
 	</LinearLayout>
+
+    <include layout="@layout/floating_message_pane" />
+
 </LinearLayout>
+
+
 </ScrollView>

@@ -1,8 +1,10 @@
 package com.urbanairship.richpush.sample;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -124,6 +126,16 @@ public class MessageFragment extends SherlockFragment {
             }
 
             @Override
+            public String getUserId() {
+                return RichPushManager.shared().getRichPushUser().getId();
+            }
+
+            @Override
+            public String getDeviceModel() {
+                return Build.MODEL;
+            }
+
+            @Override
             public String getDeviceOrientation() {
                 int orientation = MessageFragment.this.getResources().getConfiguration().orientation;
                 switch (orientation) {
@@ -137,28 +149,21 @@ public class MessageFragment extends SherlockFragment {
             }
 
             @Override
-            public void close() {
-            }
-
-            @Override
             public void navigateTo(String activityName) {
+                Class intentClass = null;
                 if ("home".equals(activityName)) {
-
+                    intentClass = MainActivity.class;
                 } else if ("inbox".equals(activityName)) {
-
+                    intentClass = InboxActivity.class;
+                } else if ("preferences".equals(activityName)) {
+                    intentClass = PushPreferencesActivity.class;
                 }
-            }
-
-            @Override
-            public void nextMessage() {
-            }
-
-            @Override
-            public void previousMessage() {
-            }
-
-            @Override
-            public void goToMessage(String messageId) {
+                if (intentClass != null) {
+                    Intent intent = new Intent(MessageFragment.this.getSherlockActivity(), intentClass);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    MessageFragment.this.getSherlockActivity().startActivity(intent);
+                    MessageFragment.this.getSherlockActivity().finish();
+                }
             }
         }, "urbanairship");
 

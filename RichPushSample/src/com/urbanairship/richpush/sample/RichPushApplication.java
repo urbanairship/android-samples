@@ -10,6 +10,7 @@ import java.util.List;
 
 public class RichPushApplication extends Application {
 
+    public static final String MESSAGE_ID_RECEIVED_KEY = "com.urbanairship.richpush.sample.MESSAGE_ID_RECEIVED";
     public static final String HOME_ACTIVITY = "Home";
     public static final String INBOX_ACTIVITY = "Inbox";
     public static final String[] navList = new String[] {
@@ -21,6 +22,7 @@ public class RichPushApplication extends Application {
         UAirship.takeOff(this);
         if (this.isProcess(this.getPackageName())) {
             PushManager.enablePush();
+            PushManager.shared().setIntentReceiver(PushReceiver.class);
         }
     }
 

@@ -12,9 +12,14 @@
     <p>{{ sent_date }}</p><br>
     <a onclick="urbanairship.nextMessage();">Next</a><br>
     <a onclick="urbanairship.previousMessage();">Previous</a><br>
+    <a onclick="urbanairship.navigateTo('home');">Home</a><br>
+    <a onclick="urbanairship.navigateTo('inbox');">Inbox</a><br>
+    <a onclick="urbanairship.navigateTo('preferences');">Preferences</a><br>
     <a onclick="alert(urbanairship.getDeviceOrientation());">Device Orientation</a><br>
     <a onclick="alert(urbanairship.getViewWidth());">View Width</a><br>
     <a onclick="alert(urbanairship.getViewHeight());">View Height</a><br>
     <a onclick="alert(urbanairship.getMessageId());">Message Id</a><br>
+    <a onclick="alert(urbanairship.getUserId());">User Id</a><br>
+    <a onclick="alert(urbanairship.getDeviceModel());">Device Model</a><br>
 </body>
 </html>

@@ -3,6 +3,7 @@ package com.urbanairship.richpush.sample;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -14,6 +15,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushUser;
+import com.urbanairship.util.UAStringUtil;
 
 @SuppressWarnings("unused")
 public class MainActivity extends SherlockFragmentActivity implements
@@ -61,6 +63,7 @@ public class MainActivity extends SherlockFragmentActivity implements
     protected void onResume() {
         super.onResume();
         this.configureActionBar();
+        this.displayMessageIfNecessary();
     }
 
     @Override
@@ -73,6 +76,11 @@ public class MainActivity extends SherlockFragmentActivity implements
     protected void onStop() {
         super.onStart();
         UAirship.shared().getAnalytics().activityStopped(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.finish();
     }
 
     @Override
@@ -104,6 +112,24 @@ public class MainActivity extends SherlockFragmentActivity implements
     }
 
     // helpers
+
+    private void displayMessageIfNecessary() {
+        String messageId = this.getIntent().getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
+        if (!UAStringUtil.isEmpty(messageId)) {
+            MessageFragment message = MessageFragment.newInstance(messageId);
+            message.show(this.getSupportFragmentManager(), R.id.floating_message_pane, "message");
+            this.findViewById(R.id.floating_message_pane).setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void dismissMessageIfNecessary() {
+        MessageFragment message = (MessageFragment) this.getSupportFragmentManager()
+                .findFragmentByTag("message");
+        if (message != null) {
+            message.dismiss();
+            this.findViewById(R.id.floating_message_pane).setVisibility(View.INVISIBLE);
+        }
+    }
 
     private void configureActionBar() {
         ActionBar actionBar = this.getSupportActionBar();

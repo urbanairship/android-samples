@@ -1,5 +1,6 @@
 package com.urbanairship.richpush.sample;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -47,6 +48,14 @@ public class MessageActivity extends SherlockFragmentActivity {
     @Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putString(EXTRA_MESSAGE_ID_KEY, this.currentMessageId);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, InboxActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        this.startActivity(intent);
+        this.finish();
     }
 
     // helpers

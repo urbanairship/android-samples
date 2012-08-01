@@ -51,6 +51,13 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name="com.urbanairship.richpush.sample.PushReceiver">
+            <!-- REQUIRED IntentFilter - For Helium and Hybrid -->
+            <intent-filter>
+                <action android:name="com.urbanairship.push.PushManager.ACTION_NOTIFICATION_OPENED" />
+            </intent-filter>
+        </receiver>
+
         <!-- REQUIRED -->
         <!-- The 'android:process' parameter is optional. Set it to a value starting
             with a colon (:) to make it run in a separate,

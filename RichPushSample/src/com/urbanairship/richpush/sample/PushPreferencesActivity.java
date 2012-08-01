@@ -25,6 +25,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package com.urbanairship.richpush.sample;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -33,12 +34,13 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.TimePicker;
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.urbanairship.UAirship;
 import com.urbanairship.location.LocationPreferences;
 import com.urbanairship.location.UALocationManager;
 import com.urbanairship.push.PushManager;
 import com.urbanairship.push.PushPreferences;
+import com.urbanairship.util.UAStringUtil;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -46,7 +48,7 @@ import java.util.Date;
 // This class represents the UI and implementation of the activity enabling users
 // to set Quiet Time preferences.
 
-public class PushPreferencesActivity extends SherlockActivity {
+public class PushPreferencesActivity extends SherlockFragmentActivity {
 
     CheckBox pushEnabled;
     CheckBox soundEnabled;
@@ -150,6 +152,14 @@ public class PushPreferencesActivity extends SherlockActivity {
             endTime.setCurrentHour(interval[1].getHours());
             endTime.setCurrentMinute(interval[1].getMinutes());
         }
+
+        this.displayMessageIfNecessary();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        this.dismissMessageIfNecessary();
     }
 
     // When the activity is closed, save the user's Push preferences
@@ -191,7 +201,34 @@ public class PushPreferencesActivity extends SherlockActivity {
         }
 
         this.handleLocation();
+    }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        this.startActivity(intent);
+        this.finish();
+    }
+
+    // helpers
+
+    private void displayMessageIfNecessary() {
+        String messageId = this.getIntent().getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
+        if (!UAStringUtil.isEmpty(messageId)) {
+            MessageFragment message = MessageFragment.newInstance(messageId);
+            message.show(this.getSupportFragmentManager(), R.id.floating_message_pane, "message");
+            this.findViewById(R.id.floating_message_pane).setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void dismissMessageIfNecessary() {
+        MessageFragment message = (MessageFragment) this.getSupportFragmentManager()
+                .findFragmentByTag("message");
+        if (message != null) {
+            message.dismiss();
+            this.findViewById(R.id.floating_message_pane).setVisibility(View.INVISIBLE);
+        }
     }
 
     private void handleLocation() {

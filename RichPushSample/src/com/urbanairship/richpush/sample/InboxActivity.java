@@ -12,10 +12,12 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.urbanairship.Logger;
 import com.urbanairship.UAirship;
 import com.urbanairship.UrbanAirshipProvider;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
+import com.urbanairship.util.UAStringUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -52,6 +54,11 @@ public class InboxActivity extends SherlockFragmentActivity implements
         this.state = savedInstanceState;
 
         this.discoverViewType();
+
+        if (this.state != null && !UAStringUtil.isEmpty(this.state.getString(MESSAGE_ID_KEY))) {
+            Collections.addAll(this.checkedIds, this.state.getStringArray(CHECKED_IDS_KEY));
+            this.startActionModeIfNecessary(this.state.getString(MESSAGE_ID_KEY));
+        }
     }
 
     @Override
@@ -101,6 +108,7 @@ public class InboxActivity extends SherlockFragmentActivity implements
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 this.startActivity(intent);
+                this.finish();
                 break;
         }
         return true;
@@ -113,6 +121,7 @@ public class InboxActivity extends SherlockFragmentActivity implements
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             this.startActivity(intent);
+            this.finish();
         } else if (RichPushApplication.INBOX_ACTIVITY.equals(navName)) {
             // do nothing, we're here
         }
@@ -127,14 +136,13 @@ public class InboxActivity extends SherlockFragmentActivity implements
 
     @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        MenuItem item = menu.findItem(R.id.mark_read_or_unread);
         if (RichPushManager.shared().getRichPushUser().getInbox()
                 .getMessage(this.firstMessageIdSelected).isRead()) {
-            item.setIcon(R.drawable.mark_unread);
-            item.setTitle(this.getString(R.string.mark_unread));
+            menu.findItem(R.id.mark_read_or_unread).setIcon(R.drawable.mark_unread)
+                    .setTitle(this.getString(R.string.mark_unread));
         } else {
-            item.setIcon(R.drawable.mark_read);
-            item.setTitle(this.getString(R.string.mark_read));
+            menu.findItem(R.id.mark_read_or_unread).setIcon(R.drawable.mark_read)
+                    .setTitle(this.getString(R.string.mark_read));
         }
         return true;
     }
@@ -171,14 +179,17 @@ public class InboxActivity extends SherlockFragmentActivity implements
         this.actionMode = null;
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        this.startActivity(intent);
+        this.finish();
+    }
+
     // helpers
 
     private void setState() {
-        if (this.state != null && this.state.getString(MESSAGE_ID_KEY) != null) {
-            Collections.addAll(this.checkedIds, this.state.getStringArray(CHECKED_IDS_KEY));
-            this.startActionModeIfNecessary(this.state.getString(MESSAGE_ID_KEY));
-        }
-
         this.inbox = (InboxFragment) this.getSupportFragmentManager().findFragmentById(R.id.inbox);
         this.inbox.setViewBinder(new MessageBinder());
 
@@ -204,6 +215,12 @@ public class InboxActivity extends SherlockFragmentActivity implements
                     }
                 });
             }
+        }
+
+        String messageId = this.getIntent().getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
+        Logger.debug("Received message id " + messageId);
+        if (!UAStringUtil.isEmpty(messageId)) {
+            this.showMessage(messageId);
         }
     }
 

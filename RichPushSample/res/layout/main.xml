@@ -55,4 +55,6 @@
         />
     </LinearLayout>
 
+    <include layout="@layout/floating_message_pane" />
+
 </RelativeLayout>
