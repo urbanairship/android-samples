@@ -1,10 +1,7 @@
 package com.urbanairship.richpush.sample;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.res.AssetManager;
-import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -19,9 +16,12 @@ import com.urbanairship.Logger;
 import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
+import com.urbanairship.richpush.RichPushMessageJavaScript;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class MessageFragment extends SherlockFragment {
@@ -88,6 +88,7 @@ public class MessageFragment extends SherlockFragment {
                 .replace("{{ sent_date }}", message.getSentDate().toString());
     }
 
+    @SuppressWarnings("unchecked")
     private void initializeBrowser() {
         this.browser.getSettings().setJavaScriptEnabled(true);
         this.browser.getSettings().setDomStorageEnabled(true);
@@ -108,64 +109,25 @@ public class MessageFragment extends SherlockFragment {
 
         });
 
-        this.browser.addJavascriptInterface(new RichPushMessageJavaScriptInterface() {
-
-            @Override
-            public int getViewHeight() {
-                return MessageFragment.this.getView().getHeight();
+        Class<? extends RichPushMessageJavaScript> jsInterfaceClass = RichPushManager.getJsInterface();
+        if (jsInterfaceClass != null) {
+            try {
+                Constructor<RichPushMessageJavaScript> constructor =
+                        (Constructor<RichPushMessageJavaScript>)jsInterfaceClass.getConstructor(View.class,
+                                String.class);
+                RichPushMessageJavaScript jsInterface = constructor.newInstance(this.browser,
+                        this.getArguments().getString(MESSAGE_ID_KEY));
+                this.browser.addJavascriptInterface(jsInterface, RichPushManager.getJsIdentifier());
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (java.lang.InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
             }
-
-            @Override
-            public int getViewWidth() {
-                return MessageFragment.this.getView().getWidth();
-            }
-
-            @Override
-            public String getMessageId() {
-                return MessageFragment.this.getArguments().getString(MESSAGE_ID_KEY);
-            }
-
-            @Override
-            public String getUserId() {
-                return RichPushManager.shared().getRichPushUser().getId();
-            }
-
-            @Override
-            public String getDeviceModel() {
-                return Build.MODEL;
-            }
-
-            @Override
-            public String getDeviceOrientation() {
-                int orientation = MessageFragment.this.getResources().getConfiguration().orientation;
-                switch (orientation) {
-                    case Configuration.ORIENTATION_LANDSCAPE:
-                        return "landscape";
-                    case Configuration.ORIENTATION_PORTRAIT:
-                        return "portrait";
-                    default:
-                        return "undefined";
-                }
-            }
-
-            @Override
-            public void navigateTo(String activityName) {
-                Class intentClass = null;
-                if ("home".equals(activityName)) {
-                    intentClass = MainActivity.class;
-                } else if ("inbox".equals(activityName)) {
-                    intentClass = InboxActivity.class;
-                } else if ("preferences".equals(activityName)) {
-                    intentClass = PushPreferencesActivity.class;
-                }
-                if (intentClass != null) {
-                    Intent intent = new Intent(MessageFragment.this.getSherlockActivity(), intentClass);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    MessageFragment.this.getSherlockActivity().startActivity(intent);
-                    MessageFragment.this.getSherlockActivity().finish();
-                }
-            }
-        }, "urbanairship");
+        }
 
     }
 

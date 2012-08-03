@@ -5,6 +5,8 @@ import android.app.Application;
 import android.content.Context;
 import com.urbanairship.UAirship;
 import com.urbanairship.push.PushManager;
+import com.urbanairship.richpush.RichPushManager;
+import com.urbanairship.richpush.RichPushMessageJavaScript;
 
 import java.util.List;
 
@@ -23,6 +25,7 @@ public class RichPushApplication extends Application {
         if (this.isProcess(this.getPackageName())) {
             PushManager.enablePush();
             PushManager.shared().setIntentReceiver(PushReceiver.class);
+            RichPushManager.setJavascriptInterface(RichPushMessageJavaScript.class, "urbanairship");
         }
     }
 

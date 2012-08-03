@@ -10,11 +10,9 @@
     <h3>{{ message }}</h3><br>
     <h5>{{ id }}</h5><br>
     <p>{{ sent_date }}</p><br>
-    <a onclick="urbanairship.nextMessage();">Next</a><br>
-    <a onclick="urbanairship.previousMessage();">Previous</a><br>
-    <a onclick="urbanairship.navigateTo('home');">Home</a><br>
-    <a onclick="urbanairship.navigateTo('inbox');">Inbox</a><br>
-    <a onclick="urbanairship.navigateTo('preferences');">Preferences</a><br>
+    <a onclick="urbanairship.navigateTo('com.urbanairship.richpush.sample.MainActivity');">Home</a><br>
+    <a onclick="urbanairship.navigateTo('com.urbanairship.richpush.sample.InboxActivity');">Inbox</a><br>
+    <a onclick="urbanairship.navigateTo('com.urbanairship.richpush.sample.PushPreferencesActivity');">Preferences</a><br>
     <a onclick="alert(urbanairship.getDeviceOrientation());">Device Orientation</a><br>
     <a onclick="alert(urbanairship.getViewWidth());">View Width</a><br>
     <a onclick="alert(urbanairship.getViewHeight());">View Height</a><br>

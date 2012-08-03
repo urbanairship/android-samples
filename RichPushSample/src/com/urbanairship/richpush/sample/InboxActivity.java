@@ -174,6 +174,7 @@ public class InboxActivity extends SherlockFragmentActivity implements
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
+        // TODO I think this is wrong because I think this will be called on screen rotation.
         this.checkedIds.clear();
         this.firstMessageIdSelected = null;
         this.actionMode = null;
