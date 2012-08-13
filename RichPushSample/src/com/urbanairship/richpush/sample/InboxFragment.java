@@ -18,6 +18,8 @@ public abstract class InboxFragment extends SherlockListFragment
 		implements LoaderManager.LoaderCallbacks<Cursor> {
 
 	public static final String EMPTY_COLUMN_NAME = "";
+    public static final String ROW_LAYOUT_ID_KEY = "row_layout_id";
+    public static final String EMPTY_LIST_STRING_KEY = "empty_list_string";
 
 	final int loaderId = 0x1;
 
@@ -33,15 +35,16 @@ public abstract class InboxFragment extends SherlockListFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.adapter = new RichPushCursorAdapter(this.getActivity(), R.layout.inbox_message,
+        RichPushManager.shared().refreshMessages();
+        this.adapter = new RichPushCursorAdapter(this.getActivity(), this.getRowLayoutId(),
                 this.createUIMapping());
 		this.setListAdapter(this.adapter);
     }
 
-	@Override
+    @Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		this.setEmptyText(this.getString(R.string.no_messages));
+		this.setEmptyText(this.getString(this.getEmptyListStringId()));
 		this.setListShown(false);
 		this.getLoaderManager().initLoader(this.loaderId, null, this);
 	}
@@ -50,7 +53,7 @@ public abstract class InboxFragment extends SherlockListFragment
     public void onListItemClick(ListView list, View view, int position, long id) {
 		this.setSelection(position);
 		RichPushMessage message = RichPushManager.shared().getRichPushUser().getInbox()
-                .getMessage(this.convertCursorIdToMessageId(id));
+                .getMessage(String.valueOf(id));
         this.listener.onMessageSelected(message);
     }
 
@@ -64,9 +67,15 @@ public abstract class InboxFragment extends SherlockListFragment
 
 	// helpers
 
-	private String convertCursorIdToMessageId(long cursorId) {
-		return String.valueOf(cursorId) + RichPushManager.PUSH_ID_SUFFIX;
-	}
+    private int getRowLayoutId() {
+        return this.getArguments() != null && this.getArguments().containsKey(ROW_LAYOUT_ID_KEY) ?
+                this.getArguments().getInt(ROW_LAYOUT_ID_KEY) : R.layout.inbox_message;
+    }
+
+    private int getEmptyListStringId() {
+        return this.getArguments() != null && this.getArguments().containsKey(EMPTY_LIST_STRING_KEY) ?
+                this.getArguments().getInt(EMPTY_LIST_STRING_KEY) : R.string.no_messages;
+    }
 
     private void setActivityAsListener(Activity activity) {
 		try {

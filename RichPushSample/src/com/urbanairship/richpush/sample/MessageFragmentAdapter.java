@@ -12,8 +12,8 @@ public class MessageFragmentAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
-    public Fragment getItem(int i) {
-        return MessageFragment.newInstance(this.getMessageId(i));
+    public Fragment getItem(int position) {
+        return MessageFragment.newInstance(this.getMessageId(position));
     }
 
     @Override

@@ -36,7 +36,7 @@ public class RichPushCursorAdapter extends CursorAdapter {
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-        String messageId = cursor.getString(this.getKeyColumnId(cursor));
+        String messageId = cursor.getString(this.getMessageIdColumnId(cursor));
         Logger.debug("Getting message " + messageId);
         RichPushMessage message = RichPushManager.shared().getRichPushUser().getInbox()
                 .getMessage(messageId);
@@ -58,9 +58,9 @@ public class RichPushCursorAdapter extends CursorAdapter {
 
 	// helpers
 
-	private int getKeyColumnId(Cursor c) {
+	private int getMessageIdColumnId(Cursor c) {
 		if (this.messageIdCol == -1) {
-			this.messageIdCol = c.getColumnIndex(UrbanAirshipProvider.COLUMN_NAME_KEY);
+			this.messageIdCol = c.getColumnIndex(UrbanAirshipProvider.RichPush.COLUMN_NAME_MESSAGE_ID);
 		}
 		return this.messageIdCol;
 	}

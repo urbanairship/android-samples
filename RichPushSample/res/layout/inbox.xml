@@ -2,12 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
+
     <fragment
         class="com.urbanairship.richpush.sample.RichPushSampleInboxFragment"
         android:id="@+id/inbox"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/button_bar"
     />
 
 </RelativeLayout>

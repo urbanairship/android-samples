@@ -6,7 +6,6 @@ import android.content.Intent;
 import com.urbanairship.Logger;
 import com.urbanairship.push.PushManager;
 import com.urbanairship.richpush.RichPushManager;
-import com.urbanairship.util.UAStringUtil;
 
 public class PushReceiver extends BroadcastReceiver {
 
@@ -16,9 +15,9 @@ public class PushReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (!intent.getAction().equals(PushManager.ACTION_NOTIFICATION_OPENED)) return;
 
-        String pushId = intent.getStringExtra(PushManager.EXTRA_PUSH_ID);
-        if (UAStringUtil.isEmpty(pushId) || !RichPushManager.isRichPushMessage(pushId)) return;
-        Logger.debug("Notified of a notification opened with id " + pushId);
+        if (!RichPushManager.isRichPushMessage(intent.getExtras())) return;
+        String messageId = intent.getStringExtra("_uamid");
+        Logger.debug("Notified of a notification opened with id " + messageId);
 
         String activityName = intent.getStringExtra(ACTIVITY_NAME_KEY);
         // default to the Inbox
@@ -29,7 +28,7 @@ public class PushReceiver extends BroadcastReceiver {
             intentClass = PushPreferencesActivity.class;
         }
         Intent messageIntent = new Intent(context, intentClass);
-        messageIntent.putExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY, pushId);
+        messageIntent.putExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY, messageId);
         messageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(messageIntent);
     }

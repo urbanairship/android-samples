@@ -31,10 +31,10 @@ public class InboxActivity extends SherlockFragmentActivity implements
         ActionMode.Callback,
         MessageViewPager.ViewPagerTouchListener {
 
-    private static final SimpleDateFormat UA_DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd HH:mm Z");
+    private static final SimpleDateFormat UA_DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-    static final String MESSAGE_ID_KEY = "com.urbanairship.richpush.sample.FIRST_MESSAGE_ID";
     static final String CHECKED_IDS_KEY = "com.urbanairship.richpush.sample.CHECKED_IDS";
+    static final String MESSAGE_ID_KEY = "com.urbanairship.richpush.sample.FIRST_MESSAGE_ID";
 
     ActionMode actionMode;
     ArrayAdapter<String> navAdapter;
@@ -52,13 +52,7 @@ public class InboxActivity extends SherlockFragmentActivity implements
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.inbox);
         this.state = savedInstanceState;
-
         this.discoverViewType();
-
-        if (this.state != null && !UAStringUtil.isEmpty(this.state.getString(MESSAGE_ID_KEY))) {
-            Collections.addAll(this.checkedIds, this.state.getStringArray(CHECKED_IDS_KEY));
-            this.startActionModeIfNecessary(this.state.getString(MESSAGE_ID_KEY));
-        }
     }
 
     @Override
@@ -174,7 +168,6 @@ public class InboxActivity extends SherlockFragmentActivity implements
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
-        // TODO I think this is wrong because I think this will be called on screen rotation.
         this.checkedIds.clear();
         this.firstMessageIdSelected = null;
         this.actionMode = null;
@@ -199,6 +192,14 @@ public class InboxActivity extends SherlockFragmentActivity implements
             this.inbox.getListView().setBackgroundColor(Color.BLACK);
             this.messagePager = (MessageViewPager) this.findViewById(R.id.message_pager);
             this.messagePager.setOnPageChangeListener(new MessageViewPagerListener());
+
+            if (this.state != null) {
+                String messageId = this.state.getString(MESSAGE_ID_KEY);
+                if (!UAStringUtil.isEmpty(messageId)) {
+                    this.firstMessageIdSelected = messageId;
+                    Collections.addAll(this.checkedIds, this.state.getStringArray(CHECKED_IDS_KEY));
+                }
+            }
 
             if (drawerView) {
                 this.messagePager.setViewPagerTouchListener(this);
@@ -254,6 +255,7 @@ public class InboxActivity extends SherlockFragmentActivity implements
                 RichPushApplication.navList);
         actionBar.setListNavigationCallbacks(this.navAdapter, this);
         actionBar.setSelectedNavigationItem(this.navAdapter.getPosition(RichPushApplication.INBOX_ACTIVITY));
+        this.startActionModeIfNecessary(this.firstMessageIdSelected);
     }
 
     private void showMessage(String messageId) {
@@ -269,8 +271,8 @@ public class InboxActivity extends SherlockFragmentActivity implements
     }
 
     private void startActionModeIfNecessary(String messageId) {
-        if (this.actionMode == null) {
-            this.firstMessageIdSelected = messageId;
+        if (this.actionMode == null && !UAStringUtil.isEmpty(messageId)) {
+            if (this.firstMessageIdSelected == null) this.firstMessageIdSelected = messageId;
             this.actionMode = this.startActionMode(this);
         }
     }
