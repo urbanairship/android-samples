@@ -41,11 +41,11 @@ public class MessageViewPager extends ViewPager {
     }
 
     public void setCurrentMessage(String messageId) {
-        this.setCurrentItem(this.adapter.getPosition(messageId), true);
+        this.setCurrentItem(this.adapter.getMessagePosition(messageId), true);
     }
 
-    public String getCurrentMessageId() {
-        return this.adapter.getMessageId(this.getCurrentItem());
+    public String getMessageId(int position) {
+        return this.adapter.getMessageId(position);
     }
 
     // interfaces

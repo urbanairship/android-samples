@@ -3,6 +3,7 @@ package com.urbanairship.richpush.sample;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushManager;
 
 public class MessageFragmentAdapter extends FragmentStatePagerAdapter {
@@ -13,19 +14,26 @@ public class MessageFragmentAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return MessageFragment.newInstance(this.getMessageId(position));
+        return MessageFragment.newInstance(this.getInbox().getMessageIdAtPosition(position));
     }
 
     @Override
     public int getCount() {
-        return RichPushManager.shared().getRichPushUser().getInbox().getMessageCount();
+        return this.getInbox().getCount();
     }
 
-    public int getPosition(String messageId) {
-        return RichPushManager.shared().getRichPushUser().getInbox().getMessagePosition(messageId);
+    public int getMessagePosition(String messageId) {
+        return this.getInbox().getMessagePosition(messageId);
     }
 
     public String getMessageId(int position) {
-        return RichPushManager.shared().getRichPushUser().getInbox().getMessageIdAtPosition(position);
+        return this.getInbox().getMessageIdAtPosition(position);
     }
+
+    // helpers
+
+    private RichPushInbox getInbox() {
+        return RichPushManager.shared().getRichPushUser().getInbox();
+    }
+
 }

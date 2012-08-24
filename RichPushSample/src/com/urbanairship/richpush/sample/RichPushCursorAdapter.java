@@ -14,8 +14,6 @@ import com.urbanairship.richpush.RichPushMessage;
 
 public class RichPushCursorAdapter extends CursorAdapter {
 
-	public static String NEWEST_FIRST_ORDER = UrbanAirshipProvider.COLUMN_NAME_KEY + " DESC";
-
 	int layout;
 	int messageIdCol = -1;
 	LayoutInflater inflater;

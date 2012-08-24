@@ -66,10 +66,12 @@ public class InboxActivity extends SherlockFragmentActivity implements
         super.onResume();
         this.setState();
         this.configureActionBar();
+        RichPushManager.shared().refreshMessages();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {
+        Logger.debug("onSaveInstanceState");
         savedInstanceState.putString(MESSAGE_ID_KEY, this.firstMessageIdSelected);
         savedInstanceState.putStringArray(CHECKED_IDS_KEY, this.checkedIds
                 .toArray(new String[this.checkedIds.size()]));
@@ -96,6 +98,12 @@ public class InboxActivity extends SherlockFragmentActivity implements
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.getSupportMenuInflater().inflate(R.menu.inbox_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case android.R.id.home:
@@ -103,6 +111,9 @@ public class InboxActivity extends SherlockFragmentActivity implements
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 this.startActivity(intent);
                 this.finish();
+                break;
+            case R.id.refresh:
+                RichPushManager.shared().refreshMessages();
                 break;
         }
         return true;
@@ -124,12 +135,14 @@ public class InboxActivity extends SherlockFragmentActivity implements
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        Logger.debug("onPrepareActionMode");
         mode.getMenuInflater().inflate(R.menu.inbox_actions_menu, menu);
         return true;
     }
 
     @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        Logger.debug("onPrepareActionMode");
         if (RichPushManager.shared().getRichPushUser().getInbox()
                 .getMessage(this.firstMessageIdSelected).isRead()) {
             menu.findItem(R.id.mark_read_or_unread).setIcon(R.drawable.mark_unread)
@@ -143,6 +156,7 @@ public class InboxActivity extends SherlockFragmentActivity implements
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        Logger.debug("onActionItemClicked");
         switch(item.getItemId()) {
             case R.id.mark_read_or_unread:
                 if (this.getString(R.string.mark_read).equals(item.getTitle())) {
@@ -168,9 +182,11 @@ public class InboxActivity extends SherlockFragmentActivity implements
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
+        Logger.debug("onDestroyActionMode");
         this.checkedIds.clear();
         this.firstMessageIdSelected = null;
         this.actionMode = null;
+        this.inbox.reloadMessages();
     }
 
     @Override
@@ -187,19 +203,19 @@ public class InboxActivity extends SherlockFragmentActivity implements
         this.inbox = (InboxFragment) this.getSupportFragmentManager().findFragmentById(R.id.inbox);
         this.inbox.setViewBinder(new MessageBinder());
 
+        if (this.state != null) {
+            String messageId = this.state.getString(MESSAGE_ID_KEY);
+            if (!UAStringUtil.isEmpty(messageId)) {
+                this.firstMessageIdSelected = messageId;
+                Collections.addAll(this.checkedIds, this.state.getStringArray(CHECKED_IDS_KEY));
+            }
+        }
+
         if (panedView) {
             this.inbox.getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             this.inbox.getListView().setBackgroundColor(Color.BLACK);
             this.messagePager = (MessageViewPager) this.findViewById(R.id.message_pager);
             this.messagePager.setOnPageChangeListener(new MessageViewPagerListener());
-
-            if (this.state != null) {
-                String messageId = this.state.getString(MESSAGE_ID_KEY);
-                if (!UAStringUtil.isEmpty(messageId)) {
-                    this.firstMessageIdSelected = messageId;
-                    Collections.addAll(this.checkedIds, this.state.getStringArray(CHECKED_IDS_KEY));
-                }
-            }
 
             if (drawerView) {
                 this.messagePager.setViewPagerTouchListener(this);
@@ -312,7 +328,7 @@ public class InboxActivity extends SherlockFragmentActivity implements
     class MessageViewPagerListener extends ViewPager.SimpleOnPageChangeListener {
         @Override
         public void onPageSelected(int position) {
-            String messageId = InboxActivity.this.messagePager.getCurrentMessageId();
+            String messageId = InboxActivity.this.messagePager.getMessageId(position);
             RichPushManager.shared().getRichPushUser().getInbox().getMessage(messageId).markRead();
         }
     }

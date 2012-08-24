@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.urbanairship.Logger;
 import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushManager;
 
@@ -36,6 +37,7 @@ public class MessageActivity extends SherlockFragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Logger.debug("Current message id is " + this.currentMessageId);
         this.messagePager.setCurrentMessage(this.currentMessageId);
     }
 
@@ -63,7 +65,7 @@ public class MessageActivity extends SherlockFragmentActivity {
     class MessageViewPagerListener extends ViewPager.SimpleOnPageChangeListener {
         @Override
         public void onPageSelected(int position) {
-            MessageActivity.this.currentMessageId = MessageActivity.this.messagePager.getCurrentMessageId();
+            MessageActivity.this.currentMessageId = MessageActivity.this.messagePager.getMessageId(position);
             RichPushManager.shared().getRichPushUser().getInbox()
                     .getMessage(MessageActivity.this.currentMessageId).markRead();
         }

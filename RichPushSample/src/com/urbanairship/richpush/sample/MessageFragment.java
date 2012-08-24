@@ -54,6 +54,10 @@ public class MessageFragment extends SherlockFragment {
 
     // public api
 
+    public String getMessageId() {
+        return this.getArguments().getString(MESSAGE_ID_KEY);
+    }
+
     public void show(FragmentManager manager, int layoutId, String tag) {
 		manager.beginTransaction().add(layoutId, this, tag).commit();
     }
@@ -64,7 +68,7 @@ public class MessageFragment extends SherlockFragment {
 
     public void loadUrl() {
         RichPushMessage message = RichPushManager.shared().getRichPushUser().getInbox()
-                .getMessage(this.getArguments().getString(MESSAGE_ID_KEY));
+                .getMessage(this.getMessageId());
         // TODO Get the url from the message
         //this.browser.loadUrl(url);
         try {

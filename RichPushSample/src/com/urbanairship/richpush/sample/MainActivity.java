@@ -2,12 +2,9 @@ package com.urbanairship.richpush.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.TextView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -48,9 +45,6 @@ public class MainActivity extends SherlockFragmentActivity implements
             this.aliasInput.setText(savedInstanceState.getString(ALIAS_KEY));
             this.emailInput.setText(savedInstanceState.getString(EMAIL_KEY));
         }
-
-        this.aliasInput.setOnEditorActionListener(new EditTextActionListener(aliasType));
-        this.emailInput.setOnEditorActionListener(new EditTextActionListener(emailType));
     }
 
     @Override
@@ -64,6 +58,12 @@ public class MainActivity extends SherlockFragmentActivity implements
         super.onResume();
         this.configureActionBar();
         this.displayMessageIfNecessary();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.updateUser();
     }
 
     @Override
@@ -143,37 +143,10 @@ public class MainActivity extends SherlockFragmentActivity implements
         actionBar.setSelectedNavigationItem(this.navAdapter.getPosition("Home"));
     }
 
-    private void updateUser(int type) {
-        switch (type) {
-            case aliasType:
-                this.user.setAlias(this.aliasInput.getText().toString());
-                break;
-            case emailType:
-                this.user.setEmailAddress(this.emailInput.getText().toString());
-                break;
-        }
-    }
-
-    // inner-classes
-
-    class EditTextActionListener implements TextView.OnEditorActionListener {
-
-        int type;
-
-        public EditTextActionListener(int type) {
-            this.type = type;
-        }
-
-        @Override
-        public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-            switch (actionId) {
-                case EditorInfo.IME_ACTION_DONE:
-                case EditorInfo.IME_ACTION_NEXT:
-                    MainActivity.this.updateUser(this.type);
-                default:
-                    return false;
-            }
-        }
+    private void updateUser() {
+        this.user.setAlias(this.aliasInput.getText().toString());
+        this.user.setEmailAddress(this.emailInput.getText().toString());
+        RichPushManager.shared().updateUser();
     }
 
 }

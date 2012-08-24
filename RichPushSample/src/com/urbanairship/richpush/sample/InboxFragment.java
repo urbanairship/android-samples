@@ -4,13 +4,11 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
-import com.urbanairship.UrbanAirshipProvider;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 
@@ -35,7 +33,6 @@ public abstract class InboxFragment extends SherlockListFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        RichPushManager.shared().refreshMessages();
         this.adapter = new RichPushCursorAdapter(this.getActivity(), this.getRowLayoutId(),
                 this.createUIMapping());
 		this.setListAdapter(this.adapter);
@@ -52,12 +49,15 @@ public abstract class InboxFragment extends SherlockListFragment
     @Override
     public void onListItemClick(ListView list, View view, int position, long id) {
 		this.setSelection(position);
-		RichPushMessage message = RichPushManager.shared().getRichPushUser().getInbox()
-                .getMessage(String.valueOf(id));
-        this.listener.onMessageSelected(message);
+        this.listener.onMessageSelected(RichPushManager.shared().getRichPushUser().getInbox()
+                .getMessageAtPosition(position));
     }
 
 	// actions
+
+    public void reloadMessages() {
+        this.adapter.notifyDataSetChanged();
+    }
 
 	public void setViewBinder(RichPushCursorAdapter.ViewBinder binder) {
 		this.adapter.setViewBinder(binder);
@@ -87,10 +87,8 @@ public abstract class InboxFragment extends SherlockListFragment
     }
 
 	@Override
-	public CursorLoader onCreateLoader(int i, Bundle bundle) {
-		return new CursorLoader(this.getActivity(), UrbanAirshipProvider.RICHPUSH_CONTENT_URI,
-				null, UrbanAirshipProvider.RichPush.COLUMN_NAME_DELETED + " <> ?", new String[] {"1"},
-                RichPushCursorAdapter.NEWEST_FIRST_ORDER);
+	public RichPushCursorLoader onCreateLoader(int i, Bundle bundle) {
+        return new RichPushCursorLoader(this.getActivity());
 	}
 
 	@Override
