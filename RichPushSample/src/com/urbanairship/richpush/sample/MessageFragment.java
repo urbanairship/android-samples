@@ -1,7 +1,6 @@
 package com.urbanairship.richpush.sample;
 
 import android.annotation.SuppressLint;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -12,14 +11,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import com.actionbarsherlock.app.SherlockFragment;
-import com.urbanairship.Logger;
 import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.RichPushMessageJavaScript;
 
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -49,7 +45,7 @@ public class MessageFragment extends SherlockFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         this.initializeBrowser();
-        this.loadUrl();
+        this.loadMessage();
     }
 
     // public api
@@ -66,31 +62,13 @@ public class MessageFragment extends SherlockFragment {
 		this.getSherlockActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 	}
 
-    public void loadUrl() {
+    public void loadMessage() {
         RichPushMessage message = RichPushManager.shared().getRichPushUser().getInbox()
                 .getMessage(this.getMessageId());
-        // TODO Get the url from the message
-        //this.browser.loadUrl(url);
-        try {
-            this.browser.loadData(this.buildHtml(message), "text/html", "UTF-8");
-        } catch (IOException e) {
-            Logger.debug(e.getMessage());
-        }
+        this.browser.loadData(message.getMessage(), "text/html", "UTF-8");
     }
 
     // helpers
-
-    private String buildHtml(RichPushMessage message) throws IOException {
-        AssetManager assetManager = UAirship.shared().getApplicationContext().getResources().getAssets();
-        DataInputStream dis = new DataInputStream(assetManager.open("message.html"));
-        byte[] buffer = new byte[dis.available()];
-        dis.readFully(buffer);
-        String html = new String(buffer);
-        return html.replace("{{ title }}", message.getTitle())
-                .replace("{{ message }}", message.getMessage())
-                .replace("{{ id }}", message.getMessageId())
-                .replace("{{ sent_date }}", message.getSentDate().toString());
-    }
 
     @SuppressWarnings("unchecked")
     private void initializeBrowser() {
