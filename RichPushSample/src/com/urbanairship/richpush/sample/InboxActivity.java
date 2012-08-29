@@ -157,19 +157,21 @@ public class InboxActivity extends SherlockFragmentActivity implements
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         Logger.debug("onActionItemClicked");
+        int size = this.checkedIds.size();
         switch(item.getItemId()) {
             case R.id.mark_read_or_unread:
                 if (this.getString(R.string.mark_read).equals(item.getTitle())) {
                     RichPushManager.shared().getRichPushUser().getInbox()
-                            .markMessagesRead(this.checkedIds);
+                            .markMessagesRead(this.checkedIds.toArray(new String[size]));
                 } else {
                     RichPushManager.shared().getRichPushUser().getInbox()
-                            .markMessagesUnread(this.checkedIds);
+                            .markMessagesUnread(this.checkedIds.toArray(new String[size]));
                 }
                 this.actionMode.finish();
                 return true;
             case R.id.delete:
-                RichPushManager.shared().getRichPushUser().getInbox().deleteMessages(this.checkedIds);
+                RichPushManager.shared().getRichPushUser().getInbox()
+                        .deleteMessages(this.checkedIds.toArray(new String[size]));
                 this.actionMode.finish();
                 return true;
             case R.id.abs__action_mode_close_button:
