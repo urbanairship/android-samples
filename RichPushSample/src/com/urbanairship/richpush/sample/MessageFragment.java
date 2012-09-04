@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.HttpAuthHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -13,8 +14,8 @@ import android.webkit.WebViewClient;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushManager;
-import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.RichPushMessageJavaScript;
+import com.urbanairship.richpush.RichPushUser;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -55,17 +56,15 @@ public class MessageFragment extends SherlockFragment {
     }
 
     public void show(FragmentManager manager, int layoutId, String tag) {
-		manager.beginTransaction().add(layoutId, this, tag).commit();
+        manager.beginTransaction().add(layoutId, this, tag).commit();
     }
 
-	public void dismiss() {
-		this.getSherlockActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-	}
+    public void dismiss() {
+        this.getSherlockActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+    }
 
     public void loadMessage() {
-        RichPushMessage message = RichPushManager.shared().getRichPushUser().getInbox()
-                .getMessage(this.getMessageId());
-        this.browser.loadData(message.getMessage(), "text/html", "UTF-8");
+        this.browser.loadUrl(RichPushManager.shared().getRichPushUser().getInbox().getMessageUrl(this.getMessageId()));
     }
 
     // helpers
@@ -82,6 +81,12 @@ public class MessageFragment extends SherlockFragment {
         this.browser.setWebChromeClient(new WebChromeClient());
 
         this.browser.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public void onReceivedHttpAuthRequest(WebView view, HttpAuthHandler handler, String host, String realm) {
+                RichPushUser user = RichPushManager.shared().getRichPushUser();
+                handler.proceed(user.getId(), user.getPassword());
+            }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {

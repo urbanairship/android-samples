@@ -93,7 +93,7 @@ public class InboxActivity extends SherlockFragmentActivity implements
 
     @Override
     public void onMessageSelected(RichPushMessage message) {
-		message.markRead();
+        message.markRead();
         this.showMessage(message.getMessageId());
     }
 
@@ -301,30 +301,28 @@ public class InboxActivity extends SherlockFragmentActivity implements
 
     // inner-classes
 
-	class MessageBinder implements RichPushCursorAdapter.ViewBinder {
-		@Override
-		public void setViewValue(View view, RichPushMessage message, String columnName) {
-			if (columnName.equals(UrbanAirshipProvider.RichPush.COLUMN_NAME_UNREAD)) {
-				view.setBackgroundColor(message.isRead() ? Color.BLACK : Color.YELLOW);
-			} else if (columnName.equals(UrbanAirshipProvider.RichPush.COLUMN_NAME_MESSAGE)) {
-				((TextView) view).setText(message.getMessage());
-			} else if (columnName.equals(UrbanAirshipProvider.RichPush.COLUMN_NAME_TITLE)) {
-				((TextView) view).setText(message.getTitle());
-			} else if (columnName.equals(UrbanAirshipProvider.COLUMN_NAME_TIMESTAMP)) {
-				((TextView) view).setText(UA_DATE_FORMATTER.format(message.getSentDate()));
-			} else {
-				view.setOnClickListener(InboxActivity.this.checkBoxListener);
-				view.setTag(message.getMessageId());
-				if (InboxActivity.this.checkedIds.contains(message.getMessageId())) {
-					((CheckBox)view).setChecked(true);
-				} else {
-					((CheckBox)view).setChecked(false);
-				}
-			}
-			view.setFocusable(false);
-			view.setFocusableInTouchMode(false);
-		}
-	}
+    class MessageBinder implements RichPushCursorAdapter.ViewBinder {
+        @Override
+        public void setViewValue(View view, RichPushMessage message, String columnName) {
+            if (columnName.equals(UrbanAirshipProvider.RichPush.COLUMN_NAME_UNREAD)) {
+                view.setBackgroundColor(message.isRead() ? Color.BLACK : Color.YELLOW);
+            } else if (columnName.equals(UrbanAirshipProvider.RichPush.COLUMN_NAME_TITLE)) {
+                ((TextView) view).setText(message.getTitle());
+            } else if (columnName.equals(UrbanAirshipProvider.COLUMN_NAME_TIMESTAMP)) {
+                ((TextView) view).setText(UA_DATE_FORMATTER.format(message.getSentDate()));
+            } else {
+                view.setOnClickListener(InboxActivity.this.checkBoxListener);
+                view.setTag(message.getMessageId());
+                if (InboxActivity.this.checkedIds.contains(message.getMessageId())) {
+                    ((CheckBox)view).setChecked(true);
+                } else {
+                    ((CheckBox)view).setChecked(false);
+                }
+            }
+            view.setFocusable(false);
+            view.setFocusableInTouchMode(false);
+        }
+    }
 
     class MessageViewPagerListener extends ViewPager.SimpleOnPageChangeListener {
         @Override
@@ -334,17 +332,17 @@ public class InboxActivity extends SherlockFragmentActivity implements
         }
     }
 
-	OnClickListener checkBoxListener = new OnClickListener() {
-		@Override
-		public void onClick(View view) {
+    OnClickListener checkBoxListener = new OnClickListener() {
+        @Override
+        public void onClick(View view) {
             String messageId = (String) view.getTag();
-			if (((CheckBox)view).isChecked()) {
-				InboxActivity.this.checkedIds.add(messageId);
-			} else {
-				InboxActivity.this.checkedIds.remove(messageId);
-			}
+            if (((CheckBox)view).isChecked()) {
+                InboxActivity.this.checkedIds.add(messageId);
+            } else {
+                InboxActivity.this.checkedIds.remove(messageId);
+            }
             InboxActivity.this.startActionModeIfNecessary(messageId);
-		}
-	};
+        }
+    };
 
 }

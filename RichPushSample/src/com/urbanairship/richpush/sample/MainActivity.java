@@ -20,13 +20,10 @@ public class MainActivity extends SherlockFragmentActivity implements
     protected static final String TAG = "MainActivity";
 
     static final String ALIAS_KEY = "com.urbanairship.richpush.sample.ALIAS";
-    static final String EMAIL_KEY = "com.urbanairship.richpush.sample.EMAIL";
     static final int aliasType = 1;
-    static final int emailType = 2;
 
     ArrayAdapter<String> navAdapter;
     EditText aliasInput;
-    EditText emailInput;
     RichPushUser user;
 
     @Override
@@ -36,14 +33,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 
         this.user = RichPushManager.shared().getRichPushUser();
         this.aliasInput = (EditText)this.findViewById(R.id.alias_input);
-        this.emailInput = (EditText)this.findViewById(R.id.email_input);
 
         if (savedInstanceState == null) {
             this.aliasInput.setText(this.user.getAlias());
-            this.emailInput.setText(this.user.getEmailAddress());
         } else {
             this.aliasInput.setText(savedInstanceState.getString(ALIAS_KEY));
-            this.emailInput.setText(savedInstanceState.getString(EMAIL_KEY));
         }
     }
 
@@ -69,7 +63,6 @@ public class MainActivity extends SherlockFragmentActivity implements
     @Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putString(ALIAS_KEY, this.aliasInput.getText().toString());
-        savedInstanceState.putString(EMAIL_KEY, this.emailInput.getText().toString());
     }
 
     @Override
@@ -145,7 +138,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 
     private void updateUser() {
         this.user.setAlias(this.aliasInput.getText().toString());
-        this.user.setEmailAddress(this.emailInput.getText().toString());
         RichPushManager.shared().updateUser();
     }
 

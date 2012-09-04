@@ -10,7 +10,7 @@ import com.urbanairship.richpush.RichPushManager;
 
 @SuppressWarnings("unused")
 public class MessageActivity extends SherlockFragmentActivity {
-	protected static final String TAG = "MessageActivity";
+    protected static final String TAG = "MessageActivity";
 
     public static final String EXTRA_MESSAGE_ID_KEY = "com.urbanairship.richpush.sample.EXTRA_MESSAGE_ID_KEY";
 

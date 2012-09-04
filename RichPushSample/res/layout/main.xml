@@ -29,32 +29,6 @@
         />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/email_section"
-        android:orientation="horizontal"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/alias_section"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-    >
-        <TextView
-            android:id="@+id/email_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/email_label"
-        />
-        <EditText
-            android:id="@+id/email_input"
-            android:layout_toRightOf="@id/email_label"
-            android:minWidth="160dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:imeOptions="actionDone"
-        />
-    </LinearLayout>
-
     <include layout="@layout/floating_message_pane" />
 
 </RelativeLayout>

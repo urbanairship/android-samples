@@ -6,7 +6,7 @@
 
     <uses-sdk android:minSdkVersion="7"
               android:targetSdkVersion="15"/>
-        
+
     <!-- REQUIRED -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
-    
+
     <!-- REQUIRED FOR LOCATION -->
     <!-- Use ACCESS_COARSE_LOCATION if GPS access is not necessary -->
     <!-- uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /-->
@@ -28,7 +28,7 @@
         android:name="com.urbanairship.richpush.sample.RichPushApplication"
         android:theme="@style/Theme.Sherlock"
         android:debuggable="true">
-        
+
         <activity android:name=".MainActivity"
                   android:label="@string/app_name"
         >
@@ -64,7 +64,7 @@
             private process -->
         <service android:name="com.urbanairship.push.PushService"
                 android:process=":com.urbanairship.process"/>
-        
+
         <!-- REQUIRED -->
         <!-- The 'android:process' parameter is optional. Set it to a value starting
             with a colon (:) to make it run in a separate,

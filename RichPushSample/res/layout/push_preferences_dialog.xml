@@ -8,7 +8,7 @@
               android:layout_height="fill_parent"
               android:padding="20dip">
 
-	<LinearLayout android:orientation="horizontal"
+    <LinearLayout android:orientation="horizontal"
                   android:layout_width="fill_parent"
                   android:layout_height="fill_parent">
 
@@ -22,9 +22,9 @@
             android:layout_width="wrap_content"
             android:textSize="16dip"/>
 
-	</LinearLayout>
-	
-	<LinearLayout android:orientation="horizontal"
+    </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal"
                   android:layout_width="fill_parent"
                   android:layout_height="fill_parent">
 
@@ -38,9 +38,9 @@
             android:layout_width="wrap_content"
             android:textSize="16dip"/>
 
-	</LinearLayout>
-	
-		<LinearLayout android:orientation="horizontal"
+    </LinearLayout>
+
+        <LinearLayout android:orientation="horizontal"
                   android:layout_width="fill_parent"
                   android:layout_height="fill_parent">
 
@@ -54,9 +54,9 @@
             android:layout_width="wrap_content"
             android:textSize="16dip"/>
 
-	</LinearLayout>
-	
-		<LinearLayout android:orientation="horizontal"
+    </LinearLayout>
+
+        <LinearLayout android:orientation="horizontal"
                   android:layout_width="fill_parent"
                   android:layout_height="fill_parent">
 
@@ -70,14 +70,14 @@
             android:layout_width="wrap_content"
             android:textSize="16dip"/>
 
-	</LinearLayout>
-              
+    </LinearLayout>
+
 <TextView
     android:text="Start Time"
     android:layout_height="wrap_content"
     android:layout_width="wrap_content"
     android:textSize="16dip"/>
-            
+
 <TimePicker
     android:enabled="false"
     android:id="@+id/start_time"
@@ -90,13 +90,13 @@
     android:layout_height="wrap_content"
     android:layout_width="wrap_content"
     android:textSize="16dip"/>
-    
+
 <TimePicker
     android:id="@+id/end_time"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"/>
-    
-		<LinearLayout android:orientation="horizontal"
+
+        <LinearLayout android:orientation="horizontal"
                   android:layout_width="fill_parent"
                   android:layout_height="fill_parent">
 
@@ -110,8 +110,8 @@
             android:layout_width="wrap_content"
             android:textSize="16dip"/>
         </LinearLayout>
-        
-		<LinearLayout android:orientation="horizontal"
+
+        <LinearLayout android:orientation="horizontal"
                   android:layout_width="fill_parent"
                   android:layout_height="fill_parent">
 
@@ -125,7 +125,7 @@
             android:layout_width="wrap_content"
             android:textSize="16dip"/>
 
-	</LinearLayout>
+    </LinearLayout>
 
     <include layout="@layout/floating_message_pane" />
 

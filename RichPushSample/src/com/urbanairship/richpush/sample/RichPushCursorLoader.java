@@ -15,7 +15,7 @@ public class RichPushCursorLoader extends CursorLoader {
     @Override
     protected Cursor onLoadInBackground() {
         Cursor cursor = RichPushManager.shared().getRichPushUser().getInbox().refresh();
-        Logger.debug("Loaded " + cursor.getCount() + " messages in the background");
+        Logger.verbose("Loaded " + cursor.getCount() + " messages in the background");
         return cursor;
     }
 }

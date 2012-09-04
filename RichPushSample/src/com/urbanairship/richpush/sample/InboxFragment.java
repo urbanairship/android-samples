@@ -13,16 +13,16 @@ import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 
 public abstract class InboxFragment extends SherlockListFragment
-		implements LoaderManager.LoaderCallbacks<Cursor> {
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
-	public static final String EMPTY_COLUMN_NAME = "";
+    public static final String EMPTY_COLUMN_NAME = "";
     public static final String ROW_LAYOUT_ID_KEY = "row_layout_id";
     public static final String EMPTY_LIST_STRING_KEY = "empty_list_string";
 
-	final int loaderId = 0x1;
+    final int loaderId = 0x1;
 
     OnMessageListener listener;
-	RichPushCursorAdapter adapter;
+    RichPushCursorAdapter adapter;
 
     @Override
     public void onAttach(Activity activity) {
@@ -35,37 +35,37 @@ public abstract class InboxFragment extends SherlockListFragment
         super.onCreate(savedInstanceState);
         this.adapter = new RichPushCursorAdapter(this.getActivity(), this.getRowLayoutId(),
                 this.createUIMapping());
-		this.setListAdapter(this.adapter);
+        this.setListAdapter(this.adapter);
     }
 
     @Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		this.setEmptyText(this.getString(this.getEmptyListStringId()));
-		this.setListShown(false);
-		this.getLoaderManager().initLoader(this.loaderId, null, this);
-	}
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        this.setEmptyText(this.getString(this.getEmptyListStringId()));
+        this.setListShown(false);
+        this.getLoaderManager().initLoader(this.loaderId, null, this);
+    }
 
     @Override
     public void onListItemClick(ListView list, View view, int position, long id) {
-		this.setSelection(position);
+        this.setSelection(position);
         this.listener.onMessageSelected(RichPushManager.shared().getRichPushUser().getInbox()
                 .getMessageAtPosition(position));
     }
 
-	// actions
+    // actions
 
     public void reloadMessages() {
         this.adapter.notifyDataSetChanged();
     }
 
-	public void setViewBinder(RichPushCursorAdapter.ViewBinder binder) {
-		this.adapter.setViewBinder(binder);
-	}
+    public void setViewBinder(RichPushCursorAdapter.ViewBinder binder) {
+        this.adapter.setViewBinder(binder);
+    }
 
-	public abstract SparseArray<String> createUIMapping();
+    public abstract SparseArray<String> createUIMapping();
 
-	// helpers
+    // helpers
 
     private int getRowLayoutId() {
         return this.getArguments() != null && this.getArguments().containsKey(ROW_LAYOUT_ID_KEY) ?
@@ -78,36 +78,36 @@ public abstract class InboxFragment extends SherlockListFragment
     }
 
     private void setActivityAsListener(Activity activity) {
-		try {
-			this.listener = (OnMessageListener) activity;
-		} catch (ClassCastException e) {
-			throw new IllegalStateException("Activities using InboxFragment must implement " +
-					"the InboxFragment.OnMessageListener interface.");
-		}
+        try {
+            this.listener = (OnMessageListener) activity;
+        } catch (ClassCastException e) {
+            throw new IllegalStateException("Activities using InboxFragment must implement " +
+                    "the InboxFragment.OnMessageListener interface.");
+        }
     }
 
-	@Override
-	public RichPushCursorLoader onCreateLoader(int i, Bundle bundle) {
+    @Override
+    public RichPushCursorLoader onCreateLoader(int i, Bundle bundle) {
         return new RichPushCursorLoader(this.getActivity());
-	}
+    }
 
-	@Override
-	public void onLoadFinished(Loader loader, Cursor cursor) {
-		this.adapter.swapCursor(cursor);
+    @Override
+    public void onLoadFinished(Loader loader, Cursor cursor) {
+        this.adapter.swapCursor(cursor);
 
-		if (this.isResumed()) {
-			this.setListShown(true);
-		} else {
-			this.setListShownNoAnimation(true);
-		}
-	}
+        if (this.isResumed()) {
+            this.setListShown(true);
+        } else {
+            this.setListShownNoAnimation(true);
+        }
+    }
 
-	@Override
-	public void onLoaderReset(Loader loader) {
-		this.adapter.swapCursor(null);
-	}
+    @Override
+    public void onLoaderReset(Loader loader) {
+        this.adapter.swapCursor(null);
+    }
 
-	// interfaces
+    // interfaces
 
     public interface OnMessageListener {
         void onMessageSelected(RichPushMessage message);
