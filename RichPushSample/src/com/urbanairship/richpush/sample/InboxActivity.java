@@ -375,16 +375,22 @@ public class InboxActivity extends SherlockFragmentActivity implements
 
     @Override
     public void onUpdateMessages(boolean success) {
+        //if the message update failed
         if (!success) {
+            //show an error dialog
             DialogFragment fragment = new InboxLoadFailedDialogFragment();
             fragment.show(getSupportFragmentManager(), "dialog");
+            //stop the loading spinner
             inbox.setListShownNoAnimation(true);
         }
 
         String messageId = this.getMessageId();
+        //if we were launched with a message to display
         if(!UAStringUtil.isEmpty(messageId)) {
+            //jump straight to in instead of loading the updated message list first
             this.showMessage(messageId);
         } else {
+            //otherwise just load the update message list
             inbox.loadMessages();
         }
     }
