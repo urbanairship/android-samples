@@ -1,12 +1,26 @@
 package com.urbanairship.richpush.sample;
 
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.ActionMode;
@@ -19,17 +33,13 @@ import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.util.UAStringUtil;
 
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 @SuppressWarnings("unchecked")
 public class InboxActivity extends SherlockFragmentActivity implements
         InboxFragment.OnMessageListener,
         ActionBar.OnNavigationListener,
         ActionMode.Callback,
-        MessageViewPager.ViewPagerTouchListener {
+        MessageViewPager.ViewPagerTouchListener,
+        RichPushManager.Listener {
 
     private static final SimpleDateFormat UA_DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
@@ -64,9 +74,9 @@ public class InboxActivity extends SherlockFragmentActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        RichPushManager.shared().addListener(this);
         this.setState();
         this.configureActionBar();
-        RichPushManager.shared().refreshMessages();
     }
 
     @Override
@@ -80,6 +90,7 @@ public class InboxActivity extends SherlockFragmentActivity implements
     @Override
     protected void onPause() {
         super.onPause();
+        RichPushManager.shared().removeListener(this);
         if (panedView) {
             this.messagePager.clearViewPagerTouchListener();
         }
@@ -113,6 +124,7 @@ public class InboxActivity extends SherlockFragmentActivity implements
                 this.finish();
                 break;
             case R.id.refresh:
+                inbox.setListShownNoAnimation(false);
                 RichPushManager.shared().refreshMessages();
                 break;
         }
@@ -187,7 +199,7 @@ public class InboxActivity extends SherlockFragmentActivity implements
         this.checkedIds.clear();
         this.firstMessageIdSelected = null;
         this.actionMode = null;
-        this.inbox.reloadMessages();
+        this.inbox.refreshMessages();
     }
 
     @Override
@@ -199,6 +211,10 @@ public class InboxActivity extends SherlockFragmentActivity implements
     }
 
     // helpers
+
+    private String getMessageId() {
+        return this.getIntent().getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
+    }
 
     private void setState() {
         this.inbox = (InboxFragment) this.getSupportFragmentManager().findFragmentById(R.id.inbox);
@@ -236,10 +252,16 @@ public class InboxActivity extends SherlockFragmentActivity implements
             }
         }
 
-        String messageId = this.getIntent().getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
-        Logger.debug("Received message id " + messageId);
+        String messageId = this.getMessageId();
         if (!UAStringUtil.isEmpty(messageId)) {
-            this.showMessage(messageId);
+            Logger.debug("Received message id " + messageId);
+            RichPushManager.shared().refreshMessages();
+        } else {
+            if (RichPushManager.shared().isRefreshingMessages()) {
+                inbox.setListShownNoAnimation(false);
+            } else {
+                inbox.loadMessages();
+            }
         }
     }
 
@@ -345,4 +367,49 @@ public class InboxActivity extends SherlockFragmentActivity implements
         }
     };
 
+    @Override
+    public void onUpdateMessages(boolean success) {
+        if (!success) {
+            DialogFragment fragment = new InboxLoadFailedDialogFragment();
+            fragment.show(getSupportFragmentManager(), "dialog");
+            inbox.setListShownNoAnimation(true);
+        }
+
+        String messageId = this.getMessageId();
+        if(!UAStringUtil.isEmpty(messageId)) {
+            this.showMessage(messageId);
+        } else {
+            inbox.loadMessages();
+        }
+    }
+
+    //no-op
+    @Override
+    public void onUpdateUser(boolean success) {
+    }
+
+    //no-op
+    @Override
+    public void onRetrieveMessage(boolean success, String messageId) {
+    }
+
+    public static class InboxLoadFailedDialogFragment extends DialogFragment {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+            return new AlertDialog.Builder(getActivity())
+                    .setIcon(R.drawable.icon)
+                    .setTitle("Unable to retrieve new messages")
+                    .setMessage("Please try again later")
+                    .setNeutralButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                dialog.dismiss();
+                            }
+                        }
+                    )
+                    .create();
+        }
+    }
 }

@@ -8,12 +8,13 @@ import android.support.v4.content.Loader;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.ListView;
+
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 
-public abstract class InboxFragment extends SherlockListFragment
-        implements LoaderManager.LoaderCallbacks<Cursor> {
+public abstract class InboxFragment extends SherlockListFragment implements
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String EMPTY_COLUMN_NAME = "";
     public static final String ROW_LAYOUT_ID_KEY = "row_layout_id";
@@ -43,7 +44,6 @@ public abstract class InboxFragment extends SherlockListFragment
         super.onActivityCreated(savedInstanceState);
         this.setEmptyText(this.getString(this.getEmptyListStringId()));
         this.setListShown(false);
-        this.getLoaderManager().initLoader(this.loaderId, null, this);
     }
 
     @Override
@@ -55,7 +55,11 @@ public abstract class InboxFragment extends SherlockListFragment
 
     // actions
 
-    public void reloadMessages() {
+    public void loadMessages() {
+        this.getLoaderManager().initLoader(this.loaderId, null, this);
+    }
+
+    public void refreshMessages() {
         this.adapter.notifyDataSetChanged();
     }
 
@@ -112,5 +116,4 @@ public abstract class InboxFragment extends SherlockListFragment
     public interface OnMessageListener {
         void onMessageSelected(RichPushMessage message);
     }
-
 }

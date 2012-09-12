@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -23,22 +23,13 @@ public class MainActivity extends SherlockFragmentActivity implements
     static final int aliasType = 1;
 
     ArrayAdapter<String> navAdapter;
-    EditText aliasInput;
     RichPushUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.main);
-
         this.user = RichPushManager.shared().getRichPushUser();
-        this.aliasInput = (EditText)this.findViewById(R.id.alias_input);
-
-        if (savedInstanceState == null) {
-            this.aliasInput.setText(this.user.getAlias());
-        } else {
-            this.aliasInput.setText(savedInstanceState.getString(ALIAS_KEY));
-        }
     }
 
     @Override
@@ -52,17 +43,6 @@ public class MainActivity extends SherlockFragmentActivity implements
         super.onResume();
         this.configureActionBar();
         this.displayMessageIfNecessary();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        this.updateUser();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putString(ALIAS_KEY, this.aliasInput.getText().toString());
     }
 
     @Override
@@ -135,10 +115,4 @@ public class MainActivity extends SherlockFragmentActivity implements
         actionBar.setListNavigationCallbacks(this.navAdapter, this);
         actionBar.setSelectedNavigationItem(this.navAdapter.getPosition("Home"));
     }
-
-    private void updateUser() {
-        this.user.setAlias(this.aliasInput.getText().toString());
-        RichPushManager.shared().updateUser();
-    }
-
 }
