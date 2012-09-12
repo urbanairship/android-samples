@@ -199,7 +199,7 @@ public class InboxActivity extends SherlockFragmentActivity implements
         this.checkedIds.clear();
         this.firstMessageIdSelected = null;
         this.actionMode = null;
-        this.inbox.refreshMessages();
+        this.inbox.refreshDisplay();
     }
 
     @Override
@@ -253,13 +253,19 @@ public class InboxActivity extends SherlockFragmentActivity implements
         }
 
         String messageId = this.getMessageId();
+
+        //if we were launched with a message to display
         if (!UAStringUtil.isEmpty(messageId)) {
             Logger.debug("Received message id " + messageId);
+            //refresh messages from the server
             RichPushManager.shared().refreshMessages();
         } else {
+            //if we're currently already in the middle of a refresh
             if (RichPushManager.shared().isRefreshingMessages()) {
+                //keep displaying the loading spinner
                 inbox.setListShownNoAnimation(false);
             } else {
+                //load messages from disk
                 inbox.loadMessages();
             }
         }

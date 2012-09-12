@@ -59,7 +59,7 @@ public abstract class InboxFragment extends SherlockListFragment implements
         this.getLoaderManager().initLoader(this.loaderId, null, this);
     }
 
-    public void refreshMessages() {
+    public void refreshDisplay() {
         this.adapter.notifyDataSetChanged();
     }
 
