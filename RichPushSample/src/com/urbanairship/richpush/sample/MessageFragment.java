@@ -1,5 +1,8 @@
 package com.urbanairship.richpush.sample;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -11,14 +14,15 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
 import com.actionbarsherlock.app.SherlockFragment;
+import com.urbanairship.Logger;
 import com.urbanairship.UAirship;
+import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushManager;
+import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.RichPushMessageJavaScript;
 import com.urbanairship.richpush.RichPushUser;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class MessageFragment extends SherlockFragment {
@@ -64,7 +68,16 @@ public class MessageFragment extends SherlockFragment {
     }
 
     public void loadMessage() {
-        this.browser.loadUrl(RichPushManager.shared().getRichPushUser().getInbox().getMessageUrl(this.getMessageId()));
+        String id = this.getMessageId();
+        RichPushInbox inbox = RichPushManager.shared().getRichPushUser().getInbox();
+        RichPushMessage message = inbox.getMessage(id);
+        if (message != null) {
+            String bodyUrl = message.getMessageBodyUrl();
+            this.browser.loadUrl(bodyUrl);
+        }
+        else {
+            Logger.info("Couldn't retrieve message for ID: " + id);
+        }
     }
 
     // helpers
