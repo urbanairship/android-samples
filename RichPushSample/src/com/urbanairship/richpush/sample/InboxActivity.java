@@ -258,15 +258,13 @@ public class InboxActivity extends SherlockFragmentActivity implements
         if (!UAStringUtil.isEmpty(messageId)) {
             Logger.debug("Received message id " + messageId);
             //refresh messages from the server
+            inbox.setListShownNoAnimation(false);
             RichPushManager.shared().refreshMessages();
         } else {
             //if we're currently already in the middle of a refresh
             if (RichPushManager.shared().isRefreshingMessages()) {
-                //keep displaying the loading spinner
+                //keep displaying the loading progress spinner
                 inbox.setListShownNoAnimation(false);
-            } else {
-                //load messages from disk
-                inbox.loadMessages();
             }
         }
     }
@@ -380,18 +378,17 @@ public class InboxActivity extends SherlockFragmentActivity implements
             //show an error dialog
             DialogFragment fragment = new InboxLoadFailedDialogFragment();
             fragment.show(getSupportFragmentManager(), "dialog");
-            //stop the loading spinner
-            inbox.setListShownNoAnimation(true);
         }
 
         String messageId = this.getMessageId();
         //if we were launched with a message to display
         if(!UAStringUtil.isEmpty(messageId)) {
-            //jump straight to in instead of loading the updated message list first
+            //jump straight to the message
             this.showMessage(messageId);
         } else {
-            //otherwise just load the update message list
-            inbox.loadMessages();
+            //otherwise stop the progress spinner and display the list
+            inbox.setListShownNoAnimation(true);
+
         }
     }
 

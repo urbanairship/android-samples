@@ -43,7 +43,7 @@ public abstract class InboxFragment extends SherlockListFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         this.setEmptyText(this.getString(this.getEmptyListStringId()));
-        this.setListShown(false);
+        this.getLoaderManager().initLoader(this.loaderId, null, this);
     }
 
     @Override
@@ -54,10 +54,6 @@ public abstract class InboxFragment extends SherlockListFragment implements
     }
 
     // actions
-
-    public void loadMessages() {
-        this.getLoaderManager().initLoader(this.loaderId, null, this);
-    }
 
     public void refreshDisplay() {
         this.adapter.notifyDataSetChanged();
@@ -98,12 +94,6 @@ public abstract class InboxFragment extends SherlockListFragment implements
     @Override
     public void onLoadFinished(Loader loader, Cursor cursor) {
         this.adapter.swapCursor(cursor);
-
-        if (this.isResumed()) {
-            this.setListShown(true);
-        } else {
-            this.setListShownNoAnimation(true);
-        }
     }
 
     @Override
