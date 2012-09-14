@@ -8,7 +8,5 @@
     <string name="mark_unread">Mark Unread</string>
     <string name="delete">Delete</string>
     <string name="preferences">Preferences</string>
-    <string name="alias_label">My friends call me</string>
-    <string name="email_label">and my email address is</string>
     <string name="refresh">Refresh</string>
 </resources>
