@@ -78,8 +78,8 @@
         <!-- REQUIRED -->
         <!-- This is required for persisting preferences related to push and location -->
         <provider android:name="com.urbanairship.UrbanAirshipProvider"
-            android:authorities="com.urbanairship"
-            android:exported="true"
+            android:authorities="com.urbanairship.richpush.sample.urbanairship.provider"
+            android:exported="false"
             android:multiprocess="true" />
     </application>
 </manifest> 
