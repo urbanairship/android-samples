@@ -64,6 +64,8 @@
             private process -->
         <service android:name="com.urbanairship.push.PushService"
                 android:process=":com.urbanairship.process"/>
+        <service android:name="com.urbanairship.push.PushWorkerService" android:label="Push Notification Worker Service"/>
+        <service android:name="com.urbanairship.analytics.EventService" android:label="Event Service"/>
 
         <!-- REQUIRED -->
         <!-- The 'android:process' parameter is optional. Set it to a value starting
