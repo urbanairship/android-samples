@@ -1,3 +1,7 @@
+/*
+ * Copyright 2012 Urban Airship and Contributors
+ */
+
 package com.urbanairship.richpush.sample;
 
 import android.app.Application;
@@ -13,7 +17,7 @@ public class RichPushApplication extends Application {
     public static final String HOME_ACTIVITY = "Home";
     public static final String INBOX_ACTIVITY = "Inbox";
     public static final String[] navList = new String[] {
-            HOME_ACTIVITY, INBOX_ACTIVITY
+        HOME_ACTIVITY, INBOX_ACTIVITY
     };
 
     @Override

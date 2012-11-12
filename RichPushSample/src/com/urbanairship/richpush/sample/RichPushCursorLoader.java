@@ -1,8 +1,13 @@
+/*
+ * Copyright 2012 Urban Airship and Contributors
+ */
+
 package com.urbanairship.richpush.sample;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.content.CursorLoader;
+
 import com.urbanairship.Logger;
 import com.urbanairship.richpush.RichPushManager;
 

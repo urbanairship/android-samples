@@ -1,7 +1,12 @@
+/*
+ * Copyright 2012 Urban Airship and Contributors
+ */
+
 package com.urbanairship.richpush.sample;
 
 import android.os.Bundle;
 import android.util.SparseArray;
+
 import com.urbanairship.UrbanAirshipProvider;
 
 public class RichPushSampleInboxFragment extends InboxFragment {

@@ -1,3 +1,7 @@
+/*
+ * Copyright 2012 Urban Airship and Contributors
+ */
+
 package com.urbanairship.richpush.sample;
 
 import android.content.Context;
@@ -7,6 +11,7 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.urbanairship.Logger;
 import com.urbanairship.UrbanAirshipProvider;
 import com.urbanairship.richpush.RichPushManager;

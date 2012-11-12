@@ -1,3 +1,7 @@
+/*
+ * Copyright 2012 Urban Airship and Contributors
+ */
+
 package com.urbanairship.richpush.sample;
 
 import android.app.Activity;
@@ -14,7 +18,7 @@ import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 
 public abstract class InboxFragment extends SherlockListFragment implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String EMPTY_COLUMN_NAME = "";
     public static final String ROW_LAYOUT_ID_KEY = "row_layout_id";

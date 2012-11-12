@@ -1,7 +1,8 @@
-package com.urbanairship.richpush.sample;
+/*
+ * Copyright 2012 Urban Airship and Contributors
+ */
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+package com.urbanairship.richpush.sample;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -23,6 +24,9 @@ import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.RichPushMessageJavaScript;
 import com.urbanairship.richpush.RichPushUser;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class MessageFragment extends SherlockFragment {

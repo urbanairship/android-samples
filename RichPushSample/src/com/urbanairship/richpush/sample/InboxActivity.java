@@ -1,9 +1,8 @@
-package com.urbanairship.richpush.sample;
+/*
+ * Copyright 2012 Urban Airship and Contributors
+ */
 
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+package com.urbanairship.richpush.sample;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -33,13 +32,18 @@ import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.util.UAStringUtil;
 
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 @SuppressWarnings("unchecked")
 public class InboxActivity extends SherlockFragmentActivity implements
-        InboxFragment.OnMessageListener,
-        ActionBar.OnNavigationListener,
-        ActionMode.Callback,
-        MessageViewPager.ViewPagerTouchListener,
-        RichPushManager.Listener {
+InboxFragment.OnMessageListener,
+ActionBar.OnNavigationListener,
+ActionMode.Callback,
+MessageViewPager.ViewPagerTouchListener,
+RichPushManager.Listener {
 
     private static final SimpleDateFormat UA_DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
@@ -117,16 +121,16 @@ public class InboxActivity extends SherlockFragmentActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            case android.R.id.home:
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                this.startActivity(intent);
-                this.finish();
-                break;
-            case R.id.refresh:
-                inbox.setListShownNoAnimation(false);
-                RichPushManager.shared().refreshMessages();
-                break;
+        case android.R.id.home:
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            this.startActivity(intent);
+            this.finish();
+            break;
+        case R.id.refresh:
+            inbox.setListShownNoAnimation(false);
+            RichPushManager.shared().refreshMessages();
+            break;
         }
         return true;
     }
@@ -158,10 +162,10 @@ public class InboxActivity extends SherlockFragmentActivity implements
         if (RichPushManager.shared().getRichPushUser().getInbox()
                 .getMessage(this.firstMessageIdSelected).isRead()) {
             menu.findItem(R.id.mark_read_or_unread).setIcon(R.drawable.mark_unread)
-                    .setTitle(this.getString(R.string.mark_unread));
+            .setTitle(this.getString(R.string.mark_unread));
         } else {
             menu.findItem(R.id.mark_read_or_unread).setIcon(R.drawable.mark_read)
-                    .setTitle(this.getString(R.string.mark_read));
+            .setTitle(this.getString(R.string.mark_read));
         }
         return true;
     }
@@ -170,26 +174,26 @@ public class InboxActivity extends SherlockFragmentActivity implements
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         Logger.debug("onActionItemClicked");
         switch(item.getItemId()) {
-            case R.id.mark_read_or_unread:
-                if (this.getString(R.string.mark_read).equals(item.getTitle())) {
-                    RichPushManager.shared().getRichPushUser().getInbox()
-                            .markMessagesRead(this.checkedIds);
-                } else {
-                    RichPushManager.shared().getRichPushUser().getInbox()
-                            .markMessagesUnread(this.checkedIds);
-                }
-                this.actionMode.finish();
-                return true;
-            case R.id.delete:
+        case R.id.mark_read_or_unread:
+            if (this.getString(R.string.mark_read).equals(item.getTitle())) {
                 RichPushManager.shared().getRichPushUser().getInbox()
-                        .deleteMessages(this.checkedIds);
-                this.actionMode.finish();
-                return true;
-            case R.id.abs__action_mode_close_button:
-                this.actionMode.finish();
-                return true;
-            default:
-                return false;
+                .markMessagesRead(this.checkedIds);
+            } else {
+                RichPushManager.shared().getRichPushUser().getInbox()
+                .markMessagesUnread(this.checkedIds);
+            }
+            this.actionMode.finish();
+            return true;
+        case R.id.delete:
+            RichPushManager.shared().getRichPushUser().getInbox()
+            .deleteMessages(this.checkedIds);
+            this.actionMode.finish();
+            return true;
+        case R.id.abs__action_mode_close_button:
+            this.actionMode.finish();
+            return true;
+        default:
+            return false;
         }
     }
 
@@ -408,15 +412,16 @@ public class InboxActivity extends SherlockFragmentActivity implements
         public Dialog onCreateDialog(Bundle savedInstanceState) {
 
             return new AlertDialog.Builder(getActivity())
-                    .setIcon(R.drawable.icon)
-                    .setTitle("Unable to retrieve new messages")
-                    .setMessage("Please try again later")
-                    .setNeutralButton("OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                dialog.dismiss();
-                            }
-                        }
+            .setIcon(R.drawable.icon)
+            .setTitle("Unable to retrieve new messages")
+            .setMessage("Please try again later")
+            .setNeutralButton("OK",
+                    new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    dialog.dismiss();
+                }
+            }
                     )
                     .create();
         }
