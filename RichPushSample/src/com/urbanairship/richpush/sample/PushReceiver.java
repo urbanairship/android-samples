@@ -4,6 +4,7 @@
 
 package com.urbanairship.richpush.sample;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,7 +27,7 @@ public class PushReceiver extends BroadcastReceiver {
 
         String activityName = intent.getStringExtra(ACTIVITY_NAME_KEY);
         // default to the Inbox
-        Class intentClass = InboxActivity.class;
+        Class<? extends Activity> intentClass = InboxActivity.class;
         if ("home".equals(activityName)) {
             intentClass = MainActivity.class;
         } else if ("preferences".equals(activityName)) {

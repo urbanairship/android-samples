@@ -96,12 +96,12 @@ LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     @Override
-    public void onLoadFinished(Loader loader, Cursor cursor) {
+    public void onLoadFinished(@SuppressWarnings("rawtypes") Loader loader, Cursor cursor) {
         this.adapter.swapCursor(cursor);
     }
 
     @Override
-    public void onLoaderReset(Loader loader) {
+    public void onLoaderReset(@SuppressWarnings("rawtypes") Loader loader) {
         this.adapter.swapCursor(null);
     }
 
