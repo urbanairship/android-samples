@@ -5,6 +5,7 @@
 */jar/*
 urbanairship-lib-*.jar
 *.pyc
+libs/
 gen/
 build/
 build.properties
