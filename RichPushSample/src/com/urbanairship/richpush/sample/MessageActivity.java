@@ -13,7 +13,7 @@ import com.urbanairship.Logger;
 import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushManager;
 
-@SuppressWarnings("unused")
+
 public class MessageActivity extends SherlockFragmentActivity {
     protected static final String TAG = "MessageActivity";
 

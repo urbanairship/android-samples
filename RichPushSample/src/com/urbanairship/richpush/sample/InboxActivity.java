@@ -37,7 +37,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-@SuppressWarnings("unchecked")
 public class InboxActivity extends SherlockFragmentActivity implements
 InboxFragment.OnMessageListener,
 ActionBar.OnNavigationListener,
