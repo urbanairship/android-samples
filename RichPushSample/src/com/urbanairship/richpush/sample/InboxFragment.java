@@ -97,12 +97,7 @@ LoaderManager.LoaderCallbacks<Cursor> {
 
     @Override
     public void onLoadFinished(@SuppressWarnings("rawtypes") Loader loader, Cursor cursor) {
-        this.adapter.swapCursor(cursor);
-    }
-
-    @Override
-    public void onLoaderReset(@SuppressWarnings("rawtypes") Loader loader) {
-        this.adapter.swapCursor(null);
+        this.adapter.changeCursor(cursor);
     }
 
     // interfaces
