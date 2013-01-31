@@ -378,6 +378,8 @@ RichPushInbox.Listener {
         }
     };
 
+    //interface callbacks
+
     @Override
     public void onUpdateMessages(boolean success) {
 
