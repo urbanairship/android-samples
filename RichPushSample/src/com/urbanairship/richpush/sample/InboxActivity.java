@@ -28,6 +28,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.urbanairship.Logger;
 import com.urbanairship.UAirship;
 import com.urbanairship.UrbanAirshipProvider;
+import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.util.UAStringUtil;
@@ -42,8 +43,8 @@ InboxFragment.OnMessageListener,
 ActionBar.OnNavigationListener,
 ActionMode.Callback,
 MessageViewPager.ViewPagerTouchListener,
-RichPushManager.Listener {
-
+RichPushManager.Listener,
+RichPushInbox.Listener {
     private static final SimpleDateFormat UA_DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     static final String CHECKED_IDS_KEY = "com.urbanairship.richpush.sample.CHECKED_IDS";
@@ -78,6 +79,8 @@ RichPushManager.Listener {
     protected void onResume() {
         super.onResume();
         RichPushManager.shared().addListener(this);
+        RichPushInbox inbox = RichPushManager.shared().getRichPushUser().getInbox();
+        inbox.addListener(this);
         this.setState();
         this.configureActionBar();
     }
@@ -94,6 +97,8 @@ RichPushManager.Listener {
     protected void onPause() {
         super.onPause();
         RichPushManager.shared().removeListener(this);
+        RichPushInbox inbox = RichPushManager.shared().getRichPushUser().getInbox();
+        inbox.removeListener(this);
         if (panedView) {
             this.messagePager.clearViewPagerTouchListener();
         }
@@ -202,7 +207,6 @@ RichPushManager.Listener {
         this.checkedIds.clear();
         this.firstMessageIdSelected = null;
         this.actionMode = null;
-        this.inbox.refreshDisplay();
     }
 
     @Override
@@ -376,6 +380,10 @@ RichPushManager.Listener {
 
     @Override
     public void onUpdateMessages(boolean success) {
+
+        //stop the progress spinner and display the list
+        inbox.setListShownNoAnimation(true);
+
         //if the message update failed
         if (!success) {
             //show an error dialog
@@ -388,10 +396,6 @@ RichPushManager.Listener {
         if(!UAStringUtil.isEmpty(messageId)) {
             //jump straight to the message
             this.showMessage(messageId);
-        } else {
-            //otherwise stop the progress spinner and display the list
-            inbox.setListShownNoAnimation(true);
-
         }
     }
 
@@ -424,5 +428,10 @@ RichPushManager.Listener {
                     )
                     .create();
         }
+    }
+
+    public void onUpdateInbox() {
+        this.inbox.refreshDisplay();
+        this.messagePager.refreshDisplay();
     }
 }
