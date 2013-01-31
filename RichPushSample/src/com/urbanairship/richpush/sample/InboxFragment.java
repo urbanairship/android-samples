@@ -100,6 +100,12 @@ LoaderManager.LoaderCallbacks<Cursor> {
         this.adapter.changeCursor(cursor);
     }
 
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        //TODO: is this what we want here?
+        this.adapter.swapCursor(null);
+    }
+
     // interfaces
 
     public interface OnMessageListener {
