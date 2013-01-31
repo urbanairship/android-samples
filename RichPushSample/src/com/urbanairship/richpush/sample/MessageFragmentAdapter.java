@@ -19,12 +19,21 @@ public class MessageFragmentAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return MessageFragment.newInstance(this.getInbox().getMessageIdAtPosition(position));
+        String messageId = this.getInbox().getMessageIdAtPosition(position);
+        MessageFragment fragment = MessageFragment.newInstance(messageId);
+        return fragment;
     }
 
     @Override
     public int getCount() {
         return this.getInbox().getCount();
+    }
+
+    //the default implementation of this method returns POSITION_UNCHANGED, which effectively
+    //assumes that fragments will never change position or be destroyed
+    @Override
+    public int getItemPosition(Object item) {
+        return POSITION_NONE;
     }
 
     public int getMessagePosition(String messageId) {
