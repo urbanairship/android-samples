@@ -52,6 +52,10 @@ public class MessageViewPager extends ViewPager {
         return this.adapter.getMessageId(position);
     }
 
+    public void refreshDisplay() {
+        this.adapter.notifyDataSetChanged();
+    }
+
     // interfaces
 
     public static interface ViewPagerTouchListener {
