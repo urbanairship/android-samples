@@ -28,5 +28,4 @@ public class RichPushSampleInboxFragment extends InboxFragment {
         mapping.put(R.id.message_checkbox, EMPTY_COLUMN_NAME);
         return mapping;
     }
-
 }
