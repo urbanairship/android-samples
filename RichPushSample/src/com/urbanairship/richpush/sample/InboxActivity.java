@@ -411,6 +411,12 @@ RichPushInbox.Listener {
     public void onRetrieveMessage(boolean success, String messageId) {
     }
 
+    @Override
+    public void onUpdateInbox() {
+        this.inbox.refreshDisplay();
+        this.messagePager.refreshDisplay();
+    }
+
     public static class InboxLoadFailedDialogFragment extends DialogFragment {
 
         @Override
@@ -430,10 +436,5 @@ RichPushInbox.Listener {
                     )
                     .create();
         }
-    }
-
-    public void onUpdateInbox() {
-        this.inbox.refreshDisplay();
-        this.messagePager.refreshDisplay();
     }
 }
