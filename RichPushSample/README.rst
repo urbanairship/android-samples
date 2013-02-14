@@ -11,7 +11,7 @@ Dependencies
 
 Because of the UI involved, RichPushSample requires a few dependencies.  Be sure to install these first before working with the app.
 
-- Urban Airship Android Library (2.0.5+)
+- Urban Airship Android Library (2.1.1+)
 - ActionBarSherlock_ (4.2.0+) 
 - `Android Support Library`_
 
