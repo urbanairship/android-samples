@@ -1,0 +1,17 @@
+developmentAppKey = Your Development App Key
+developmentAppSecret = Your Development App Secret
+productionAppKey = Your Propduction App Key
+productionAppSecret = Your Production Secret
+
+#transport is "gcm" or "helium"
+transport = gcm
+
+gcmSender = Your GCM sender ID is your Google API project number (required for GCM)
+inProduction = false
+
+richPushEnabled = true
+
+# 2 = Log.VERBOSE; 3 = Log.DEBUG; 4 = Log.INFO;
+# 5 = Log.WARN; 6 = Log.ERROR; 7 = Log.ASSERT;
+developmentLogLevel = 3
+productionLogLevel = 6
