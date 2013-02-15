@@ -52,8 +52,8 @@ public class MainActivity extends InstrumentedActivity {
         locationButton = (Button) findViewById(R.id.location_button);
 
         boundServiceFilter = new IntentFilter();
-        boundServiceFilter.addAction(UALocationManager.ACTION_LOCATION_SERVICE_BOUND);
-        boundServiceFilter.addAction(UALocationManager.ACTION_LOCATION_SERVICE_UNBOUND);
+        boundServiceFilter.addAction(UALocationManager.getLocationIntentAction(UALocationManager.ACTION_SUFFIX_LOCATION_SERVICE_BOUND));
+        boundServiceFilter.addAction(UALocationManager.getLocationIntentAction(UALocationManager.ACTION_SUFFIX_LOCATION_SERVICE_UNBOUND));
 
         launchButton.setOnClickListener(new OnClickListener() {
 
@@ -106,7 +106,8 @@ public class MainActivity extends InstrumentedActivity {
     private BroadcastReceiver boundServiceReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (UALocationManager.ACTION_LOCATION_SERVICE_BOUND.equals(intent.getAction())) {
+            if (UALocationManager.getLocationIntentAction(UALocationManager.ACTION_SUFFIX_LOCATION_SERVICE_BOUND)
+                    .equals(intent.getAction())) {
                 locationButton.setEnabled(true);
             } else {
                 locationButton.setEnabled(false);

@@ -63,7 +63,7 @@ public class LocationActivity extends MapActivity {
         }
 
         locationFilter = new IntentFilter();
-        locationFilter.addAction(UALocationManager.ACTION_LOCATION_UPDATE);
+        locationFilter.addAction(UALocationManager.getLocationIntentAction(UALocationManager.ACTION_SUFFIX_LOCATION_UPDATE));
 
         newCriteria = new Criteria();
         newCriteria.setAccuracy(Criteria.ACCURACY_FINE);
@@ -130,7 +130,8 @@ public class LocationActivity extends MapActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (UALocationManager.ACTION_LOCATION_UPDATE.equals(intent.getAction())) {
+            if (UALocationManager.getLocationIntentAction(UALocationManager.ACTION_SUFFIX_LOCATION_UPDATE)
+                    .equals(intent.getAction())) {
                 Location newLocation = (Location) intent.getExtras().get(UALocationManager.LOCATION_KEY);
                 if (mapView != null) {
                     setNewLocationOnMap(newLocation);
@@ -178,8 +179,8 @@ public class LocationActivity extends MapActivity {
         mapView.setBuiltInZoomControls(true);
         mapView.setClickable(true);
 
-        LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT,
-                LayoutParams.FILL_PARENT, new GeoPoint(0,0), LayoutParams.CENTER);
+        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
+                LayoutParams.MATCH_PARENT, new GeoPoint(0,0), LayoutParams.CENTER);
 
         mapLayout.addView(mapView, params);
     }
