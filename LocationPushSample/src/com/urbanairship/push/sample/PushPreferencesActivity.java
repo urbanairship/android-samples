@@ -25,9 +25,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package com.urbanairship.push.sample;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -35,13 +32,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.urbanairship.UAirship;
 import com.urbanairship.analytics.InstrumentedActivity;
 import com.urbanairship.location.LocationPreferences;
 import com.urbanairship.location.UALocationManager;
 import com.urbanairship.push.PushManager;
 import com.urbanairship.push.PushPreferences;
+
+import java.util.Calendar;
+import java.util.Date;
 
 // This class represents the UI and implementation of the activity enabling users
 // to set Quiet Time preferences.
@@ -54,6 +56,9 @@ public class PushPreferencesActivity extends InstrumentedActivity {
     CheckBox quietTimeEnabled;
     CheckBox locationEnabled;
     CheckBox backgroundLocationEnabled;
+
+    TextView locationEnabledLabel;
+    TextView backgroundLocationEnabledLabel;
 
     TimePicker startTime;
     TimePicker endTime;
@@ -89,6 +94,8 @@ public class PushPreferencesActivity extends InstrumentedActivity {
         quietTimeEnabled = (CheckBox) findViewById(R.id.quiet_time_enabled);
         locationEnabled = (CheckBox) findViewById(R.id.location_enabled);
         backgroundLocationEnabled = (CheckBox) findViewById(R.id.background_location_enabled);
+        locationEnabledLabel = (TextView) findViewById(R.id.location_enabled_label);
+        backgroundLocationEnabledLabel = (TextView) findViewById(R.id.background_location_enabled_label);
 
         startTime = (TimePicker) findViewById(R.id.start_time);
         endTime = (TimePicker) findViewById(R.id.end_time);
@@ -138,8 +145,16 @@ public class PushPreferencesActivity extends InstrumentedActivity {
         quietTimeEnabled.setChecked(isQuietTimeEnabled);
         quietTimeSettingsActive(isQuietTimeEnabled);
 
-        locationEnabled.setChecked(locPrefs.isLocationEnabled());
-        backgroundLocationEnabled.setChecked(locPrefs.isBackgroundLocationEnabled());
+        if (!UAirship.shared().getAirshipConfigOptions().locationOptions.locationServiceEnabled) {
+            locationEnabled.setVisibility(View.GONE);
+            backgroundLocationEnabled.setVisibility(View.GONE);
+            locationEnabledLabel.setVisibility(View.GONE);
+            backgroundLocationEnabledLabel.setVisibility(View.GONE);
+
+        } else {
+            locationEnabled.setChecked(locPrefs.isLocationEnabled());
+            backgroundLocationEnabled.setChecked(locPrefs.isBackgroundLocationEnabled());
+        }
 
         //this will be null if a quiet time interval hasn't been set
         Date[] interval = pushPrefs.getQuietTimeInterval();
@@ -193,6 +208,9 @@ public class PushPreferencesActivity extends InstrumentedActivity {
     }
 
     private void handleLocation() {
+        if (!UAirship.shared().getAirshipConfigOptions().locationOptions.locationServiceEnabled) {
+            return;
+        }
         boolean isLocationEnabledInActivity = locationEnabled.isChecked();
         boolean isBackgroundLocationEnabledInActivity = backgroundLocationEnabled.isChecked();
 
