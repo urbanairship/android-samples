@@ -11,7 +11,6 @@ inProduction = false
 
 richPushEnabled = true
 
-# 2 = Log.VERBOSE; 3 = Log.DEBUG; 4 = Log.INFO;
-# 5 = Log.WARN; 6 = Log.ERROR; 7 = Log.ASSERT;
-developmentLogLevel = 3
-productionLogLevel = 6
+# LogLevel is "VERBOSE", "DEBUG", "INFO", "WARN", "ERROR" or "ASSERT"
+developmentLogLevel = DEBUG
+productionLogLevel = ERROR
