@@ -414,7 +414,9 @@ RichPushInbox.Listener {
     @Override
     public void onUpdateInbox() {
         this.inbox.refreshDisplay();
-        this.messagePager.refreshDisplay();
+        if (this.panedView) {
+            this.messagePager.refreshDisplay();
+        }
     }
 
     public static class InboxLoadFailedDialogFragment extends DialogFragment {
