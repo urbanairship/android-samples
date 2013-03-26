@@ -144,9 +144,7 @@ RichPushInbox.Listener {
         String navName = this.navAdapter.getItem(itemPosition);
         if (RichPushApplication.HOME_ACTIVITY.equals(navName)) {
             Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             this.startActivity(intent);
-            this.finish();
         } else if (RichPushApplication.INBOX_ACTIVITY.equals(navName)) {
             // do nothing, we're here
         }
@@ -207,14 +205,6 @@ RichPushInbox.Listener {
         this.checkedIds.clear();
         this.firstMessageIdSelected = null;
         this.actionMode = null;
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        this.startActivity(intent);
-        this.finish();
     }
 
     // helpers
