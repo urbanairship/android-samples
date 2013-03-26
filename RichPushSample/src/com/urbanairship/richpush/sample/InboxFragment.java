@@ -112,6 +112,4 @@ LoaderManager.LoaderCallbacks<Cursor> {
     public interface OnMessageListener {
         void onMessageSelected(RichPushMessage message);
     }
-
-
 }
