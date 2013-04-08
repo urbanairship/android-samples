@@ -4,7 +4,6 @@
 
 package com.urbanairship.richpush.sample;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -195,14 +194,6 @@ public class PushPreferencesActivity extends SherlockFragmentActivity {
         }
 
         this.handleLocation();
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        this.startActivity(intent);
-        this.finish();
     }
 
     // helpers

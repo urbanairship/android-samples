@@ -56,11 +56,6 @@ ActionBar.OnNavigationListener {
     }
 
     @Override
-    public void onBackPressed() {
-        this.finish();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.getSupportMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
