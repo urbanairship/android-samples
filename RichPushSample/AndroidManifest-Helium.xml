@@ -56,19 +56,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".InboxActivity">
-            <meta-data
-		        android:name="android.support.PARENT_ACTIVITY"
-		        android:value=".MainActivity"/>
-        </activity>
-        
-        <activity android:name=".PushPreferencesActivity" >
-            <meta-data
-		        android:name="android.support.PARENT_ACTIVITY"
-		        android:value=".MainActivity"/>
-        </activity>
-        
+        <activity android:name=".InboxActivity" />
         <activity android:name=".MessageActivity" />
+        <activity android:name=".PushPreferencesActivity" />
 
         <!-- REQUIRED -->
         <receiver android:name="com.urbanairship.CoreReceiver">
