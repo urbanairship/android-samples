@@ -74,7 +74,7 @@ RichPushInbox.Listener {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        this.setPendingMessageIdFromIntent(getIntent());
+        this.setPendingMessageIdFromIntent(intent);
         this.showPendingMessageId();
     }
 
@@ -136,9 +136,7 @@ RichPushInbox.Listener {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
         case android.R.id.home:
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            this.startActivity(intent);
+            this.onBackPressed();
             break;
         case R.id.refresh:
             inbox.setListShownNoAnimation(false);
@@ -152,9 +150,7 @@ RichPushInbox.Listener {
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
         String navName = this.navAdapter.getItem(itemPosition);
         if (RichPushApplication.HOME_ACTIVITY.equals(navName)) {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            this.startActivity(intent);
+            this.onBackPressed();
         } else if (RichPushApplication.INBOX_ACTIVITY.equals(navName)) {
             // do nothing, we're here
         }
@@ -222,6 +218,8 @@ RichPushInbox.Listener {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         this.startActivity(intent);
+
+        this.finish();
     }
 
     // helpers
