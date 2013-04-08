@@ -106,7 +106,7 @@ RichPushInbox.Listener {
 
     @Override
     protected void onStop() {
-        super.onStart();
+        super.onStop();
         UAirship.shared().getAnalytics().activityStopped(this);
     }
 
@@ -205,6 +205,13 @@ RichPushInbox.Listener {
         this.checkedIds.clear();
         this.firstMessageIdSelected = null;
         this.actionMode = null;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        this.startActivity(intent);
     }
 
     // helpers
