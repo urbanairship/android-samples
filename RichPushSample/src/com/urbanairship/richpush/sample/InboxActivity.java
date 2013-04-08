@@ -139,7 +139,6 @@ RichPushInbox.Listener {
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             this.startActivity(intent);
-            this.finish();
             break;
         case R.id.refresh:
             inbox.setListShownNoAnimation(false);

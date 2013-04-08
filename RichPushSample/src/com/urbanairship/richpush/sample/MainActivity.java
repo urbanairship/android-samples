@@ -79,7 +79,6 @@ ActionBar.OnNavigationListener {
             // do nothing, we're here
         } else if (RichPushApplication.INBOX_ACTIVITY.equals(navName)) {
             Intent intent = new Intent(this, InboxActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             this.startActivity(intent);
         }
         return true;
