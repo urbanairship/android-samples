@@ -259,19 +259,6 @@ RichPushInbox.Listener {
                 });
             }
         }
-
-        //if we were launched with a message to display
-        if (!UAStringUtil.isEmpty(pendingMessageId)) {
-            //refresh messages from the server
-            inbox.setListShownNoAnimation(false);
-            RichPushManager.shared().refreshMessages();
-        } else {
-            //if we're currently already in the middle of a refresh
-            if (RichPushManager.shared().isRefreshingMessages()) {
-                //keep displaying the loading progress spinner
-                inbox.setListShownNoAnimation(false);
-            }
-        }
     }
 
     private void openInbox() {
