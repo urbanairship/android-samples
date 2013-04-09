@@ -40,6 +40,7 @@ LoaderManager.LoaderCallbacks<Cursor> {
         super.onCreate(savedInstanceState);
         this.adapter = new RichPushCursorAdapter(this.getActivity(), this.getRowLayoutId(),
                 this.createUIMapping());
+
         this.setListAdapter(this.adapter);
     }
 

@@ -56,11 +56,6 @@ ActionBar.OnNavigationListener {
     }
 
     @Override
-    public void onBackPressed() {
-        this.finish();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.getSupportMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
@@ -83,7 +78,9 @@ ActionBar.OnNavigationListener {
         if (RichPushApplication.HOME_ACTIVITY.equals(navName)) {
             // do nothing, we're here
         } else if (RichPushApplication.INBOX_ACTIVITY.equals(navName)) {
-            this.startActivity(new Intent(this, InboxActivity.class));
+            Intent intent = new Intent(this, InboxActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            this.startActivity(intent);
         }
         return true;
     }

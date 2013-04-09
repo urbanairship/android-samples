@@ -61,12 +61,21 @@ RichPushInbox.Listener {
     Set<String> checkedIds = new HashSet<String>();
     String firstMessageIdSelected;
 
+    private String pendingMessageId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.inbox);
         this.state = savedInstanceState;
         this.discoverViewType();
+        this.setPendingMessageIdFromIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        this.setPendingMessageIdFromIntent(intent);
+        this.showPendingMessageId();
     }
 
     @Override
@@ -83,6 +92,7 @@ RichPushInbox.Listener {
         inbox.addListener(this);
         this.setState();
         this.configureActionBar();
+        this.showPendingMessageId();
     }
 
     @Override
@@ -106,7 +116,7 @@ RichPushInbox.Listener {
 
     @Override
     protected void onStop() {
-        super.onStart();
+        super.onStop();
         UAirship.shared().getAnalytics().activityStopped(this);
     }
 
@@ -126,10 +136,7 @@ RichPushInbox.Listener {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
         case android.R.id.home:
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            this.startActivity(intent);
-            this.finish();
+            this.onBackPressed();
             break;
         case R.id.refresh:
             inbox.setListShownNoAnimation(false);
@@ -143,10 +150,7 @@ RichPushInbox.Listener {
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
         String navName = this.navAdapter.getItem(itemPosition);
         if (RichPushApplication.HOME_ACTIVITY.equals(navName)) {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            this.startActivity(intent);
-            this.finish();
+            this.onBackPressed();
         } else if (RichPushApplication.INBOX_ACTIVITY.equals(navName)) {
             // do nothing, we're here
         }
@@ -214,14 +218,11 @@ RichPushInbox.Listener {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         this.startActivity(intent);
+
         this.finish();
     }
 
     // helpers
-
-    private String getMessageId() {
-        return this.getIntent().getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
-    }
 
     private void setState() {
         this.inbox = (InboxFragment) this.getSupportFragmentManager().findFragmentById(R.id.inbox);
@@ -258,22 +259,6 @@ RichPushInbox.Listener {
                 });
             }
         }
-
-        String messageId = this.getMessageId();
-
-        //if we were launched with a message to display
-        if (!UAStringUtil.isEmpty(messageId)) {
-            Logger.debug("Received message id " + messageId);
-            //refresh messages from the server
-            inbox.setListShownNoAnimation(false);
-            RichPushManager.shared().refreshMessages();
-        } else {
-            //if we're currently already in the middle of a refresh
-            if (RichPushManager.shared().isRefreshingMessages()) {
-                //keep displaying the loading progress spinner
-                inbox.setListShownNoAnimation(false);
-            }
-        }
     }
 
     private void openInbox() {
@@ -306,6 +291,21 @@ RichPushInbox.Listener {
         actionBar.setListNavigationCallbacks(this.navAdapter, this);
         actionBar.setSelectedNavigationItem(this.navAdapter.getPosition(RichPushApplication.INBOX_ACTIVITY));
         this.startActionModeIfNecessary(this.firstMessageIdSelected);
+    }
+
+    private void setPendingMessageIdFromIntent(Intent intent) {
+        pendingMessageId = intent.getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
+
+        if(!UAStringUtil.isEmpty(pendingMessageId)) {
+            Logger.debug("Received message id " + pendingMessageId);
+        }
+    }
+
+    private void showPendingMessageId() {
+        if(!UAStringUtil.isEmpty(pendingMessageId)) {
+            showMessage(pendingMessageId);
+            pendingMessageId = null;
+        }
     }
 
     private void showMessage(String messageId) {
@@ -391,13 +391,6 @@ RichPushInbox.Listener {
             //show an error dialog
             DialogFragment fragment = new InboxLoadFailedDialogFragment();
             fragment.show(getSupportFragmentManager(), "dialog");
-        }
-
-        String messageId = this.getMessageId();
-        //if we were launched with a message to display
-        if(!UAStringUtil.isEmpty(messageId)) {
-            //jump straight to the message
-            this.showMessage(messageId);
         }
     }
 
