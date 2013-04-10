@@ -6,11 +6,14 @@ package com.urbanairship.richpush.sample;
 
 import android.app.Activity;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.SparseArray;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
@@ -47,7 +50,7 @@ LoaderManager.LoaderCallbacks<Cursor> {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.setEmptyText(this.getString(this.getEmptyListStringId()));
+        this.setEmptyText(getString(getEmptyListStringId()));
         this.getLoaderManager().initLoader(this.loaderId, null, this);
     }
 
@@ -102,7 +105,7 @@ LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(Loader<Cursor> loader) {https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=5&ved=0CFQQFjAE&url=http%3A%2F%2Fstackoverflow.com%2Fquestions%2F13149446%2Fandroid-fragments-when-to-use-hide-show-or-add-remove-replace&ei=FoFkUaMK7cCLAsOwgFg&usg=AFQjCNFPidJ-zAL3er_nn_IsofutRn_Rmg&bvm=bv.44990110,d.cGE
         //TODO: is this what we want here?
         this.adapter.swapCursor(null);
     }

@@ -11,12 +11,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -42,9 +42,9 @@ public class InboxActivity extends SherlockFragmentActivity implements
 InboxFragment.OnMessageListener,
 ActionBar.OnNavigationListener,
 ActionMode.Callback,
-MessageViewPager.ViewPagerTouchListener,
 RichPushManager.Listener,
 RichPushInbox.Listener {
+
     private static final SimpleDateFormat UA_DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     static final String CHECKED_IDS_KEY = "com.urbanairship.richpush.sample.CHECKED_IDS";
@@ -52,24 +52,47 @@ RichPushInbox.Listener {
 
     ActionMode actionMode;
     ArrayAdapter<String> navAdapter;
-    boolean panedView = false;
-    boolean drawerView = false;
-    Bundle state;
+    private boolean isSingleWindow;
+
     MessageViewPager messagePager;
-    ImageView handle;
     InboxFragment inbox;
     Set<String> checkedIds = new HashSet<String>();
     String firstMessageIdSelected;
 
     private String pendingMessageId;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.inbox);
-        this.state = savedInstanceState;
-        this.discoverViewType();
         this.setPendingMessageIdFromIntent(getIntent());
+
+
+
+        configureActionBar();
+
+        this.inbox = (InboxFragment) this.getSupportFragmentManager().findFragmentById(R.id.inbox);
+        this.inbox.setViewBinder(new MessageBinder());
+        this.inbox.getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        this.inbox.getListView().setBackgroundColor(Color.BLACK);
+
+        this.messagePager = (MessageViewPager) this.findViewById(R.id.message_pager);
+        this.messagePager.setOnPageChangeListener(new MessageViewPagerListener());
+        this.isSingleWindow = messagePager.getVisibility() == View.GONE;
+
+        View collapsableHandle = this.findViewById(R.id.handle);
+        if (collapsableHandle != null) {
+            configureCollaspableMessagePane(collapsableHandle);
+        }
+
+        if (savedInstanceState != null) {
+            String messageId = savedInstanceState.getString(MESSAGE_ID_KEY);
+            if (!UAStringUtil.isEmpty(messageId)) {
+                this.firstMessageIdSelected = messageId;
+                Collections.addAll(this.checkedIds, savedInstanceState.getStringArray(CHECKED_IDS_KEY));
+            }
+        }
     }
 
     @Override
@@ -84,15 +107,14 @@ RichPushInbox.Listener {
         UAirship.shared().getAnalytics().activityStarted(this);
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
         RichPushManager.shared().addListener(this);
-        RichPushInbox inbox = RichPushManager.shared().getRichPushUser().getInbox();
-        inbox.addListener(this);
-        this.setState();
-        this.configureActionBar();
-        this.showPendingMessageId();
+        RichPushManager.shared().getRichPushUser().getInbox().addListener(this);
+
+        showPendingMessageId();
     }
 
     @Override
@@ -107,11 +129,9 @@ RichPushInbox.Listener {
     protected void onPause() {
         super.onPause();
         RichPushManager.shared().removeListener(this);
-        RichPushInbox inbox = RichPushManager.shared().getRichPushUser().getInbox();
-        inbox.removeListener(this);
-        if (panedView) {
-            this.messagePager.clearViewPagerTouchListener();
-        }
+        RichPushManager.shared().getRichPushUser().getInbox().removeListener(this);
+
+        messagePager.clearViewPagerTouchListener();
     }
 
     @Override
@@ -123,12 +143,12 @@ RichPushInbox.Listener {
     @Override
     public void onMessageSelected(RichPushMessage message) {
         message.markRead();
-        this.showMessage(message.getMessageId());
+        showMessage(message.getMessageId());
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.getSupportMenuInflater().inflate(R.menu.inbox_menu, menu);
+        getSupportMenuInflater().inflate(R.menu.inbox_menu, menu);
         return true;
     }
 
@@ -136,7 +156,7 @@ RichPushInbox.Listener {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
         case android.R.id.home:
-            this.onBackPressed();
+            navigateToMain();
             break;
         case R.id.refresh:
             inbox.setListShownNoAnimation(false);
@@ -146,13 +166,16 @@ RichPushInbox.Listener {
         return true;
     }
 
+
     @Override
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
         String navName = this.navAdapter.getItem(itemPosition);
         if (RichPushApplication.HOME_ACTIVITY.equals(navName)) {
-            this.onBackPressed();
+            navigateToMain();
         } else if (RichPushApplication.INBOX_ACTIVITY.equals(navName)) {
-            // do nothing, we're here
+            if (getSupportFragmentManager().popBackStackImmediate()) {
+                messagePager.setVisibility(View.GONE);
+            }
         }
         return true;
     }
@@ -215,6 +238,16 @@ RichPushInbox.Listener {
 
     @Override
     public void onBackPressed() {
+        if (getSupportFragmentManager().popBackStackImmediate()) {
+            messagePager.setVisibility(View.GONE);
+        } else {
+            navigateToMain();
+        }
+    }
+
+    // helpers
+
+    private void navigateToMain() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         this.startActivity(intent);
@@ -222,61 +255,21 @@ RichPushInbox.Listener {
         this.finish();
     }
 
-    // helpers
-
-    private void setState() {
-        this.inbox = (InboxFragment) this.getSupportFragmentManager().findFragmentById(R.id.inbox);
-        this.inbox.setViewBinder(new MessageBinder());
-
-        if (this.state != null) {
-            String messageId = this.state.getString(MESSAGE_ID_KEY);
-            if (!UAStringUtil.isEmpty(messageId)) {
-                this.firstMessageIdSelected = messageId;
-                Collections.addAll(this.checkedIds, this.state.getStringArray(CHECKED_IDS_KEY));
+    private void configureCollaspableMessagePane(final View collapseHandle) {
+        int iconResource = this.inbox.isVisible() ? R.drawable.inbox_open : R.drawable.inbox_close;
+        collapseHandle.setBackgroundResource(iconResource);
+        collapseHandle.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (InboxActivity.this.inbox.isVisible()) {
+                    getSupportFragmentManager().beginTransaction().show(InboxActivity.this.inbox).commit();
+                    collapseHandle.setBackgroundResource(R.drawable.inbox_close);
+                } else {
+                    getSupportFragmentManager().beginTransaction().hide(InboxActivity.this.inbox).commit();
+                    collapseHandle.setBackgroundResource(R.drawable.inbox_open);
+                }
             }
-        }
-
-        if (panedView) {
-            this.inbox.getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-            this.inbox.getListView().setBackgroundColor(Color.BLACK);
-            this.messagePager = (MessageViewPager) this.findViewById(R.id.message_pager);
-            this.messagePager.setOnPageChangeListener(new MessageViewPagerListener());
-
-            if (drawerView) {
-                this.messagePager.setViewPagerTouchListener(this);
-                this.handle = (ImageView) this.findViewById(R.id.handle);
-                this.handle.setBackgroundResource(this.inbox.isVisible() ? R.drawable.inbox_open :
-                    R.drawable.inbox_close);
-                this.handle.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (InboxActivity.this.inbox.isVisible()) {
-                            InboxActivity.this.closeInbox();
-                        } else {
-                            InboxActivity.this.openInbox();
-                        }
-                    }
-                });
-            }
-        }
-    }
-
-    private void openInbox() {
-        this.getSupportFragmentManager().beginTransaction().show(InboxActivity.this.inbox).commit();
-        this.handle.setBackgroundResource(R.drawable.inbox_close);
-    }
-
-    private void closeInbox() {
-        this.getSupportFragmentManager().beginTransaction().hide(InboxActivity.this.inbox).commit();
-        this.handle.setBackgroundResource(R.drawable.inbox_open);
-    }
-
-    private void discoverViewType() {
-        if (this.findViewById(R.id.message_pane) != null) {
-            this.drawerView = this.panedView = true;
-        } else if (this.findViewById(R.id.message_pager) != null) {
-            this.panedView = true;
-        }
+        });
     }
 
     private void configureActionBar() {
@@ -309,14 +302,13 @@ RichPushInbox.Listener {
     }
 
     private void showMessage(String messageId) {
-        if (this.panedView) {
-            this.messagePager.setCurrentMessage(messageId);
-            if (this.drawerView)
-                this.closeInbox();
-        } else {
-            Intent intent = new Intent(this, MessageActivity.class);
-            intent.putExtra(MessageActivity.EXTRA_MESSAGE_ID_KEY, messageId);
-            this.startActivity(intent);
+        this.messagePager.setCurrentMessage(messageId);
+        if (isSingleWindow) {
+            FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
+            ft.hide(this.inbox);
+            ft.addToBackStack("show_message");
+            ft.commit();
+            messagePager.setVisibility(View.VISIBLE);
         }
     }
 
@@ -325,11 +317,6 @@ RichPushInbox.Listener {
             if (this.firstMessageIdSelected == null) this.firstMessageIdSelected = messageId;
             this.actionMode = this.startActionMode(this);
         }
-    }
-
-    @Override
-    public void onViewPagerTouch() {
-        if (this.inbox.isVisible()) this.closeInbox();
     }
 
     // inner-classes
@@ -382,7 +369,6 @@ RichPushInbox.Listener {
 
     @Override
     public void onUpdateMessages(boolean success) {
-
         //stop the progress spinner and display the list
         inbox.setListShownNoAnimation(true);
 
@@ -407,29 +393,23 @@ RichPushInbox.Listener {
     @Override
     public void onUpdateInbox() {
         this.inbox.refreshDisplay();
-        if (this.panedView) {
-            this.messagePager.refreshDisplay();
-        }
+        this.messagePager.refreshDisplay();
     }
 
     public static class InboxLoadFailedDialogFragment extends DialogFragment {
-
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-
             return new AlertDialog.Builder(getActivity())
             .setIcon(R.drawable.icon)
             .setTitle("Unable to retrieve new messages")
             .setMessage("Please try again later")
-            .setNeutralButton("OK",
-                    new DialogInterface.OnClickListener() {
+            .setNeutralButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int whichButton) {
                     dialog.dismiss();
                 }
-            }
-                    )
-                    .create();
+            })
+            .create();
         }
     }
 }
