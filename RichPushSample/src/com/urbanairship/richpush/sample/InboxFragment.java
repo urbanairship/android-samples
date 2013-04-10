@@ -5,23 +5,18 @@
 package com.urbanairship.richpush.sample;
 
 import android.app.Activity;
-import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
-import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
+import com.urbanairship.richpush.sample.RichPushMessageAdapter.ViewBinder;
 
-public abstract class InboxFragment extends SherlockListFragment implements
-LoaderManager.LoaderCallbacks<Cursor> {
+import java.util.List;
+
+public abstract class InboxFragment extends SherlockListFragment {
 
     public static final String EMPTY_COLUMN_NAME = "";
     public static final String ROW_LAYOUT_ID_KEY = "row_layout_id";
@@ -30,7 +25,9 @@ LoaderManager.LoaderCallbacks<Cursor> {
     final int loaderId = 0x1;
 
     OnMessageListener listener;
-    RichPushCursorAdapter adapter;
+    RichPushMessageAdapter adapter;
+    private ViewBinder binder;
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -41,34 +38,32 @@ LoaderManager.LoaderCallbacks<Cursor> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.adapter = new RichPushCursorAdapter(this.getActivity(), this.getRowLayoutId(),
-                this.createUIMapping());
-
-        this.setListAdapter(this.adapter);
+        this.adapter = new RichPushMessageAdapter(getActivity(), getRowLayoutId(), createUIMapping());
+        this.setListAdapter(adapter);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         this.setEmptyText(getString(getEmptyListStringId()));
-        this.getLoaderManager().initLoader(this.loaderId, null, this);
     }
 
     @Override
     public void onListItemClick(ListView list, View view, int position, long id) {
-        this.setSelection(position);
-        this.listener.onMessageSelected(RichPushManager.shared().getRichPushUser().getInbox()
-                .getMessageAtPosition(position));
+        this.listener.onMessageSelected(this.adapter.getItem(position));
     }
 
     // actions
 
-    public void refreshDisplay() {
-        this.adapter.notifyDataSetChanged();
+    public void refreshDisplay(List<RichPushMessage> messages) {
+        adapter.setMessages(messages);
     }
 
-    public void setViewBinder(RichPushCursorAdapter.ViewBinder binder) {
-        this.adapter.setViewBinder(binder);
+    public void setViewBinder(RichPushMessageAdapter.ViewBinder binder) {
+        this.binder = binder;
+        if (adapter != null) {
+            this.adapter.setViewBinder(binder);
+        }
     }
 
     public abstract SparseArray<String> createUIMapping();
@@ -94,24 +89,7 @@ LoaderManager.LoaderCallbacks<Cursor> {
         }
     }
 
-    @Override
-    public RichPushCursorLoader onCreateLoader(int i, Bundle bundle) {
-        return new RichPushCursorLoader(this.getActivity());
-    }
-
-    @Override
-    public void onLoadFinished(@SuppressWarnings("rawtypes") Loader loader, Cursor cursor) {
-        this.adapter.changeCursor(cursor);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=5&ved=0CFQQFjAE&url=http%3A%2F%2Fstackoverflow.com%2Fquestions%2F13149446%2Fandroid-fragments-when-to-use-hide-show-or-add-remove-replace&ei=FoFkUaMK7cCLAsOwgFg&usg=AFQjCNFPidJ-zAL3er_nn_IsofutRn_Rmg&bvm=bv.44990110,d.cGE
-        //TODO: is this what we want here?
-        this.adapter.swapCursor(null);
-    }
-
     // interfaces
-
     public interface OnMessageListener {
         void onMessageSelected(RichPushMessage message);
     }

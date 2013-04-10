@@ -11,6 +11,10 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+import com.urbanairship.richpush.RichPushMessage;
+
+import java.util.List;
+
 public class MessageViewPager extends ViewPager {
 
     MessageFragmentAdapter adapter;
@@ -44,15 +48,9 @@ public class MessageViewPager extends ViewPager {
         this.listener = null;
     }
 
-    public void setCurrentMessage(String messageId) {
-        this.setCurrentItem(this.adapter.getMessagePosition(messageId), true);
-    }
 
-    public String getMessageId(int position) {
-        return this.adapter.getMessageId(position);
-    }
-
-    public void refreshDisplay() {
+    public void refreshDisplay(List<RichPushMessage> messages) {
+        this.adapter.setRichPushMessages(messages);
         this.adapter.notifyDataSetChanged();
     }
 
@@ -61,4 +59,5 @@ public class MessageViewPager extends ViewPager {
     public static interface ViewPagerTouchListener {
         public void onViewPagerTouch();
     }
+
 }

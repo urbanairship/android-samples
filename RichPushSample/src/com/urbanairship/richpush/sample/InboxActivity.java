@@ -38,6 +38,7 @@ import com.urbanairship.util.UAStringUtil;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class InboxActivity extends SherlockFragmentActivity implements
@@ -65,6 +66,7 @@ RichPushInbox.Listener {
     String firstMessageIdSelected;
 
     private String pendingMessageId;
+    private List<RichPushMessage> messages;
 
 
     @Override
@@ -91,6 +93,8 @@ RichPushInbox.Listener {
             configureCollaspableMessagePane(collapseHandle);
         }
 
+        updateRichPushMessages();
+
         if (savedInstanceState != null) {
             String messageId = savedInstanceState.getString(MESSAGE_ID_KEY);
             if (!UAStringUtil.isEmpty(messageId)) {
@@ -98,6 +102,8 @@ RichPushInbox.Listener {
                 Collections.addAll(this.checkedIds, savedInstanceState.getStringArray(CHECKED_IDS_KEY));
             }
         }
+
+
     }
 
     @Override
@@ -324,7 +330,7 @@ RichPushInbox.Listener {
     }
 
     private void showMessage(String messageId) {
-        this.messagePager.setCurrentMessage(messageId);
+        this.messagePager.setCurrentItem(getMessagePosition(messageId));
         if (isSingleWindow) {
             FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
             ft.hide(this.inbox);
@@ -347,7 +353,7 @@ RichPushInbox.Listener {
 
     // inner-classes
 
-    class MessageBinder implements RichPushCursorAdapter.ViewBinder {
+    class MessageBinder implements RichPushMessageAdapter.ViewBinder {
         @Override
         public void setViewValue(View view, RichPushMessage message, String columnName) {
             if (columnName.equals(UrbanAirshipProvider.RichPush.COLUMN_NAME_UNREAD)) {
@@ -373,8 +379,7 @@ RichPushInbox.Listener {
     class MessageViewPagerListener extends ViewPager.SimpleOnPageChangeListener {
         @Override
         public void onPageSelected(int position) {
-            String messageId = InboxActivity.this.messagePager.getMessageId(position);
-            RichPushManager.shared().getRichPushUser().getInbox().getMessage(messageId).markRead();
+            messages.get(position).markRead();
         }
     }
 
@@ -418,8 +423,13 @@ RichPushInbox.Listener {
 
     @Override
     public void onUpdateInbox() {
-        this.inbox.refreshDisplay();
-        this.messagePager.refreshDisplay();
+        updateRichPushMessages();
+    }
+
+    private void updateRichPushMessages() {
+        messages = RichPushManager.shared().getRichPushUser().getInbox().getMessages();
+        this.inbox.refreshDisplay(messages);
+        this.messagePager.refreshDisplay(messages);
     }
 
     public static class InboxLoadFailedDialogFragment extends DialogFragment {
@@ -437,5 +447,15 @@ RichPushInbox.Listener {
             })
             .create();
         }
+    }
+
+    private int getMessagePosition(String messageId) {
+        for (int i = 0; i < messages.size(); i++) {
+            if (messages.get(i).getMessageId().equals(messageId)) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }
