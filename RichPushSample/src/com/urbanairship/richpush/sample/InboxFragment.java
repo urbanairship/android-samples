@@ -16,12 +16,9 @@ import com.urbanairship.richpush.RichPushMessage;
 import java.util.List;
 
 public abstract class InboxFragment extends SherlockListFragment {
-
     public static final String EMPTY_COLUMN_NAME = "";
     public static final String ROW_LAYOUT_ID_KEY = "row_layout_id";
     public static final String EMPTY_LIST_STRING_KEY = "empty_list_string";
-
-    final int loaderId = 0x1;
 
     OnMessageListener listener;
     RichPushMessageAdapter adapter;
@@ -52,7 +49,7 @@ public abstract class InboxFragment extends SherlockListFragment {
 
     // actions
 
-    public void refreshDisplay(List<RichPushMessage> messages) {
+    public void setMessages(List<RichPushMessage> messages) {
         adapter.setMessages(messages);
     }
 

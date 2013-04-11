@@ -39,7 +39,7 @@ public class MessageActivity extends SherlockFragmentActivity {
                 messages.get(position).markRead();
             }
         });
-        this.messagePager.refreshDisplay(messages);
+        this.messagePager.setMessages(messages);
         this.messagePager.setCurrentItem(RichPushMessageUtils.getMessagePosition(messageId, messages));
     }
 

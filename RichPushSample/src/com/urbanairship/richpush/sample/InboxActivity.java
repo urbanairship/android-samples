@@ -365,9 +365,9 @@ RichPushInbox.Listener {
 
     private void updateRichPushMessages() {
         messages = RichPushManager.shared().getRichPushUser().getInbox().getMessages();
-        this.inbox.refreshDisplay(messages);
+        this.inbox.setMessages(messages);
         if (messagePager != null) {
-            this.messagePager.refreshDisplay(messages);
+            this.messagePager.setMessages(messages);
         }
     }
 

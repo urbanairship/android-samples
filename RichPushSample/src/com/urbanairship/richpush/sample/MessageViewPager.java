@@ -49,7 +49,7 @@ public class MessageViewPager extends ViewPager {
     }
 
 
-    public void refreshDisplay(List<RichPushMessage> messages) {
+    public void setMessages(List<RichPushMessage> messages) {
         this.adapter.setRichPushMessages(messages);
         this.adapter.notifyDataSetChanged();
     }
