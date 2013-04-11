@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -32,7 +31,6 @@ import com.urbanairship.UrbanAirshipProvider;
 import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
-import com.urbanairship.richpush.sample.MessageViewPager.ViewPagerTouchListener;
 import com.urbanairship.util.UAStringUtil;
 
 import java.text.SimpleDateFormat;
@@ -56,11 +54,9 @@ RichPushInbox.Listener {
     ActionMode actionMode;
     ArrayAdapter<String> navAdapter;
     private boolean isSingleWindow;
-    private boolean hasCollapseablePane;
 
     MessageViewPager messagePager;
     InboxFragment inbox;
-    ImageView collapseHandle;
 
     Set<String> checkedIds = new HashSet<String>();
     String firstMessageIdSelected;
@@ -86,12 +82,6 @@ RichPushInbox.Listener {
         this.messagePager.setOnPageChangeListener(new MessageViewPagerListener());
 
         this.isSingleWindow = messagePager.getVisibility() == View.GONE;
-
-        collapseHandle = (ImageView) this.findViewById(R.id.handle);
-        if (collapseHandle != null) {
-            hasCollapseablePane = true;
-            configureCollaspableMessagePane(collapseHandle);
-        }
 
         updateRichPushMessages();
 
@@ -184,9 +174,14 @@ RichPushInbox.Listener {
         if (RichPushApplication.HOME_ACTIVITY.equals(navName)) {
             navigateToMain();
         } else if (RichPushApplication.INBOX_ACTIVITY.equals(navName)) {
-            if (getSupportFragmentManager().popBackStackImmediate()) {
-                messagePager.setVisibility(View.GONE);
-            }
+            //            if (getSupportFragmentManager().popBackStackImmediate()) {
+            //                messagePager.setVisibility(View.GONE);
+            //            }
+
+            Intent messageIntent = new Intent(this, MainActivity.class);
+            messageIntent.putExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY, RichPushManager.shared().getRichPushUser().getInbox().getMessages().get(0).getMessageId());
+            messageIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(messageIntent);
         }
         return true;
     }
@@ -266,40 +261,6 @@ RichPushInbox.Listener {
         this.finish();
     }
 
-    private void configureCollaspableMessagePane(final ImageView collapseHandle) {
-        int iconResource = this.inbox.isVisible() ? R.drawable.inbox_open : R.drawable.inbox_close;
-        collapseHandle.setImageResource(iconResource);
-        collapseHandle.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (inbox.isVisible()) {
-                    collapseInbox();
-                } else {
-                    revealInbox();
-                }
-            }
-        });
-
-        this.messagePager.setViewPagerTouchListener(new ViewPagerTouchListener() {
-            @Override
-            public void onViewPagerTouch() {
-                if (inbox.isVisible()) {
-                    collapseInbox();
-                }
-            }
-        });
-    }
-
-    private void collapseInbox() {
-        getSupportFragmentManager().beginTransaction().hide(InboxActivity.this.inbox).commit();
-        collapseHandle.setImageResource(R.drawable.inbox_open);
-    }
-
-    private void revealInbox() {
-        getSupportFragmentManager().beginTransaction().show(InboxActivity.this.inbox).commit();
-        collapseHandle.setImageResource(R.drawable.inbox_close);
-    }
-
     private void configureActionBar() {
         ActionBar actionBar = this.getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
@@ -330,17 +291,13 @@ RichPushInbox.Listener {
     }
 
     private void showMessage(String messageId) {
-        this.messagePager.setCurrentItem(getMessagePosition(messageId));
+        this.messagePager.setCurrentItem(RichPushMessageUtils.getMessagePosition(messageId, messages));
         if (isSingleWindow) {
             FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
             ft.hide(this.inbox);
             ft.addToBackStack("show_message");
             ft.commit();
             messagePager.setVisibility(View.VISIBLE);
-        }
-
-        if (hasCollapseablePane && inbox.isVisible()) {
-            collapseInbox();
         }
     }
 
@@ -449,13 +406,5 @@ RichPushInbox.Listener {
         }
     }
 
-    private int getMessagePosition(String messageId) {
-        for (int i = 0; i < messages.size(); i++) {
-            if (messages.get(i).getMessageId().equals(messageId)) {
-                return i;
-            }
-        }
 
-        return -1;
-    }
 }

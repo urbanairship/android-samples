@@ -9,4 +9,5 @@
     <string name="delete">Delete</string>
     <string name="preferences">Preferences</string>
     <string name="refresh">Refresh</string>
+    <string name="rich_push_message_dialog_title">Rich Push Message</string>
 </resources>

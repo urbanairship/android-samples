@@ -6,7 +6,6 @@ package com.urbanairship.richpush.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ArrayAdapter;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -18,7 +17,6 @@ import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushUser;
 import com.urbanairship.util.UAStringUtil;
 
-@SuppressWarnings("unused")
 public class MainActivity extends SherlockFragmentActivity implements
 ActionBar.OnNavigationListener {
     protected static final String TAG = "MainActivity";
@@ -33,20 +31,29 @@ ActionBar.OnNavigationListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.main);
+        this.configureActionBar();
+
         this.user = RichPushManager.shared().getRichPushUser();
+
+        // If we have a message id and its the first create, display the message in a dialog
+        String messageId = this.getIntent().getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
+        if (savedInstanceState == null && !UAStringUtil.isEmpty(messageId)) {
+            showRichPushMessage(messageId);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        String messageId = intent.getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
+        if (!UAStringUtil.isEmpty(messageId)) {
+            showRichPushMessage(messageId);
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         UAirship.shared().getAnalytics().activityStarted(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        this.configureActionBar();
-        this.displayMessageIfNecessary();
     }
 
     @Override
@@ -87,22 +94,9 @@ ActionBar.OnNavigationListener {
 
     // helpers
 
-    private void displayMessageIfNecessary() {
-        String messageId = this.getIntent().getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
-        if (!UAStringUtil.isEmpty(messageId)) {
-            MessageFragment message = MessageFragment.newInstance(messageId);
-            message.show(this.getSupportFragmentManager(), R.id.floating_message_pane, "message");
-            this.findViewById(R.id.floating_message_pane).setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void dismissMessageIfNecessary() {
-        MessageFragment message = (MessageFragment) this.getSupportFragmentManager()
-                .findFragmentByTag("message");
-        if (message != null) {
-            message.dismiss();
-            this.findViewById(R.id.floating_message_pane).setVisibility(View.INVISIBLE);
-        }
+    private void showRichPushMessage(String messageId) {
+        RichPushMessageDialogFragment message = RichPushMessageDialogFragment.newInstance(messageId);
+        message.show(this.getSupportFragmentManager(), "message");
     }
 
     private void configureActionBar() {

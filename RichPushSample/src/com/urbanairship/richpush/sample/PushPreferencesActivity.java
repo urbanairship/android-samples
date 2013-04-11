@@ -150,12 +150,6 @@ public class PushPreferencesActivity extends SherlockFragmentActivity {
         this.displayMessageIfNecessary();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        this.dismissMessageIfNecessary();
-    }
-
     // When the activity is closed, save the user's Push preferences
     @Override
     public void onStop() {
@@ -209,19 +203,9 @@ public class PushPreferencesActivity extends SherlockFragmentActivity {
 
     private void displayMessageIfNecessary() {
         String messageId = this.getIntent().getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
-        if (!UAStringUtil.isEmpty(messageId)) {
-            MessageFragment message = MessageFragment.newInstance(messageId);
-            message.show(this.getSupportFragmentManager(), R.id.floating_message_pane, "message");
-            this.findViewById(R.id.floating_message_pane).setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void dismissMessageIfNecessary() {
-        MessageFragment message = (MessageFragment) this.getSupportFragmentManager()
-                .findFragmentByTag("message");
-        if (message != null) {
-            message.dismiss();
-            this.findViewById(R.id.floating_message_pane).setVisibility(View.INVISIBLE);
+        if (!UAStringUtil.isEmpty(messageId) && getFragmentManager().findFragmentByTag("message") == null) {
+            RichPushMessageDialogFragment message = RichPushMessageDialogFragment.newInstance(messageId);
+            message.show(this.getSupportFragmentManager(), "message");
         }
     }
 
