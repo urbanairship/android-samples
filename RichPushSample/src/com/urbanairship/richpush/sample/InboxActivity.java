@@ -12,12 +12,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -26,15 +22,11 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.urbanairship.Logger;
 import com.urbanairship.UAirship;
-import com.urbanairship.UrbanAirshipProvider;
 import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.util.UAStringUtil;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -45,24 +37,18 @@ ActionMode.Callback,
 RichPushManager.Listener,
 RichPushInbox.Listener {
 
-    private static final SimpleDateFormat UA_DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
     static final String CHECKED_IDS_KEY = "com.urbanairship.richpush.sample.CHECKED_IDS";
     static final String MESSAGE_ID_KEY = "com.urbanairship.richpush.sample.FIRST_MESSAGE_ID";
 
-    ActionMode actionMode;
-    ArrayAdapter<String> navAdapter;
+    private ActionMode actionMode;
+    private ArrayAdapter<String> navAdapter;
 
-    MessageViewPager messagePager;
-    InboxFragment inbox;
-
-    RichPushInbox richPushInbox;
-
-    List<String> checkedIds = new ArrayList<String>();
+    private MessageViewPager messagePager;
+    private InboxFragment inbox;
+    private RichPushInbox richPushInbox;
 
     private String pendingMessageId;
     private List<RichPushMessage> messages;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +60,6 @@ RichPushInbox.Listener {
 
         this.richPushInbox = RichPushManager.shared().getRichPushUser().getInbox();
         this.inbox = (InboxFragment) this.getSupportFragmentManager().findFragmentById(R.id.inbox);
-        this.inbox.setViewBinder(new MessageBinder());
         this.inbox.getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         this.inbox.getListView().setBackgroundColor(Color.BLACK);
 
@@ -89,15 +74,6 @@ RichPushInbox.Listener {
         }
 
         updateRichPushMessages();
-
-        if (savedInstanceState != null) {
-            String messageId = savedInstanceState.getString(MESSAGE_ID_KEY);
-            if (!UAStringUtil.isEmpty(messageId)) {
-                Collections.addAll(this.checkedIds, savedInstanceState.getStringArray(CHECKED_IDS_KEY));
-            }
-        }
-
-
     }
 
     @Override
@@ -120,13 +96,7 @@ RichPushInbox.Listener {
         RichPushManager.shared().getRichPushUser().getInbox().addListener(this);
 
         showPendingMessageId();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
-        Logger.debug("onSaveInstanceState");
-        savedInstanceState.putStringArray(CHECKED_IDS_KEY, this.checkedIds
-                .toArray(new String[this.checkedIds.size()]));
+        startActionModeIfNecessary();
     }
 
     @Override
@@ -146,6 +116,11 @@ RichPushInbox.Listener {
     public void onMessageSelected(RichPushMessage message) {
         message.markRead();
         showMessage(message.getMessageId());
+    }
+
+    @Override
+    public void onSelectionChanged() {
+        startActionModeIfNecessary();
     }
 
     @Override
@@ -188,8 +163,8 @@ RichPushInbox.Listener {
     @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
         Logger.debug("onPrepareActionMode");
-
-        RichPushMessage firstMessage = richPushInbox.getMessage(checkedIds.get(0));
+        String firstMessageId = inbox.getSelectedMessages().get(0);
+        RichPushMessage firstMessage = richPushInbox.getMessage(firstMessageId);
         menu.findItem(R.id.mark_read).setVisible(!firstMessage.isRead());
         menu.findItem(R.id.mark_unread).setVisible(firstMessage.isRead());
 
@@ -202,13 +177,13 @@ RichPushInbox.Listener {
         Logger.debug("onActionItemClicked");
         switch(item.getItemId()) {
         case R.id.mark_read:
-            richPushInbox.markMessagesRead(new HashSet<String>(checkedIds));
+            richPushInbox.markMessagesRead(new HashSet<String>(inbox.getSelectedMessages()));
             break;
         case R.id.mark_unread:
-            richPushInbox.markMessagesUnread(new HashSet<String>(checkedIds));
+            richPushInbox.markMessagesUnread(new HashSet<String>(inbox.getSelectedMessages()));
             break;
         case R.id.delete:
-            richPushInbox.deleteMessages(new HashSet<String>(checkedIds));
+            richPushInbox.deleteMessages(new HashSet<String>(inbox.getSelectedMessages()));
             break;
         case R.id.abs__action_mode_close_button:
             break;
@@ -223,7 +198,7 @@ RichPushInbox.Listener {
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         Logger.debug("onDestroyActionMode");
-        checkedIds.clear();
+        inbox.clearSelection();
         actionMode = null;
     }
 
@@ -253,8 +228,6 @@ RichPushInbox.Listener {
                 RichPushApplication.navList);
         actionBar.setListNavigationCallbacks(this.navAdapter, this);
         actionBar.setSelectedNavigationItem(this.navAdapter.getPosition(RichPushApplication.INBOX_ACTIVITY));
-
-        startActionModeIfNecessary();
     }
 
     private void setPendingMessageIdFromIntent(Intent intent) {
@@ -283,6 +256,7 @@ RichPushInbox.Listener {
     }
 
     private void startActionModeIfNecessary() {
+        List<String> checkedIds = inbox.getSelectedMessages();
         if (actionMode != null && checkedIds.isEmpty()) {
             actionMode.finish();
             return;
@@ -290,46 +264,6 @@ RichPushInbox.Listener {
             actionMode = this.startActionMode(this);
         }
     }
-
-
-    // inner-classes
-
-    class MessageBinder implements RichPushMessageAdapter.ViewBinder {
-        @Override
-        public void setViewValue(View view, RichPushMessage message, String columnName) {
-            if (columnName.equals(UrbanAirshipProvider.RichPush.COLUMN_NAME_UNREAD)) {
-                view.setBackgroundColor(message.isRead() ? Color.BLACK : Color.YELLOW);
-            } else if (columnName.equals(UrbanAirshipProvider.RichPush.COLUMN_NAME_TITLE)) {
-                ((TextView) view).setText(message.getTitle());
-            } else if (columnName.equals(UrbanAirshipProvider.COLUMN_NAME_TIMESTAMP)) {
-                ((TextView) view).setText(UA_DATE_FORMATTER.format(message.getSentDate()));
-            } else {
-                view.setOnClickListener(InboxActivity.this.checkBoxListener);
-                view.setTag(message.getMessageId());
-                if (InboxActivity.this.checkedIds.contains(message.getMessageId())) {
-                    ((CheckBox)view).setChecked(true);
-                } else {
-                    ((CheckBox)view).setChecked(false);
-                }
-            }
-            view.setFocusable(false);
-            view.setFocusableInTouchMode(false);
-        }
-    }
-
-    OnClickListener checkBoxListener = new OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            String messageId = (String) view.getTag();
-            if (((CheckBox)view).isChecked()) {
-                checkedIds.add(messageId);
-            } else {
-                checkedIds.remove(messageId);
-            }
-
-            startActionModeIfNecessary(messageId);
-        }
-    };
 
     //interface callbacks
 
@@ -385,4 +319,6 @@ RichPushInbox.Listener {
             .create();
         }
     }
+
+
 }

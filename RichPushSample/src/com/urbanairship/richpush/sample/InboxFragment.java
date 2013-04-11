@@ -5,23 +5,34 @@
 package com.urbanairship.richpush.sample;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.urbanairship.UrbanAirshipProvider;
 import com.urbanairship.richpush.RichPushMessage;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class InboxFragment extends SherlockListFragment {
+    private static final SimpleDateFormat UA_DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
     public static final String EMPTY_COLUMN_NAME = "";
     public static final String ROW_LAYOUT_ID_KEY = "row_layout_id";
     public static final String EMPTY_LIST_STRING_KEY = "empty_list_string";
 
-    OnMessageListener listener;
-    RichPushMessageAdapter adapter;
+    private OnMessageListener listener;
+    private RichPushMessageAdapter adapter;
+    private List<String> checkedIds = new ArrayList<String>();
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -33,6 +44,8 @@ public abstract class InboxFragment extends SherlockListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.adapter = new RichPushMessageAdapter(getActivity(), getRowLayoutId(), createUIMapping());
+        adapter.setViewBinder(new MessageBinder());
+        setRetainInstance(true);
         this.setListAdapter(adapter);
     }
 
@@ -53,8 +66,12 @@ public abstract class InboxFragment extends SherlockListFragment {
         adapter.setMessages(messages);
     }
 
-    public void setViewBinder(RichPushMessageAdapter.ViewBinder binder) {
-        this.adapter.setViewBinder(binder);
+    public List<String> getSelectedMessages() {
+        return checkedIds;
+    }
+
+    public void clearSelection() {
+        checkedIds.clear();
     }
 
     public abstract SparseArray<String> createUIMapping();
@@ -83,5 +100,42 @@ public abstract class InboxFragment extends SherlockListFragment {
     // interfaces
     public interface OnMessageListener {
         void onMessageSelected(RichPushMessage message);
+        void onSelectionChanged();
+    }
+
+    // inner class
+    class MessageBinder implements RichPushMessageAdapter.ViewBinder {
+        @Override
+        public void setViewValue(View view, RichPushMessage message, String columnName) {
+            if (columnName.equals(UrbanAirshipProvider.RichPush.COLUMN_NAME_UNREAD)) {
+                view.setBackgroundColor(message.isRead() ? Color.BLACK : Color.YELLOW);
+            } else if (columnName.equals(UrbanAirshipProvider.RichPush.COLUMN_NAME_TITLE)) {
+                ((TextView) view).setText(message.getTitle());
+            } else if (columnName.equals(UrbanAirshipProvider.COLUMN_NAME_TIMESTAMP)) {
+                ((TextView) view).setText(UA_DATE_FORMATTER.format(message.getSentDate()));
+            } else {
+                view.setTag(message.getMessageId());
+                if (checkedIds.contains(message.getMessageId())) {
+                    ((CheckBox)view).setChecked(true);
+                } else {
+                    ((CheckBox)view).setChecked(false);
+                }
+
+                view.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String messageId = (String) view.getTag();
+                        if (((CheckBox)view).isChecked()) {
+                            checkedIds.add(messageId);
+                        } else {
+                            checkedIds.remove(messageId);
+                        }
+                        listener.onSelectionChanged();
+                    }
+                });
+            }
+            view.setFocusable(false);
+            view.setFocusableInTouchMode(false);
+        }
     }
 }
