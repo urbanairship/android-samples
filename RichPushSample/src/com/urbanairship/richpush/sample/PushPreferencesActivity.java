@@ -21,7 +21,6 @@ import com.urbanairship.location.LocationPreferences;
 import com.urbanairship.location.UALocationManager;
 import com.urbanairship.push.PushManager;
 import com.urbanairship.push.PushPreferences;
-import com.urbanairship.util.UAStringUtil;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -146,8 +145,6 @@ public class PushPreferencesActivity extends SherlockFragmentActivity {
             endTime.setCurrentHour(interval[1].getHours());
             endTime.setCurrentMinute(interval[1].getMinutes());
         }
-
-        this.displayMessageIfNecessary();
     }
 
     // When the activity is closed, save the user's Push preferences
@@ -197,16 +194,6 @@ public class PushPreferencesActivity extends SherlockFragmentActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         this.startActivity(intent);
         this.finish();
-    }
-
-    // helpers
-
-    private void displayMessageIfNecessary() {
-        String messageId = this.getIntent().getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
-        if (!UAStringUtil.isEmpty(messageId) && getFragmentManager().findFragmentByTag("message") == null) {
-            RichPushMessageDialogFragment message = RichPushMessageDialogFragment.newInstance(messageId);
-            message.show(this.getSupportFragmentManager(), "message");
-        }
     }
 
     private void handleLocation() {

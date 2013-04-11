@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -53,7 +52,6 @@ RichPushInbox.Listener {
 
     ActionMode actionMode;
     ArrayAdapter<String> navAdapter;
-    private boolean isSingleWindow;
 
     MessageViewPager messagePager;
     InboxFragment inbox;
@@ -79,9 +77,14 @@ RichPushInbox.Listener {
         this.inbox.getListView().setBackgroundColor(Color.BLACK);
 
         this.messagePager = (MessageViewPager) this.findViewById(R.id.message_pager);
-        this.messagePager.setOnPageChangeListener(new MessageViewPagerListener());
-
-        this.isSingleWindow = messagePager.getVisibility() == View.GONE;
+        if (messagePager != null) {
+            this.messagePager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
+                @Override
+                public void onPageSelected(int position) {
+                    messages.get(position).markRead();
+                }
+            });
+        }
 
         updateRichPushMessages();
 
@@ -131,8 +134,6 @@ RichPushInbox.Listener {
         super.onPause();
         RichPushManager.shared().removeListener(this);
         RichPushManager.shared().getRichPushUser().getInbox().removeListener(this);
-
-        messagePager.clearViewPagerTouchListener();
     }
 
     @Override
@@ -173,15 +174,6 @@ RichPushInbox.Listener {
         String navName = this.navAdapter.getItem(itemPosition);
         if (RichPushApplication.HOME_ACTIVITY.equals(navName)) {
             navigateToMain();
-        } else if (RichPushApplication.INBOX_ACTIVITY.equals(navName)) {
-            //            if (getSupportFragmentManager().popBackStackImmediate()) {
-            //                messagePager.setVisibility(View.GONE);
-            //            }
-
-            Intent messageIntent = new Intent(this, MainActivity.class);
-            messageIntent.putExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY, RichPushManager.shared().getRichPushUser().getInbox().getMessages().get(0).getMessageId());
-            messageIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(messageIntent);
         }
         return true;
     }
@@ -244,11 +236,7 @@ RichPushInbox.Listener {
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().popBackStackImmediate()) {
-            messagePager.setVisibility(View.GONE);
-        } else {
-            navigateToMain();
-        }
+        navigateToMain();
     }
 
     // helpers
@@ -291,13 +279,12 @@ RichPushInbox.Listener {
     }
 
     private void showMessage(String messageId) {
-        this.messagePager.setCurrentItem(RichPushMessageUtils.getMessagePosition(messageId, messages));
-        if (isSingleWindow) {
-            FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
-            ft.hide(this.inbox);
-            ft.addToBackStack("show_message");
-            ft.commit();
-            messagePager.setVisibility(View.VISIBLE);
+        if (messagePager != null) {
+            this.messagePager.setCurrentItem(RichPushMessageUtils.getMessagePosition(messageId, messages));
+        } else {
+            Intent intent = new Intent(this, MessageActivity.class);
+            intent.putExtra(MessageActivity.EXTRA_MESSAGE_ID_KEY, messageId);
+            this.startActivity(intent);
         }
     }
 
@@ -330,13 +317,6 @@ RichPushInbox.Listener {
             }
             view.setFocusable(false);
             view.setFocusableInTouchMode(false);
-        }
-    }
-
-    class MessageViewPagerListener extends ViewPager.SimpleOnPageChangeListener {
-        @Override
-        public void onPageSelected(int position) {
-            messages.get(position).markRead();
         }
     }
 
@@ -386,7 +366,9 @@ RichPushInbox.Listener {
     private void updateRichPushMessages() {
         messages = RichPushManager.shared().getRichPushUser().getInbox().getMessages();
         this.inbox.refreshDisplay(messages);
-        this.messagePager.refreshDisplay(messages);
+        if (messagePager != null) {
+            this.messagePager.refreshDisplay(messages);
+        }
     }
 
     public static class InboxLoadFailedDialogFragment extends DialogFragment {

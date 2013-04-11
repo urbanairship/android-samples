@@ -12,7 +12,6 @@ import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.urbanairship.richpush.RichPushMessage;
-import com.urbanairship.richpush.sample.RichPushMessageAdapter.ViewBinder;
 
 import java.util.List;
 
@@ -26,8 +25,6 @@ public abstract class InboxFragment extends SherlockListFragment {
 
     OnMessageListener listener;
     RichPushMessageAdapter adapter;
-    private ViewBinder binder;
-
 
     @Override
     public void onAttach(Activity activity) {
@@ -60,10 +57,7 @@ public abstract class InboxFragment extends SherlockListFragment {
     }
 
     public void setViewBinder(RichPushMessageAdapter.ViewBinder binder) {
-        this.binder = binder;
-        if (adapter != null) {
-            this.adapter.setViewBinder(binder);
-        }
+        this.adapter.setViewBinder(binder);
     }
 
     public abstract SparseArray<String> createUIMapping();

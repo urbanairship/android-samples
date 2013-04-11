@@ -3,6 +3,4 @@
     android:id="@+id/browser"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:minWidth="1000dp"
-    android:minHeight="1000dp"
 />

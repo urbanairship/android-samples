@@ -2,6 +2,7 @@ package com.urbanairship.richpush.sample;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.HttpAuthHandler;
 import android.webkit.WebChromeClient;
@@ -20,6 +21,8 @@ import java.lang.reflect.InvocationTargetException;
 
 public class RichPushMessageView extends WebView {
 
+    boolean isJSInterfaceAdded = false;
+
     public RichPushMessageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         configureBrowser();
@@ -35,9 +38,26 @@ public class RichPushMessageView extends WebView {
         configureBrowser();
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        // Android JB bug where it logs errors incorrectly in a view pager
+        // http://stackoverflow.com/questions/12090899/android-webview-jellybean-should-not-happen-no-rect-based-test-nodes-found
+        if (event.getAction() == MotionEvent.ACTION_DOWN){
+            int y = this.getScrollY();
+            int x = this.getScrollX();
+            this.onScrollChanged(x, y, x, y);
+        }
+
+        return super.onTouchEvent(event);
+    }
+
     @SuppressWarnings("unchecked")
     public void loadRichPushMessage(RichPushMessage message) {
-        removeJavascriptInterface(RichPushManager.getJsIdentifier());
+        if (isJSInterfaceAdded) {
+            removeJavascriptInterface(RichPushManager.getJsIdentifier());
+            isJSInterfaceAdded = false;
+        }
 
         Class<? extends RichPushMessageJavaScript> jsInterfaceClass = RichPushManager.getJsInterface();
         if (jsInterfaceClass != null) {
@@ -47,6 +67,7 @@ public class RichPushMessageView extends WebView {
                                 String.class);
                 RichPushMessageJavaScript jsInterface = constructor.newInstance(this, message.getMessageId());
                 addJavascriptInterface(jsInterface, RichPushManager.getJsIdentifier());
+                isJSInterfaceAdded = true;
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
