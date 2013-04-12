@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">Rich Push Sample</string>
     <string name="no_messages">No messages</string>
     <string name="inbox_title">Your Inbox</string>
@@ -10,7 +11,20 @@
     <string name="ok">OK</string>
     <string name="preferences">Preferences</string>
     <string name="refresh">Refresh</string>
+    <string name="push_preference_category_title">Push Preferences</string>
     <string name="rich_push_message_dialog_title">Rich Push Message</string>
     <string name="inbox_refresh_failed_dialog_title">Unable to retrieve new messages</string>
     <string name="inbox_refresh_failed_dialog_message">Please try again later</string>
+    <string name="location_preference_category_title">Location Preferences</string>
+    <string name="quite_time_enable_preference_title">Enable Quite Time</string>
+    <string name="quite_time_start_preference_title">Quite Time Start</string>
+    <string name="quite_time_end_preference_title">Quite Time End</string>
+    <string name="push_preference_title">Enable Push</string>
+    <string name="sound_preference_title">Enable Sound</string>
+    <string name="vibrate_preference_title">Enable Vibrate</string>
+    <string name="location_preference_title">Enable Location</string>
+    <string name="foreground_location_preference_title">Enable Foreground Location</string>
+    <string name="background_location_preference_title">Enable Background Location</string>
+
 </resources>
+

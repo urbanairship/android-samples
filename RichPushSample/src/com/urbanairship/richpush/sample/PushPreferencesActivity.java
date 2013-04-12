@@ -1,231 +1,173 @@
-/*
- * Copyright 2012 Urban Airship and Contributors
- */
-
 package com.urbanairship.richpush.sample;
 
-import android.content.Intent;
-import android.content.res.Configuration;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.format.DateFormat;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
-import android.widget.CheckBox;
-import android.widget.TextView;
-import android.widget.TimePicker;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.urbanairship.UAirship;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockPreferenceActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.urbanairship.location.LocationPreferences;
 import com.urbanairship.location.UALocationManager;
 import com.urbanairship.push.PushManager;
 import com.urbanairship.push.PushPreferences;
 
-import java.util.Calendar;
 import java.util.Date;
 
-// This class represents the UI and implementation of the activity enabling users
-// to set Quiet Time preferences.
+// ActionBarSherlock does not support the new PreferenceFragment, so we fall back to using
+// deprecated methods. See https://github.com/JakeWharton/ActionBarSherlock/issues/411
+@SuppressWarnings("deprecation")
+public class PushPreferencesActivity extends SherlockPreferenceActivity {
 
-public class PushPreferencesActivity extends SherlockFragmentActivity {
-
-    CheckBox pushEnabled;
-    CheckBox soundEnabled;
-    CheckBox vibrateEnabled;
-    CheckBox quietTimeEnabled;
-    CheckBox locationEnabled;
-    CheckBox backgroundLocationEnabled;
-
-    TextView locationEnabledLabel;
-    TextView backgroundLocationEnabledLabel;
-
-    TimePicker startTime;
-    TimePicker endTime;
-
-    PushPreferences pushPrefs = PushManager.shared().getPreferences();
-    LocationPreferences locPrefs = UALocationManager.shared().getPreferences();
-
-    private void pushSettingsActive(boolean active) {
-        soundEnabled.setEnabled(active);
-        vibrateEnabled.setEnabled(active);
-    }
-
-    private void quietTimeSettingsActive(boolean active) {
-        startTime.setEnabled(active);
-        endTime.setEnabled(active);
-    }
-
-    private void backgroundLocationActive(boolean active) {
-        backgroundLocationEnabled.setEnabled(active);
-    }
+    private PushPreferences pushPrefs = PushManager.shared().getPreferences();
+    private LocationPreferences locPrefs = UALocationManager.shared().getPreferences();
+    private SharedPreferences sharedPreferences;
 
     @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        Window w = getWindow();
-        w.requestFeature(Window.FEATURE_LEFT_ICON);
-        setContentView(R.layout.push_preferences_dialog);
+        // Set the actionBar to have up navigation
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayOptions(
+                    ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
+        }
 
-        pushEnabled = (CheckBox) findViewById(R.id.push_enabled);
-        soundEnabled = (CheckBox) findViewById(R.id.sound_enabled);
-        vibrateEnabled = (CheckBox) findViewById(R.id.vibrate_enabled);
-        quietTimeEnabled = (CheckBox) findViewById(R.id.quiet_time_enabled);
-        locationEnabled = (CheckBox) findViewById(R.id.location_enabled);
-        backgroundLocationEnabled = (CheckBox) findViewById(R.id.background_location_enabled);
-        locationEnabledLabel = (TextView) findViewById(R.id.location_enabled_label);
-        backgroundLocationEnabledLabel = (TextView) findViewById(R.id.background_location_enabled_label);
+        if (pushPrefs != null) {
+            this.addPreferencesFromResource(R.xml.push_preferences);
+        }
 
-        startTime = (TimePicker) findViewById(R.id.start_time);
-        endTime = (TimePicker) findViewById(R.id.end_time);
-
-        startTime.setIs24HourView(DateFormat.is24HourFormat(this));
-        endTime.setIs24HourView(DateFormat.is24HourFormat(this));
-
-        pushEnabled.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                pushSettingsActive(((CheckBox)v).isChecked());
-            }
-
-        });
-
-        quietTimeEnabled.setOnClickListener(new OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                quietTimeSettingsActive(((CheckBox)v).isChecked());
-            }
-        });
-
-        locationEnabled.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                backgroundLocationActive(((CheckBox)v).isChecked());
-            }
-        });
-
+        if (locPrefs != null) {
+            this.addPreferencesFromResource(R.xml.location_preferences);
+        }
     }
 
-    // When the activity starts, we need to fetch and display the user's current
-    // Push preferences in the view, if applicable.
     @Override
     public void onStart() {
         super.onStart();
-        UAirship.shared().getAnalytics().activityStarted(this);
+        this.sharedPreferences = this.getPreferenceManager().getSharedPreferences();
 
-        boolean isPushEnabled = pushPrefs.isPushEnabled();
-        pushEnabled.setChecked(isPushEnabled);
-        soundEnabled.setChecked(pushPrefs.isSoundEnabled());
-        vibrateEnabled.setChecked(pushPrefs.isVibrateEnabled());
-        pushSettingsActive(isPushEnabled);
-
-        boolean isQuietTimeEnabled = pushPrefs.isQuietTimeEnabled();
-        quietTimeEnabled.setChecked(isQuietTimeEnabled);
-        quietTimeSettingsActive(isQuietTimeEnabled);
-
-        if (!UAirship.shared().getAirshipConfigOptions().locationOptions.locationServiceEnabled) {
-            locationEnabled.setVisibility(View.GONE);
-            backgroundLocationEnabled.setVisibility(View.GONE);
-            locationEnabledLabel.setVisibility(View.GONE);
-            backgroundLocationEnabledLabel.setVisibility(View.GONE);
-
-        } else {
-            locationEnabled.setChecked(locPrefs.isLocationEnabled());
-            backgroundLocationEnabled.setChecked(locPrefs.isBackgroundLocationEnabled());
-        }
-
-        //this will be null if a quiet time interval hasn't been set
-        Date[] interval = pushPrefs.getQuietTimeInterval();
-        if(interval != null) {
-            startTime.setCurrentHour(interval[0].getHours());
-            startTime.setCurrentMinute(interval[0].getMinutes());
-            endTime.setCurrentHour(interval[1].getHours());
-            endTime.setCurrentMinute(interval[1].getMinutes());
-        }
+        // Sets the shared Preferences to what we currently have stored
+        // in the urban airship preferences
+        restorePreferences();
     }
 
-    // When the activity is closed, save the user's Push preferences
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void onStop() {
         super.onStop();
-        UAirship.shared().getAnalytics().activityStopped(this);
 
-        boolean isPushEnabledInActivity = pushEnabled.isChecked();
-        boolean isQuietTimeEnabledInActivity = quietTimeEnabled.isChecked();
+        // We only want to sync the preferences
+        // after we are done changing them so services do
+        // not repeatedly start and stop.
+        setPreferences();
+    }
 
-        if(isPushEnabledInActivity) {
-            PushManager.enablePush();
+    /**
+     * Restores the Urban Airship preferences into the built in android shared preferences
+     */
+    private void restorePreferences() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        if(pushPrefs != null) {
+            editor.putBoolean("push_preference", pushPrefs.isPushEnabled());
+            editor.putBoolean("sound_preference", pushPrefs.isSoundEnabled());
+            editor.putBoolean("vibrate_preference", pushPrefs.isVibrateEnabled());
+            editor.putBoolean("quite_time_enabled_preference", pushPrefs.isQuietTimeEnabled());
+
+            Date[] quiteDates = pushPrefs.getQuietTimeInterval();
+            if( quiteDates != null) {
+                editor.putLong("quite_time_start_preference", quiteDates[0].getTime());
+                editor.putLong("quite_time_end_preference", quiteDates[1].getTime());
+            }
         }
-        else {
+
+        if (locPrefs != null) {
+            editor.putBoolean("location_preference", locPrefs.isLocationEnabled());
+            editor.putBoolean("background_location_preference", locPrefs.isBackgroundLocationEnabled());
+            editor.putBoolean("foreground_location_preference", locPrefs.isForegroundLocationEnabled());
+        }
+
+        editor.apply();
+    }
+
+    /**
+     * Tries to set both push preferences and location preferences if available
+     */
+    private void setPreferences() {
+        if (pushPrefs != null) {
+            setPushPreferences();
+        }
+
+        if (locPrefs != null) {
+            setLocationPreferences();
+        }
+    }
+
+    /**
+     * Sets the Push Urban Airship preferences from the android shared preferences
+     */
+    private void setPushPreferences() {
+        boolean isPushEnabled = sharedPreferences.getBoolean("push_preference", pushPrefs.isPushEnabled());
+        boolean isSoundEnabled = sharedPreferences.getBoolean("sound_preference", pushPrefs.isSoundEnabled());
+        boolean isVibrateEnabled = sharedPreferences.getBoolean("vibrate_preference", pushPrefs.isVibrateEnabled());
+        boolean isQuiteTimeEnabledInActivity = sharedPreferences.getBoolean("quite_time_enabled_preference", pushPrefs.isQuietTimeEnabled());
+
+        if(isPushEnabled) {
+            PushManager.enablePush();
+        } else {
             PushManager.disablePush();
         }
 
-        pushPrefs.setSoundEnabled(soundEnabled.isChecked());
-        pushPrefs.setVibrateEnabled(vibrateEnabled.isChecked());
+        pushPrefs.setSoundEnabled(isSoundEnabled);
+        pushPrefs.setVibrateEnabled(isVibrateEnabled);
+        pushPrefs.setQuietTimeEnabled(isQuiteTimeEnabledInActivity);
 
-        pushPrefs.setQuietTimeEnabled(isQuietTimeEnabledInActivity);
+        if (isQuiteTimeEnabledInActivity) {
+            long startTimeMillis = sharedPreferences.getLong("quite_time_start_preference", -1);
+            long endTimeMillis = sharedPreferences.getLong("quite_time_end_preference", -1);
 
-        if(isQuietTimeEnabledInActivity) {
+            Date startDate = startTimeMillis == -1 ? null : new Date(startTimeMillis);
+            Date endDate = endTimeMillis == -1 ? null : new Date(endTimeMillis);
 
-            // Grab the start date.
-            Calendar cal = Calendar.getInstance();
-            cal.set(Calendar.HOUR_OF_DAY, startTime.getCurrentHour());
-            cal.set(Calendar.MINUTE, startTime.getCurrentMinute());
-            Date startDate = cal.getTime();
-
-            // Prepare the end date.
-            cal = Calendar.getInstance();
-            cal.set(Calendar.HOUR_OF_DAY, endTime.getCurrentHour());
-            cal.set(Calendar.MINUTE, endTime.getCurrentMinute());
-            Date endDate = cal.getTime();
-
-            pushPrefs.setQuietTimeInterval(startDate, endDate);
+            if (startDate != null && endDate != null) {
+                pushPrefs.setQuietTimeInterval(startDate, endDate);
+            }
         }
-
-        this.handleLocation();
     }
 
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        this.startActivity(intent);
-        this.finish();
-    }
+    /**
+     * Sets the Location Urban Airship preferences from the android shared preferences
+     */
+    private void setLocationPreferences() {
+        boolean isLocationEnabled = sharedPreferences.getBoolean("location_preference", locPrefs.isLocationEnabled());
+        boolean isBackgroundEnabled = sharedPreferences.getBoolean("background_location_preference", locPrefs.isBackgroundLocationEnabled());
+        boolean isForegroundEnabled = sharedPreferences.getBoolean("foreground_location_preference", locPrefs.isForegroundLocationEnabled());
 
-    private void handleLocation() {
-        if (!UAirship.shared().getAirshipConfigOptions().locationOptions.locationServiceEnabled) {
-            return;
-        }
-        boolean isLocationEnabledInActivity = locationEnabled.isChecked();
-        boolean isBackgroundLocationEnabledInActivity = backgroundLocationEnabled.isChecked();
-
-        if (isLocationEnabledInActivity) {
+        if (isLocationEnabled) {
             UALocationManager.enableLocation();
-            handleBackgroundLocationPreference(isBackgroundLocationEnabledInActivity);
         } else {
-            handleBackgroundLocationPreference(isBackgroundLocationEnabledInActivity);
             UALocationManager.disableLocation();
         }
 
-    }
-
-    private void handleBackgroundLocationPreference(boolean backgroundLocationEnabled) {
-        if (backgroundLocationEnabled) {
+        if (isBackgroundEnabled) {
             UALocationManager.enableBackgroundLocation();
         } else {
             UALocationManager.disableBackgroundLocation();
         }
-    }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // DO NOT REMOVE, just having it here seems to fix a weird issue with
-        // Time picker where the fields would go blank on rotation.
+        if (isForegroundEnabled) {
+            UALocationManager.enableForegroundLocation();
+        } else {
+            UALocationManager.disableForegroundLocation();
+        }
     }
-
 }

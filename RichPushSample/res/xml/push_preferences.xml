@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory 
+        android:title="@string/push_preference_category_title" >
+        
+	    <CheckBoxPreference
+	        android:key="push_preference"
+	        android:title="@string/push_preference_title" />
+	    
+	    <CheckBoxPreference
+	        android:dependency="push_preference"
+	        android:key="sound_preference"
+	        android:title="@string/sound_preference_title" />
+	    
+	    <CheckBoxPreference
+	        android:dependency="push_preference"
+	        android:key="vibrate_preference"
+	        android:title="@string/vibrate_preference_title" />
+	    
+	    <CheckBoxPreference
+	        android:dependency="push_preference"
+	        android:key="quite_time_enabled_preference"
+	        android:title="@string/quite_time_enable_preference_title" />
+		
+	    <com.urbanairship.richpush.sample.TimePickerPreference
+	        android:dependency="quite_time_enabled_preference"
+	        android:key="quite_time_start_preference"
+	        android:title="@string/quite_time_start_preference_title" />
+	    
+	    <com.urbanairship.richpush.sample.TimePickerPreference
+	        android:dependency="quite_time_enabled_preference"
+	        android:key="quite_time_end_preference"
+	        android:title="@string/quite_time_end_preference_title" />
+	    
+    </PreferenceCategory>
+    
+</PreferenceScreen>
