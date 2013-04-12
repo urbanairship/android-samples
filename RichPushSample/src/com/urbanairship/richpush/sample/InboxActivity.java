@@ -54,7 +54,6 @@ RichPushInbox.Listener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.inbox);
-        this.setPendingMessageIdFromIntent(getIntent());
 
         configureActionBar();
 
@@ -69,8 +68,15 @@ RichPushInbox.Listener {
                 @Override
                 public void onPageSelected(int position) {
                     messages.get(position).markRead();
+
+                    // highlight the current item you are viewing in the inbox
+                    inbox.getListView().setItemChecked(position, true);
                 }
             });
+        }
+
+        if (savedInstanceState == null) {
+            this.setPendingMessageIdFromIntent(getIntent());
         }
 
         updateRichPushMessages();

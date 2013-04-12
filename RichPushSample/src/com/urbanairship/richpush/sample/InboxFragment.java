@@ -72,6 +72,7 @@ public abstract class InboxFragment extends SherlockListFragment {
 
     public void clearSelection() {
         checkedIds.clear();
+        adapter.notifyDataSetChanged();
     }
 
     public abstract SparseArray<String> createUIMapping();

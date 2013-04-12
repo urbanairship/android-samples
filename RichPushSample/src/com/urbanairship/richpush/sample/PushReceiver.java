@@ -22,6 +22,7 @@ public class PushReceiver extends BroadcastReceiver {
             return;
         }
 
+        // Ignore any non rich push notifications
         if (!RichPushManager.isRichPushMessage(intent.getExtras())) {
             return;
         }
