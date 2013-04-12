@@ -5,12 +5,13 @@ import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TimePicker;
-import android.widget.TimePicker.OnTimeChangedListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class TimePickerPreference extends DialogPreference implements OnTimeChangedListener {
+public class TimePickerPreference extends DialogPreference {
+    private TimePicker timePicker = null;
+
     public TimePickerPreference(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
@@ -21,8 +22,7 @@ public class TimePickerPreference extends DialogPreference implements OnTimeChan
 
     @Override
     protected View onCreateDialogView() {
-        TimePicker timePicker = new TimePicker(getContext());
-        timePicker.setOnTimeChangedListener(this);
+        timePicker = new TimePicker(getContext());
 
         Calendar calendar = getCalendar();
         timePicker.setCurrentHour(calendar.get(Calendar.HOUR_OF_DAY));
@@ -32,15 +32,16 @@ public class TimePickerPreference extends DialogPreference implements OnTimeChan
     }
 
     @Override
-    public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        calendar.set(Calendar.MINUTE, minute);
+    public void onDialogClosed(boolean positiveResult) {
+        if (positiveResult) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
+            calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
 
-        this.persistLong(calendar.getTimeInMillis());
-        this.setSummary(getSummary());
+            this.persistLong(calendar.getTimeInMillis());
+            this.setSummary(getSummary());
+        }
     }
-
 
     @Override
     public String getSummary() {
