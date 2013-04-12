@@ -54,7 +54,7 @@ public class PushPreferencesActivity extends SherlockPreferenceActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
         }
@@ -77,14 +77,14 @@ public class PushPreferencesActivity extends SherlockPreferenceActivity {
     private void restorePreferences() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        if(pushPrefs != null) {
+        if (pushPrefs != null) {
             editor.putBoolean("push_preference", pushPrefs.isPushEnabled());
             editor.putBoolean("sound_preference", pushPrefs.isSoundEnabled());
             editor.putBoolean("vibrate_preference", pushPrefs.isVibrateEnabled());
             editor.putBoolean("quiet_time_enabled_preference", pushPrefs.isQuietTimeEnabled());
 
             Date[] quietDates = pushPrefs.getQuietTimeInterval();
-            if( quietDates != null) {
+            if (quietDates != null) {
                 editor.putLong("quiet_time_start_preference", quietDates[0].getTime());
                 editor.putLong("quiet_time_end_preference", quietDates[1].getTime());
             }
@@ -121,7 +121,7 @@ public class PushPreferencesActivity extends SherlockPreferenceActivity {
         boolean isVibrateEnabled = sharedPreferences.getBoolean("vibrate_preference", pushPrefs.isVibrateEnabled());
         boolean isQuietTimeEnabledInActivity = sharedPreferences.getBoolean("quiet_time_enabled_preference", pushPrefs.isQuietTimeEnabled());
 
-        if(isPushEnabled) {
+        if (isPushEnabled) {
             PushManager.enablePush();
         } else {
             PushManager.disablePush();
