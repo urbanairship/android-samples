@@ -145,6 +145,9 @@ RichPushInbox.Listener {
             inbox.setListShownNoAnimation(false);
             RichPushManager.shared().refreshMessages();
             break;
+        case R.id.preferences:
+            this.startActivity(new Intent(this, PushPreferencesActivity.class));
+            break;
         }
         return true;
     }
