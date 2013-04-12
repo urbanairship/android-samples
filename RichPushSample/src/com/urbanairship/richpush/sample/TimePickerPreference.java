@@ -53,7 +53,7 @@ public class TimePickerPreference extends DialogPreference {
         Calendar calendar = Calendar.getInstance();
 
         long persistedTime = this.getPersistedLong(-1);
-        if(persistedTime != -1) {
+        if (persistedTime != -1) {
             calendar.setTimeInMillis(persistedTime);
         }
 
