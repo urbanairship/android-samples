@@ -27,6 +27,8 @@ ActionBar.OnNavigationListener {
     ArrayAdapter<String> navAdapter;
     RichPushUser user;
 
+    String pendingMessageId = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,18 +38,14 @@ ActionBar.OnNavigationListener {
         this.user = RichPushManager.shared().getRichPushUser();
 
         // If we have a message id and its the first create, display the message in a dialog
-        String messageId = this.getIntent().getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
-        if (savedInstanceState == null && !UAStringUtil.isEmpty(messageId)) {
-            showRichPushMessage(messageId);
+        if (savedInstanceState == null) {
+            pendingMessageId = getIntent().getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
         }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        String messageId = intent.getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
-        if (!UAStringUtil.isEmpty(messageId)) {
-            showRichPushMessage(messageId);
-        }
+        pendingMessageId = intent.getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
     }
 
     @Override
@@ -58,8 +56,21 @@ ActionBar.OnNavigationListener {
 
     @Override
     protected void onStop() {
-        super.onStart();
+        super.onStop();
         UAirship.shared().getAnalytics().activityStopped(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setNavigationToMainActivity();
+
+        if (!UAStringUtil.isEmpty(pendingMessageId)) {
+            showRichPushMessage(pendingMessageId);
+            pendingMessageId = null;
+        }
+
+        this.getSupportActionBar().setSelectedNavigationItem(this.navAdapter.getPosition("Home"));
     }
 
     @Override
@@ -89,6 +100,7 @@ ActionBar.OnNavigationListener {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             this.startActivity(intent);
         }
+
         return true;
     }
 
@@ -108,6 +120,10 @@ ActionBar.OnNavigationListener {
         this.navAdapter = new ArrayAdapter<String>(this, R.layout.sherlock_spinner_dropdown_item,
                 RichPushApplication.navList);
         actionBar.setListNavigationCallbacks(this.navAdapter, this);
-        actionBar.setSelectedNavigationItem(this.navAdapter.getPosition("Home"));
+    }
+
+    private void setNavigationToMainActivity() {
+        int position = this.navAdapter.getPosition("Home");
+        getSupportActionBar().setSelectedNavigationItem(position);
     }
 }

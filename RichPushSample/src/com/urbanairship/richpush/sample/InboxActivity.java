@@ -85,7 +85,6 @@ RichPushInbox.Listener {
     @Override
     protected void onNewIntent(Intent intent) {
         this.setPendingMessageIdFromIntent(intent);
-        this.showPendingMessageId();
     }
 
     @Override
@@ -98,6 +97,7 @@ RichPushInbox.Listener {
     @Override
     protected void onResume() {
         super.onResume();
+        setNavigationToInboxActivity();
         RichPushManager.shared().addListener(this);
         RichPushManager.shared().getRichPushUser().getInbox().addListener(this);
 
@@ -233,7 +233,11 @@ RichPushInbox.Listener {
         this.navAdapter = new ArrayAdapter<String>(this, R.layout.sherlock_spinner_dropdown_item,
                 RichPushApplication.navList);
         actionBar.setListNavigationCallbacks(this.navAdapter, this);
-        actionBar.setSelectedNavigationItem(this.navAdapter.getPosition(RichPushApplication.INBOX_ACTIVITY));
+    }
+
+    private void setNavigationToInboxActivity() {
+        int position = this.navAdapter.getPosition(RichPushApplication.INBOX_ACTIVITY);
+        getSupportActionBar().setSelectedNavigationItem(position);
     }
 
     private void setPendingMessageIdFromIntent(Intent intent) {
@@ -245,7 +249,7 @@ RichPushInbox.Listener {
     }
 
     private void showPendingMessageId() {
-        if(!UAStringUtil.isEmpty(pendingMessageId)) {
+        if (!UAStringUtil.isEmpty(pendingMessageId)) {
             showMessage(pendingMessageId);
             pendingMessageId = null;
         }
