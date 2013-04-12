@@ -16,9 +16,9 @@
     <string name="inbox_refresh_failed_dialog_title">Unable to retrieve new messages</string>
     <string name="inbox_refresh_failed_dialog_message">Please try again later</string>
     <string name="location_preference_category_title">Location Preferences</string>
-    <string name="quite_time_enable_preference_title">Enable Quite Time</string>
-    <string name="quite_time_start_preference_title">Quite Time Start</string>
-    <string name="quite_time_end_preference_title">Quite Time End</string>
+    <string name="quiet_time_enable_preference_title">Enable Quiet Time</string>
+    <string name="quiet_time_start_preference_title">Quiet Time Start</string>
+    <string name="quiet_time_end_preference_title">Quiet Time End</string>
     <string name="push_preference_title">Enable Push</string>
     <string name="sound_preference_title">Enable Sound</string>
     <string name="vibrate_preference_title">Enable Vibrate</string>

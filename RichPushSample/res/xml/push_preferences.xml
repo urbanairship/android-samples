@@ -20,18 +20,18 @@
 	    
 	    <CheckBoxPreference
 	        android:dependency="push_preference"
-	        android:key="quite_time_enabled_preference"
-	        android:title="@string/quite_time_enable_preference_title" />
+	        android:key="quiet_time_enabled_preference"
+	        android:title="@string/quiet_time_enable_preference_title" />
 		
 	    <com.urbanairship.richpush.sample.TimePickerPreference
-	        android:dependency="quite_time_enabled_preference"
-	        android:key="quite_time_start_preference"
-	        android:title="@string/quite_time_start_preference_title" />
+	        android:dependency="quiet_time_enabled_preference"
+	        android:key="quiet_time_start_preference"
+	        android:title="@string/quiet_time_start_preference_title" />
 	    
 	    <com.urbanairship.richpush.sample.TimePickerPreference
-	        android:dependency="quite_time_enabled_preference"
-	        android:key="quite_time_end_preference"
-	        android:title="@string/quite_time_end_preference_title" />
+	        android:dependency="quiet_time_enabled_preference"
+	        android:key="quiet_time_end_preference"
+	        android:title="@string/quiet_time_end_preference_title" />
 	    
     </PreferenceCategory>
     

@@ -81,12 +81,12 @@ public class PushPreferencesActivity extends SherlockPreferenceActivity {
             editor.putBoolean("push_preference", pushPrefs.isPushEnabled());
             editor.putBoolean("sound_preference", pushPrefs.isSoundEnabled());
             editor.putBoolean("vibrate_preference", pushPrefs.isVibrateEnabled());
-            editor.putBoolean("quite_time_enabled_preference", pushPrefs.isQuietTimeEnabled());
+            editor.putBoolean("quiet_time_enabled_preference", pushPrefs.isQuietTimeEnabled());
 
-            Date[] quiteDates = pushPrefs.getQuietTimeInterval();
-            if( quiteDates != null) {
-                editor.putLong("quite_time_start_preference", quiteDates[0].getTime());
-                editor.putLong("quite_time_end_preference", quiteDates[1].getTime());
+            Date[] quietDates = pushPrefs.getQuietTimeInterval();
+            if( quietDates != null) {
+                editor.putLong("quiet_time_start_preference", quietDates[0].getTime());
+                editor.putLong("quiet_time_end_preference", quietDates[1].getTime());
             }
         }
 
@@ -119,7 +119,7 @@ public class PushPreferencesActivity extends SherlockPreferenceActivity {
         boolean isPushEnabled = sharedPreferences.getBoolean("push_preference", pushPrefs.isPushEnabled());
         boolean isSoundEnabled = sharedPreferences.getBoolean("sound_preference", pushPrefs.isSoundEnabled());
         boolean isVibrateEnabled = sharedPreferences.getBoolean("vibrate_preference", pushPrefs.isVibrateEnabled());
-        boolean isQuiteTimeEnabledInActivity = sharedPreferences.getBoolean("quite_time_enabled_preference", pushPrefs.isQuietTimeEnabled());
+        boolean isQuietTimeEnabledInActivity = sharedPreferences.getBoolean("quiet_time_enabled_preference", pushPrefs.isQuietTimeEnabled());
 
         if(isPushEnabled) {
             PushManager.enablePush();
@@ -129,11 +129,11 @@ public class PushPreferencesActivity extends SherlockPreferenceActivity {
 
         pushPrefs.setSoundEnabled(isSoundEnabled);
         pushPrefs.setVibrateEnabled(isVibrateEnabled);
-        pushPrefs.setQuietTimeEnabled(isQuiteTimeEnabledInActivity);
+        pushPrefs.setQuietTimeEnabled(isQuietTimeEnabledInActivity);
 
-        if (isQuiteTimeEnabledInActivity) {
-            long startTimeMillis = sharedPreferences.getLong("quite_time_start_preference", -1);
-            long endTimeMillis = sharedPreferences.getLong("quite_time_end_preference", -1);
+        if (isQuietTimeEnabledInActivity) {
+            long startTimeMillis = sharedPreferences.getLong("quiet_time_start_preference", -1);
+            long endTimeMillis = sharedPreferences.getLong("quiet_time_end_preference", -1);
 
             Date startDate = startTimeMillis == -1 ? null : new Date(startTimeMillis);
             Date endDate = endTimeMillis == -1 ? null : new Date(endTimeMillis);
