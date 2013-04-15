@@ -23,12 +23,12 @@
 	        android:key="quiet_time_enabled_preference"
 	        android:title="@string/quiet_time_enable_preference_title" />
 		
-	    <com.urbanairship.richpush.sample.TimePickerPreference
+	    <com.urbanairship.richpush.sample.QuietTimePickerPreference
 	        android:dependency="quiet_time_enabled_preference"
 	        android:key="quiet_time_start_preference"
 	        android:title="@string/quiet_time_start_preference_title" />
 	    
-	    <com.urbanairship.richpush.sample.TimePickerPreference
+	    <com.urbanairship.richpush.sample.QuietTimePickerPreference
 	        android:dependency="quiet_time_enabled_preference"
 	        android:key="quiet_time_end_preference"
 	        android:title="@string/quiet_time_end_preference_title" />

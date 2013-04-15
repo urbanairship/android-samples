@@ -9,14 +9,14 @@ import android.widget.TimePicker;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class TimePickerPreference extends DialogPreference {
+public class QuietTimePickerPreference extends DialogPreference {
     private TimePicker timePicker = null;
 
-    public TimePickerPreference(Context context, AttributeSet attrs, int defStyle) {
+    public QuietTimePickerPreference(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
-    public TimePickerPreference(Context context, AttributeSet attrs) {
+    public QuietTimePickerPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
