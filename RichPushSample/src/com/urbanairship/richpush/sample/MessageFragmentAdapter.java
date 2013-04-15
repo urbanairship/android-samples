@@ -8,10 +8,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.urbanairship.richpush.RichPushInbox;
-import com.urbanairship.richpush.RichPushManager;
+import com.urbanairship.richpush.RichPushMessage;
+
+import java.util.List;
 
 public class MessageFragmentAdapter extends FragmentStatePagerAdapter {
+
+    private List<RichPushMessage> messages;
 
     public MessageFragmentAdapter(FragmentManager manager) {
         super(manager);
@@ -19,14 +22,21 @@ public class MessageFragmentAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        String messageId = this.getInbox().getMessageIdAtPosition(position);
+        if (messages == null || position >= messages.size()) {
+            return null;
+        }
+
+        String messageId = messages.get(position).getMessageId();
         MessageFragment fragment = MessageFragment.newInstance(messageId);
         return fragment;
     }
 
     @Override
     public int getCount() {
-        return this.getInbox().getCount();
+        if (messages == null) {
+            return 0;
+        }
+        return messages.size();
     }
 
     //the default implementation of this method returns POSITION_UNCHANGED, which effectively
@@ -36,18 +46,10 @@ public class MessageFragmentAdapter extends FragmentStatePagerAdapter {
         return POSITION_NONE;
     }
 
-    public int getMessagePosition(String messageId) {
-        return this.getInbox().getMessagePosition(messageId);
-    }
-
-    public String getMessageId(int position) {
-        return this.getInbox().getMessageIdAtPosition(position);
-    }
-
     // helpers
 
-    private RichPushInbox getInbox() {
-        return RichPushManager.shared().getRichPushUser().getInbox();
+    public void setRichPushMessages(List<RichPushMessage> messages) {
+        this.messages = messages;
     }
 
 }

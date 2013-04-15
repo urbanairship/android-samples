@@ -61,8 +61,8 @@
         </activity>
 
         <activity android:name=".InboxActivity" />
-        <activity android:name=".MessageActivity" />
         <activity android:name=".PushPreferencesActivity" />
+        <activity android:name=".MessageActivity" />
         
         <!-- REQUIRED for Urban Airship GCM-->
         <receiver android:name="com.urbanairship.CoreReceiver" />

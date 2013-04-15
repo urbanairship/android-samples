@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:weightSum="100">
-
-    <fragment
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
+    
+    <fragment 
         class="com.urbanairship.richpush.sample.RichPushSampleInboxFragment"
         android:id="@+id/inbox"
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:layout_weight="35"
-    />
+        android:layout_width="250dp"
+        android:layout_height="fill_parent" />
 
     <com.urbanairship.richpush.sample.MessageViewPager
         android:id="@+id/message_pager"
-        android:layout_width="0dp"
         android:layout_height="fill_parent"
-        android:layout_weight="65"
-    />
+        android:layout_width="fill_parent" />
 
 </LinearLayout>

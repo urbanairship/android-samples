@@ -6,7 +6,6 @@ package com.urbanairship.richpush.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ArrayAdapter;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -18,7 +17,6 @@ import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushUser;
 import com.urbanairship.util.UAStringUtil;
 
-@SuppressWarnings("unused")
 public class MainActivity extends SherlockFragmentActivity implements
 ActionBar.OnNavigationListener {
     protected static final String TAG = "MainActivity";
@@ -29,11 +27,25 @@ ActionBar.OnNavigationListener {
     ArrayAdapter<String> navAdapter;
     RichPushUser user;
 
+    String pendingMessageId = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.main);
+        this.configureActionBar();
+
         this.user = RichPushManager.shared().getRichPushUser();
+
+        // If we have a message id and its the first create, display the message in a dialog
+        if (savedInstanceState == null) {
+            pendingMessageId = getIntent().getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        pendingMessageId = intent.getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
     }
 
     @Override
@@ -43,16 +55,22 @@ ActionBar.OnNavigationListener {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        this.configureActionBar();
-        this.displayMessageIfNecessary();
+    protected void onStop() {
+        super.onStop();
+        UAirship.shared().getAnalytics().activityStopped(this);
     }
 
     @Override
-    protected void onStop() {
-        super.onStart();
-        UAirship.shared().getAnalytics().activityStopped(this);
+    protected void onResume() {
+        super.onResume();
+        setNavigationToMainActivity();
+
+        if (!UAStringUtil.isEmpty(pendingMessageId)) {
+            showRichPushMessage(pendingMessageId);
+            pendingMessageId = null;
+        }
+
+        this.getSupportActionBar().setSelectedNavigationItem(this.navAdapter.getPosition("Home"));
     }
 
     @Override
@@ -82,27 +100,15 @@ ActionBar.OnNavigationListener {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             this.startActivity(intent);
         }
+
         return true;
     }
 
     // helpers
 
-    private void displayMessageIfNecessary() {
-        String messageId = this.getIntent().getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
-        if (!UAStringUtil.isEmpty(messageId)) {
-            MessageFragment message = MessageFragment.newInstance(messageId);
-            message.show(this.getSupportFragmentManager(), R.id.floating_message_pane, "message");
-            this.findViewById(R.id.floating_message_pane).setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void dismissMessageIfNecessary() {
-        MessageFragment message = (MessageFragment) this.getSupportFragmentManager()
-                .findFragmentByTag("message");
-        if (message != null) {
-            message.dismiss();
-            this.findViewById(R.id.floating_message_pane).setVisibility(View.INVISIBLE);
-        }
+    private void showRichPushMessage(String messageId) {
+        RichPushMessageDialogFragment message = RichPushMessageDialogFragment.newInstance(messageId);
+        message.show(this.getSupportFragmentManager(), "message");
     }
 
     private void configureActionBar() {
@@ -114,6 +120,10 @@ ActionBar.OnNavigationListener {
         this.navAdapter = new ArrayAdapter<String>(this, R.layout.sherlock_spinner_dropdown_item,
                 RichPushApplication.navList);
         actionBar.setListNavigationCallbacks(this.navAdapter, this);
-        actionBar.setSelectedNavigationItem(this.navAdapter.getPosition("Home"));
+    }
+
+    private void setNavigationToMainActivity() {
+        int position = this.navAdapter.getPosition("Home");
+        getSupportActionBar().setSelectedNavigationItem(position);
     }
 }
