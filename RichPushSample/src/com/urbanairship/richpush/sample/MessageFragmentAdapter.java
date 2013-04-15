@@ -22,7 +22,7 @@ public class MessageFragmentAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        if (messages == null || messages.size() < position) {
+        if (messages == null || position >= messages.size()) {
             return null;
         }
 

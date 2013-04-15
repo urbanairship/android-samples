@@ -18,7 +18,7 @@ public class PushReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (!intent.getAction().equals(PushManager.ACTION_NOTIFICATION_OPENED)) {
+        if (!PushManager.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
             return;
         }
 

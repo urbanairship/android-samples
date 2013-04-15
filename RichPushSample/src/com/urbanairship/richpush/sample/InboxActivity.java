@@ -285,7 +285,7 @@ RichPushInbox.Listener {
         //if the message update failed
         if (!success) {
             //show an error dialog
-            DialogFragment fragment = new InboxLoadFailedDialogFragment();
+            DialogFragment fragment = new InboxRefreshFailedDialog();
             fragment.show(getSupportFragmentManager(), "dialog");
         }
     }
@@ -313,14 +313,14 @@ RichPushInbox.Listener {
         }
     }
 
-    public static class InboxLoadFailedDialogFragment extends DialogFragment {
+    public static class InboxRefreshFailedDialog extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return new AlertDialog.Builder(getActivity())
             .setIcon(R.drawable.icon)
-            .setTitle("Unable to retrieve new messages")
-            .setMessage("Please try again later")
-            .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            .setTitle(R.string.inbox_refresh_failed_dialog_title)
+            .setMessage(R.string.inbox_refresh_failed_dialog_message)
+            .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int whichButton) {
                     dialog.dismiss();
