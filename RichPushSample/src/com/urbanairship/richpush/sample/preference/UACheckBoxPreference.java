@@ -13,4 +13,9 @@ public abstract class UACheckBoxPreference extends CheckBoxPreference implements
     public void setValue(Object value) {
         this.setChecked((Boolean) value);
     }
+
+    @Override
+    protected boolean shouldPersist() {
+        return false;
+    }
 }

@@ -3,6 +3,7 @@ package com.urbanairship.richpush.sample.preference;
 import android.preference.Preference;
 import android.preference.PreferenceGroup;
 
+import com.urbanairship.Logger;
 import com.urbanairship.location.LocationPreferences;
 import com.urbanairship.location.UALocationManager;
 import com.urbanairship.push.PushManager;
@@ -19,9 +20,13 @@ public class UAPreferenceAdapter {
     private Map<UAPreferences.PreferenceType, Object> preferences = new HashMap<UAPreferences.PreferenceType, Object>();
 
     public UAPreferenceAdapter() {
-        restorePreferences();
+        populatePreferences();
     }
 
+    /**
+     * I NEED A GOOD NAME AND DESRCRIPTION FOR THIS.
+     * @param group
+     */
     public void setPreferenceGroup(PreferenceGroup group) {
         for (int i = 0; i < group.getPreferenceCount(); i ++) {
             Preference preference = group.getPreference(i);
@@ -30,12 +35,22 @@ public class UAPreferenceAdapter {
                 setPreferenceGroup((PreferenceGroup) preference);
             } else if (preference instanceof UAPreferences.Preference) {
                 preference.setPersistent(false);
+
                 UAPreferences.Preference uaPreference = (UAPreferences.Preference) preference;
+                UAPreferences.PreferenceType preferenceType = uaPreference.getPreferenceType();
+                if (preferenceType == null) {
+                    Logger.warn("Ignoring preference " + preference.toString() + ".  Preference returned a null preference type.");
+                    continue;
+                }
 
-
-                Object defaultValue = preferences.get(uaPreference.getPreferenceType());
+                Object defaultValue = preferences.get(preferenceType);
                 if (defaultValue != null) {
-                    uaPreference.setValue(defaultValue);
+                    try {
+                        uaPreference.setValue(defaultValue);
+                    } catch (Exception ex) {
+                        Logger.warn("Ignoring preference " + preference.toString() + ". Exception setting value " + defaultValue + " on preference.", ex);
+                        continue;
+                    }
                 }
 
                 preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -51,23 +66,24 @@ public class UAPreferenceAdapter {
 
 
     /**
-     * Applies the shared preferences values to the
-     * Urban Airship internal settings.
+     * Applies any preferences to UAirship preferences
      * 
      * This should be called on the onStop() method of a preference activity
      */
-    public void applyUAPreferences() {
+    public void applyUrbanAirshipPreferences() {
         if (pushPrefs != null) {
-            setPushPreferences();
+            applyPushOptions();
         }
 
         if (locPrefs != null) {
-            setLocationPreferences();
+            applyLocationOptions();
         }
     }
 
-
-    private void restorePreferences() {
+    /**
+     * Populates the preference map from the urban airship options
+     */
+    private void populatePreferences() {
         if (pushPrefs != null) {
             preferences.put(UAPreferences.PreferenceType.PUSH_ENABLE, pushPrefs.isPushEnabled());
             preferences.put(UAPreferences.PreferenceType.SOUND_ENABLE, pushPrefs.isSoundEnabled());
@@ -91,9 +107,9 @@ public class UAPreferenceAdapter {
     }
 
     /**
-     * Sets the Push Urban Airship preferences from the android shared preferences
+     * Sets the Push Urban Airship preferences from the preference map
      */
-    private void setPushPreferences() {
+    private void applyPushOptions() {
         boolean isPushEnabled = getBoolean(UAPreferences.PreferenceType.PUSH_ENABLE, pushPrefs.isPushEnabled());
         boolean isSoundEnabled = getBoolean(UAPreferences.PreferenceType.SOUND_ENABLE, pushPrefs.isSoundEnabled());
         boolean isVibrateEnabled = getBoolean(UAPreferences.PreferenceType.VIBRATE_ENABLE, pushPrefs.isVibrateEnabled());
@@ -123,9 +139,9 @@ public class UAPreferenceAdapter {
     }
 
     /**
-     * Sets the Location Urban Airship preferences from the android shared preferences
+     * Sets the Location Urban Airship preferences from the preference map
      */
-    private void setLocationPreferences() {
+    private void applyLocationOptions() {
         boolean isLocationEnabled = getBoolean(UAPreferences.PreferenceType.LOCATION_ENABLE, locPrefs.isLocationEnabled());
         boolean isBackgroundEnabled = getBoolean(UAPreferences.PreferenceType.LOCATION_BACKGROUND_ENABLE, locPrefs.isBackgroundLocationEnabled());
         boolean isForegroundEnabled = getBoolean(UAPreferences.PreferenceType.LOCATION_FOREGROUND_ENABLE, locPrefs.isForegroundLocationEnabled());

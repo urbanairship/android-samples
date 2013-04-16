@@ -9,15 +9,15 @@ import android.widget.TimePicker;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public abstract class TimePickerPreference extends DialogPreference implements UAPreferences.Preference {
+public abstract class QuietTimePickerPreference extends DialogPreference implements UAPreferences.Preference {
     private TimePicker timePicker = null;
     private long currentTime = -1;
 
-    public TimePickerPreference(Context context, AttributeSet attrs, int defStyle) {
+    public QuietTimePickerPreference(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
-    public TimePickerPreference(Context context, AttributeSet attrs) {
+    public QuietTimePickerPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -67,6 +67,12 @@ public abstract class TimePickerPreference extends DialogPreference implements U
     public void setValue(Object value) {
         currentTime = (Long) value;
         notifyChanged();
+    }
+
+
+    @Override
+    protected boolean shouldPersist() {
+        return false;
     }
 
 }

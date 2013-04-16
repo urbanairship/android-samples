@@ -4,16 +4,19 @@
     <PreferenceCategory 
         android:title="@string/location_preference_category_title" >
         
-	    <CheckBoxPreference
+	     <com.urbanairship.richpush.sample.preference.LocationEnablePreference
+	        android:persistent="false"
 	        android:key="location_preference"
 	        android:title="@string/location_preference_title" />
 	    
-	    <CheckBoxPreference
+	    <com.urbanairship.richpush.sample.preference.LocationForegroundEnablePreference
+	        android:persistent="false"
 	        android:dependency="location_preference"
 	        android:key="foreground_location_preference"
 	        android:title="@string/foreground_location_preference_title" />
 	    
-	    <CheckBoxPreference
+	    <com.urbanairship.richpush.sample.preference.LocationBackgroundEnablePreference
+	        android:persistent="false"
 	        android:dependency="location_preference"
 	        android:key="background_location_preference"
 	        android:title="@string/background_location_preference_title" />

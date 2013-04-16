@@ -53,9 +53,7 @@ public class PushPreferencesActivity extends SherlockPreferenceActivity {
     public void onStop() {
         super.onStop();
 
-        // We only want to sync the preferences
-        // after we are done changing them so services do
-        // not repeatedly start and stop.
-        preferenceAdapter.applyUAPreferences();
+        // Apply any changed UA preferences from the preference screen
+        preferenceAdapter.applyUrbanAirshipPreferences();
     }
 }
