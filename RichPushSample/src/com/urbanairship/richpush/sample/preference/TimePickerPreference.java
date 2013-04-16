@@ -1,4 +1,4 @@
-package com.urbanairship.richpush.sample;
+package com.urbanairship.richpush.sample.preference;
 
 import android.content.Context;
 import android.preference.DialogPreference;
@@ -9,14 +9,15 @@ import android.widget.TimePicker;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class QuietTimePickerPreference extends DialogPreference {
+public abstract class TimePickerPreference extends DialogPreference implements UAPreferences.Preference {
     private TimePicker timePicker = null;
+    private long currentTime = -1;
 
-    public QuietTimePickerPreference(Context context, AttributeSet attrs, int defStyle) {
+    public TimePickerPreference(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
-    public QuietTimePickerPreference(Context context, AttributeSet attrs) {
+    public TimePickerPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -38,8 +39,11 @@ public class QuietTimePickerPreference extends DialogPreference {
             calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
             calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
 
-            this.persistLong(calendar.getTimeInMillis());
-            this.setSummary(getSummary());
+            long time = calendar.getTimeInMillis();
+            if (callChangeListener(time)) {
+                currentTime = time;
+                notifyChanged();
+            }
         }
     }
 
@@ -52,12 +56,17 @@ public class QuietTimePickerPreference extends DialogPreference {
     private Calendar getCalendar() {
         Calendar calendar = Calendar.getInstance();
 
-        long persistedTime = this.getPersistedLong(-1);
-        if (persistedTime != -1) {
-            calendar.setTimeInMillis(persistedTime);
+        if (currentTime != -1) {
+            calendar.setTimeInMillis(currentTime);
         }
 
         return calendar;
+    }
+
+    @Override
+    public void setValue(Object value) {
+        currentTime = (Long) value;
+        notifyChanged();
     }
 
 }

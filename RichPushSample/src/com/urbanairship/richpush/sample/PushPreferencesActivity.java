@@ -1,6 +1,5 @@
 package com.urbanairship.richpush.sample;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -8,13 +7,14 @@ import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.urbanairship.AirshipConfigOptions;
 import com.urbanairship.UAirship;
+import com.urbanairship.richpush.sample.preference.UAPreferenceAdapter;
 
 // ActionBarSherlock does not support the new PreferenceFragment, so we fall back to using
 // deprecated methods. See https://github.com/JakeWharton/ActionBarSherlock/issues/411
 @SuppressWarnings("deprecation")
 public class PushPreferencesActivity extends SherlockPreferenceActivity {
 
-    private UASharedPreferences sharedPreferences;
+    private UAPreferenceAdapter preferenceAdapter = new UAPreferenceAdapter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +36,8 @@ public class PushPreferencesActivity extends SherlockPreferenceActivity {
         if (options.locationOptions.locationServiceEnabled) {
             this.addPreferencesFromResource(R.xml.location_preferences);
         }
+
+        preferenceAdapter.setPreferenceGroup(getPreferenceScreen());
     }
 
     @Override
@@ -54,41 +56,6 @@ public class PushPreferencesActivity extends SherlockPreferenceActivity {
         // We only want to sync the preferences
         // after we are done changing them so services do
         // not repeatedly start and stop.
-        sharedPreferences.applyUAPreferences();
-    }
-
-    @Override
-    public SharedPreferences getSharedPreferences(String name, int mode) {
-        if (sharedPreferences == null) {
-            sharedPreferences = new UASharedPreferences() {
-                @Override
-                public String getPreferenceKey(UAPreferenceKey key) {
-                    switch(key) {
-                    case LOCATION_BACKGROUND_ENABLE:
-                        return "background_location_preference";
-                    case LOCATION_ENABLE:
-                        return "location_preference";
-                    case LOCATION_FOREGROUND_ENABLE:
-                        return "foreground_location_preference";
-                    case PUSH_ENABLE:
-                        return "push_preference";
-                    case QUIET_TIME_ENABLE:
-                        return "quiet_time_enabled_preference";
-                    case QUIET_TIME_END:
-                        return "quiet_time_end_preference";
-                    case QUIET_TIME_START:
-                        return "quiet_time_start_preference";
-                    case SOUND_ENABLE:
-                        return "sound_preference";
-                    case VIBRATE_ENABLE:
-                        return "vibrate_preference";
-                    }
-                    return null;
-                }
-
-            };
-        }
-
-        return sharedPreferences;
+        preferenceAdapter.applyUAPreferences();
     }
 }
