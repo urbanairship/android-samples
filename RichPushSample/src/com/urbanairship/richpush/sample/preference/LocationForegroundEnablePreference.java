@@ -2,12 +2,15 @@
  * Copyright 2013 Urban Airship and Contributors
  */
 
-
 package com.urbanairship.richpush.sample.preference;
 
 import android.content.Context;
 import android.util.AttributeSet;
 
+/**
+ * CheckboxPreference to enable/disable foreground location tracking
+ *
+ */
 public class LocationForegroundEnablePreference extends UACheckBoxPreference {
 
     public LocationForegroundEnablePreference(Context context, AttributeSet attrs) {
@@ -15,7 +18,7 @@ public class LocationForegroundEnablePreference extends UACheckBoxPreference {
     }
 
     @Override
-    public UAPreferences.PreferenceType getPreferenceType() {
-        return UAPreferences.PreferenceType.LOCATION_FOREGROUND_ENABLE;
+    public UAPreference.PreferenceType getPreferenceType() {
+        return UAPreference.PreferenceType.LOCATION_FOREGROUND_ENABLE;
     }
 }

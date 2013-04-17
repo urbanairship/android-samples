@@ -6,6 +6,7 @@ package com.urbanairship.richpush.sample.preference;
 
 import android.preference.Preference;
 import android.preference.PreferenceGroup;
+import android.preference.PreferenceScreen;
 
 import com.urbanairship.Logger;
 import com.urbanairship.location.LocationPreferences;
@@ -17,57 +18,27 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * An adapter to set Urban Airship preferences from Android preference screens without
+ * saving values to the shared preferences
+ *
+ */
 public class UAPreferenceAdapter {
 
     private PushPreferences pushPrefs = PushManager.shared().getPreferences();
     private LocationPreferences locPrefs = UALocationManager.shared().getPreferences();
-    private Map<UAPreferences.PreferenceType, Object> preferences = new HashMap<UAPreferences.PreferenceType, Object>();
-
-    public UAPreferenceAdapter() {
-        populatePreferences();
-    }
+    private Map<UAPreference.PreferenceType, Object> preferences = new HashMap<UAPreference.PreferenceType, Object>();
 
     /**
-     * I NEED A GOOD NAME AND DESRCRIPTION FOR THIS.
-     * @param group
+     * UAPreferenceAdapter constructor
+     * @param screen PreferenceScreen that contains any UAPreferences.  Any none UAPreferences will
+     * not be affected.
      */
-    public void setPreferenceGroup(PreferenceGroup group) {
-        for (int i = 0; i < group.getPreferenceCount(); i ++) {
-            Preference preference = group.getPreference(i);
+    public UAPreferenceAdapter(PreferenceScreen screen) {
+        populatePreferences();
 
-            if(preference instanceof PreferenceGroup) {
-                setPreferenceGroup((PreferenceGroup) preference);
-            } else if (preference instanceof UAPreferences.Preference) {
-                preference.setPersistent(false);
-
-                UAPreferences.Preference uaPreference = (UAPreferences.Preference) preference;
-                UAPreferences.PreferenceType preferenceType = uaPreference.getPreferenceType();
-                if (preferenceType == null) {
-                    Logger.warn("Ignoring preference " + preference.toString() + ".  Preference returned a null preference type.");
-                    continue;
-                }
-
-                Object defaultValue = preferences.get(preferenceType);
-                if (defaultValue != null) {
-                    try {
-                        uaPreference.setValue(defaultValue);
-                    } catch (Exception ex) {
-                        Logger.warn("Ignoring preference " + preference.toString() + ". Exception setting value " + defaultValue + " on preference.", ex);
-                        continue;
-                    }
-                }
-
-                preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                    @Override
-                    public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        preferences.put(((UAPreferences.Preference)preference).getPreferenceType(), newValue);
-                        return true;
-                    }
-                });
-            }
-        }
+        checkForUAPreferences(screen);
     }
-
 
     /**
      * Applies any preferences to UAirship preferences
@@ -89,23 +60,23 @@ public class UAPreferenceAdapter {
      */
     private void populatePreferences() {
         if (pushPrefs != null) {
-            preferences.put(UAPreferences.PreferenceType.PUSH_ENABLE, pushPrefs.isPushEnabled());
-            preferences.put(UAPreferences.PreferenceType.SOUND_ENABLE, pushPrefs.isSoundEnabled());
-            preferences.put(UAPreferences.PreferenceType.VIBRATE_ENABLE, pushPrefs.isVibrateEnabled());
-            preferences.put(UAPreferences.PreferenceType.QUIET_TIME_ENABLE, pushPrefs.isQuietTimeEnabled());
+            preferences.put(UAPreference.PreferenceType.PUSH_ENABLE, pushPrefs.isPushEnabled());
+            preferences.put(UAPreference.PreferenceType.SOUND_ENABLE, pushPrefs.isSoundEnabled());
+            preferences.put(UAPreference.PreferenceType.VIBRATE_ENABLE, pushPrefs.isVibrateEnabled());
+            preferences.put(UAPreference.PreferenceType.QUIET_TIME_ENABLE, pushPrefs.isQuietTimeEnabled());
 
 
             Date[] quietDates = pushPrefs.getQuietTimeInterval();
             if (quietDates != null) {
-                preferences.put(UAPreferences.PreferenceType.QUIET_TIME_START, quietDates[0].getTime());
-                preferences.put(UAPreferences.PreferenceType.QUIET_TIME_END, quietDates[1].getTime());
+                preferences.put(UAPreference.PreferenceType.QUIET_TIME_START, quietDates[0].getTime());
+                preferences.put(UAPreference.PreferenceType.QUIET_TIME_END, quietDates[1].getTime());
             }
 
 
             if (locPrefs != null) {
-                preferences.put(UAPreferences.PreferenceType.LOCATION_ENABLE, locPrefs.isLocationEnabled());
-                preferences.put(UAPreferences.PreferenceType.LOCATION_BACKGROUND_ENABLE, locPrefs.isBackgroundLocationEnabled());
-                preferences.put(UAPreferences.PreferenceType.LOCATION_FOREGROUND_ENABLE, locPrefs.isForegroundLocationEnabled());
+                preferences.put(UAPreference.PreferenceType.LOCATION_ENABLE, locPrefs.isLocationEnabled());
+                preferences.put(UAPreference.PreferenceType.LOCATION_BACKGROUND_ENABLE, locPrefs.isBackgroundLocationEnabled());
+                preferences.put(UAPreference.PreferenceType.LOCATION_FOREGROUND_ENABLE, locPrefs.isForegroundLocationEnabled());
             }
         }
     }
@@ -114,10 +85,10 @@ public class UAPreferenceAdapter {
      * Sets the Push Urban Airship preferences from the preference map
      */
     private void applyPushOptions() {
-        boolean isPushEnabled = getBoolean(UAPreferences.PreferenceType.PUSH_ENABLE, pushPrefs.isPushEnabled());
-        boolean isSoundEnabled = getBoolean(UAPreferences.PreferenceType.SOUND_ENABLE, pushPrefs.isSoundEnabled());
-        boolean isVibrateEnabled = getBoolean(UAPreferences.PreferenceType.VIBRATE_ENABLE, pushPrefs.isVibrateEnabled());
-        boolean isQuietTimeEnabledInActivity = getBoolean(UAPreferences.PreferenceType.QUIET_TIME_ENABLE, pushPrefs.isQuietTimeEnabled());
+        boolean isPushEnabled = getBoolean(UAPreference.PreferenceType.PUSH_ENABLE, pushPrefs.isPushEnabled());
+        boolean isSoundEnabled = getBoolean(UAPreference.PreferenceType.SOUND_ENABLE, pushPrefs.isSoundEnabled());
+        boolean isVibrateEnabled = getBoolean(UAPreference.PreferenceType.VIBRATE_ENABLE, pushPrefs.isVibrateEnabled());
+        boolean isQuietTimeEnabledInActivity = getBoolean(UAPreference.PreferenceType.QUIET_TIME_ENABLE, pushPrefs.isQuietTimeEnabled());
 
         if (isPushEnabled) {
             PushManager.enablePush();
@@ -130,8 +101,8 @@ public class UAPreferenceAdapter {
         pushPrefs.setQuietTimeEnabled(isQuietTimeEnabledInActivity);
 
         if (isQuietTimeEnabledInActivity) {
-            long startTimeMillis = getLong(UAPreferences.PreferenceType.QUIET_TIME_START, -1);
-            long endTimeMillis = getLong(UAPreferences.PreferenceType.QUIET_TIME_END, -1);
+            long startTimeMillis = getLong(UAPreference.PreferenceType.QUIET_TIME_START, -1);
+            long endTimeMillis = getLong(UAPreference.PreferenceType.QUIET_TIME_END, -1);
 
             Date startDate = startTimeMillis == -1 ? null : new Date(startTimeMillis);
             Date endDate = endTimeMillis == -1 ? null : new Date(endTimeMillis);
@@ -146,9 +117,9 @@ public class UAPreferenceAdapter {
      * Sets the Location Urban Airship preferences from the preference map
      */
     private void applyLocationOptions() {
-        boolean isLocationEnabled = getBoolean(UAPreferences.PreferenceType.LOCATION_ENABLE, locPrefs.isLocationEnabled());
-        boolean isBackgroundEnabled = getBoolean(UAPreferences.PreferenceType.LOCATION_BACKGROUND_ENABLE, locPrefs.isBackgroundLocationEnabled());
-        boolean isForegroundEnabled = getBoolean(UAPreferences.PreferenceType.LOCATION_FOREGROUND_ENABLE, locPrefs.isForegroundLocationEnabled());
+        boolean isLocationEnabled = getBoolean(UAPreference.PreferenceType.LOCATION_ENABLE, locPrefs.isLocationEnabled());
+        boolean isBackgroundEnabled = getBoolean(UAPreference.PreferenceType.LOCATION_BACKGROUND_ENABLE, locPrefs.isBackgroundLocationEnabled());
+        boolean isForegroundEnabled = getBoolean(UAPreference.PreferenceType.LOCATION_FOREGROUND_ENABLE, locPrefs.isForegroundLocationEnabled());
 
         if (isLocationEnabled) {
             UALocationManager.enableLocation();
@@ -169,12 +140,67 @@ public class UAPreferenceAdapter {
         }
     }
 
-    private boolean getBoolean(UAPreferences.PreferenceType preferenceType, boolean defaultValue) {
+    /**
+     * 
+     * @param PreferenceGroup to check for preferences
+     */
+    private void checkForUAPreferences(PreferenceGroup group) {
+        for (int i = 0; i < group.getPreferenceCount(); i ++) {
+            Preference preference = group.getPreference(i);
+
+            if(preference instanceof PreferenceGroup) {
+                checkForUAPreferences((PreferenceGroup) preference);
+            } else if (preference instanceof UAPreference) {
+                preference.setPersistent(false);
+
+                UAPreference uaPreference = (UAPreference) preference;
+                UAPreference.PreferenceType preferenceType = uaPreference.getPreferenceType();
+                if (preferenceType == null) {
+                    Logger.warn("Ignoring preference " + preference.toString() + ".  Preference returned a null preference type.");
+                    continue;
+                }
+
+                Object defaultValue = preferences.get(preferenceType);
+                if (defaultValue != null) {
+                    try {
+                        uaPreference.setValue(defaultValue);
+                    } catch (Exception ex) {
+                        Logger.warn("Ignoring preference " + preference.toString() + ". Exception setting value " + defaultValue + " on preference.", ex);
+                        continue;
+                    }
+                }
+
+                preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        preferences.put(((UAPreference)preference).getPreferenceType(), newValue);
+                        return true;
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * A helper method to retrieve values inside the preference map
+     * 
+     * @param preferenceType UAPreference.PreferenceType key into the preferences
+     * @param defaultValue Default value if the preference is not stored in the preferences
+     * @return Value inside the preferences map, or default value if it does not exist
+     */
+    private boolean getBoolean(UAPreference.PreferenceType preferenceType, boolean defaultValue) {
         Boolean value = (Boolean) preferences.get(preferenceType);
         return value == null ? defaultValue : value;
     }
 
-    private long getLong(UAPreferences.PreferenceType preferenceType, long defaultValue) {
+    /**
+     * A helper method to retrieve values inside the preference map
+     * 
+     * @param preferenceType UAPreference.PreferenceType key into the preferences
+     * @param defaultValue Default value if the preference is not stored in the preferences
+     * @return Value inside the preferences map, or default value if it does not exist
+     */
+    private long getLong(UAPreference.PreferenceType preferenceType, long defaultValue) {
         Long value = (Long) preferences.get(preferenceType);
         return value == null ? defaultValue : value;
     }

@@ -8,7 +8,11 @@ import android.content.Context;
 import android.preference.CheckBoxPreference;
 import android.util.AttributeSet;
 
-public abstract class UACheckBoxPreference extends CheckBoxPreference implements UAPreferences.Preference {
+/**
+ * Abstract CheckBoxPreference that implements UAPreference
+ *
+ */
+abstract class UACheckBoxPreference extends CheckBoxPreference implements UAPreference {
     public UACheckBoxPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
     }

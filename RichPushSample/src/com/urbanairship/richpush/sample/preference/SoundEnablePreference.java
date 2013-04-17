@@ -7,6 +7,10 @@ package com.urbanairship.richpush.sample.preference;
 import android.content.Context;
 import android.util.AttributeSet;
 
+/**
+ * CheckboxPreference to enable/disable push notification sounds
+ *
+ */
 public class SoundEnablePreference extends UACheckBoxPreference {
 
     public SoundEnablePreference(Context context, AttributeSet attrs) {
@@ -14,7 +18,7 @@ public class SoundEnablePreference extends UACheckBoxPreference {
     }
 
     @Override
-    public UAPreferences.PreferenceType getPreferenceType() {
-        return UAPreferences.PreferenceType.SOUND_ENABLE;
+    public UAPreference.PreferenceType getPreferenceType() {
+        return UAPreference.PreferenceType.SOUND_ENABLE;
     }
 }

@@ -13,7 +13,11 @@ import android.widget.TimePicker;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public abstract class QuietTimePickerPreference extends DialogPreference implements UAPreferences.Preference {
+/**
+ * Abstract DialogPreference that allows setting quiet time that implements UAPreference
+ *
+ */
+abstract class QuietTimePickerPreference extends DialogPreference implements UAPreference {
     private TimePicker timePicker = null;
     private long currentTime = -1;
 
@@ -57,6 +61,10 @@ public abstract class QuietTimePickerPreference extends DialogPreference impleme
         return formatter.format(getCalendar().getTime());
     }
 
+    /**
+     * Helper to create a new calendar with the current time of the preference
+     * @return Calendar of the current time of the preference
+     */
     private Calendar getCalendar() {
         Calendar calendar = Calendar.getInstance();
 

@@ -7,6 +7,11 @@ package com.urbanairship.richpush.sample.preference;
 import android.content.Context;
 import android.util.AttributeSet;
 
+
+/**
+ * CheckboxPreference to enable/disable push notification vibration
+ *
+ */
 public class VibrateEnablePreference extends UACheckBoxPreference {
 
     public VibrateEnablePreference(Context context, AttributeSet attrs) {
@@ -14,7 +19,7 @@ public class VibrateEnablePreference extends UACheckBoxPreference {
     }
 
     @Override
-    public UAPreferences.PreferenceType getPreferenceType() {
-        return UAPreferences.PreferenceType.VIBRATE_ENABLE;
+    public UAPreference.PreferenceType getPreferenceType() {
+        return UAPreference.PreferenceType.VIBRATE_ENABLE;
     }
 }

@@ -18,7 +18,7 @@ import com.urbanairship.richpush.sample.preference.UAPreferenceAdapter;
 @SuppressWarnings("deprecation")
 public class PushPreferencesActivity extends SherlockPreferenceActivity {
 
-    private UAPreferenceAdapter preferenceAdapter = new UAPreferenceAdapter();
+    private UAPreferenceAdapter preferenceAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class PushPreferencesActivity extends SherlockPreferenceActivity {
             this.addPreferencesFromResource(R.xml.location_preferences);
         }
 
-        preferenceAdapter.setPreferenceGroup(getPreferenceScreen());
+        preferenceAdapter = new UAPreferenceAdapter(getPreferenceScreen());
     }
 
     @Override

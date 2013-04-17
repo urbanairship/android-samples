@@ -7,6 +7,10 @@ package com.urbanairship.richpush.sample.preference;
 import android.content.Context;
 import android.util.AttributeSet;
 
+/**
+ * DialogPreference to set the quiet time end
+ *
+ */
 public class QuietTimeEndPreference extends QuietTimePickerPreference {
 
     public QuietTimeEndPreference(Context context, AttributeSet attrs) {
@@ -14,7 +18,7 @@ public class QuietTimeEndPreference extends QuietTimePickerPreference {
     }
 
     @Override
-    public UAPreferences.PreferenceType getPreferenceType() {
-        return UAPreferences.PreferenceType.QUIET_TIME_END;
+    public UAPreference.PreferenceType getPreferenceType() {
+        return UAPreference.PreferenceType.QUIET_TIME_END;
     }
 }

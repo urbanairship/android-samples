@@ -7,6 +7,10 @@ package com.urbanairship.richpush.sample.preference;
 import android.content.Context;
 import android.util.AttributeSet;
 
+/**
+ * CheckboxPreference to enable/disable background location tracking
+ *
+ */
 public class LocationBackgroundEnablePreference extends UACheckBoxPreference {
 
     public LocationBackgroundEnablePreference(Context context, AttributeSet attrs) {
@@ -14,7 +18,7 @@ public class LocationBackgroundEnablePreference extends UACheckBoxPreference {
     }
 
     @Override
-    public UAPreferences.PreferenceType getPreferenceType() {
-        return UAPreferences.PreferenceType.LOCATION_BACKGROUND_ENABLE;
+    public UAPreference.PreferenceType getPreferenceType() {
+        return UAPreference.PreferenceType.LOCATION_BACKGROUND_ENABLE;
     }
 }

@@ -7,6 +7,10 @@ package com.urbanairship.richpush.sample.preference;
 import android.content.Context;
 import android.util.AttributeSet;
 
+/**
+ * CheckboxPreference to enable/disable quiet time
+ *
+ */
 public class QuietTimeEnablePreference extends UACheckBoxPreference {
 
     public QuietTimeEnablePreference(Context context, AttributeSet attrs) {
@@ -14,7 +18,7 @@ public class QuietTimeEnablePreference extends UACheckBoxPreference {
     }
 
     @Override
-    public UAPreferences.PreferenceType getPreferenceType() {
-        return UAPreferences.PreferenceType.QUIET_TIME_ENABLE;
+    public UAPreference.PreferenceType getPreferenceType() {
+        return UAPreference.PreferenceType.QUIET_TIME_ENABLE;
     }
 }

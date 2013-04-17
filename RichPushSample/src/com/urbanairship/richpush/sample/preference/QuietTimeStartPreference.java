@@ -7,6 +7,10 @@ package com.urbanairship.richpush.sample.preference;
 import android.content.Context;
 import android.util.AttributeSet;
 
+/**
+ * DialogPreference to set the quiet time start
+ *
+ */
 public class QuietTimeStartPreference extends QuietTimePickerPreference {
 
     public QuietTimeStartPreference(Context context, AttributeSet attrs) {
@@ -14,7 +18,7 @@ public class QuietTimeStartPreference extends QuietTimePickerPreference {
     }
 
     @Override
-    public UAPreferences.PreferenceType getPreferenceType() {
-        return UAPreferences.PreferenceType.QUIET_TIME_START;
+    public UAPreference.PreferenceType getPreferenceType() {
+        return UAPreference.PreferenceType.QUIET_TIME_START;
     }
 }

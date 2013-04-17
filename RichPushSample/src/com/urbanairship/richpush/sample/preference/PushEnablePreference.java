@@ -7,6 +7,10 @@ package com.urbanairship.richpush.sample.preference;
 import android.content.Context;
 import android.util.AttributeSet;
 
+/**
+ * CheckboxPreference to enable/disable push notifications
+ *
+ */
 public class PushEnablePreference extends UACheckBoxPreference {
 
     public PushEnablePreference(Context context, AttributeSet attrs) {
@@ -14,7 +18,7 @@ public class PushEnablePreference extends UACheckBoxPreference {
     }
 
     @Override
-    public UAPreferences.PreferenceType getPreferenceType() {
-        return UAPreferences.PreferenceType.PUSH_ENABLE;
+    public UAPreference.PreferenceType getPreferenceType() {
+        return UAPreference.PreferenceType.PUSH_ENABLE;
     }
 }
