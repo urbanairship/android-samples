@@ -1,5 +1,8 @@
-package com.urbanairship.richpush.sample.preference;
+/*
+ * Copyright 2013 Urban Airship and Contributors
+ */
 
+package com.urbanairship.richpush.sample.preference;
 
 public class UAPreferences {
     public enum PreferenceType {
