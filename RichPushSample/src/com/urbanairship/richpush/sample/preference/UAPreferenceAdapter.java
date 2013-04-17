@@ -68,13 +68,13 @@ public class UAPreferenceAdapter {
 
         switch (preferenceType) {
         case LOCATION_BACKGROUND_ENABLE:
-            value = locPrefs.isLocationEnabled();
+            value = locPrefs.isBackgroundLocationEnabled();
             break;
         case LOCATION_ENABLE:
             value = locPrefs.isLocationEnabled();
             break;
         case LOCATION_FOREGROUND_ENABLE:
-            value = locPrefs.isLocationEnabled();
+            value = locPrefs.isForegroundLocationEnabled();
             break;
         case PUSH_ENABLE:
             value = pushPrefs.isPushEnabled();
@@ -91,7 +91,7 @@ public class UAPreferenceAdapter {
             value = quietTimes != null ? quietTimes[0].getTime() : null;
             break;
         case SOUND_ENABLE:
-            value = pushPrefs.isVibrateEnabled();
+            value = pushPrefs.isSoundEnabled();
             break;
         case VIBRATE_ENABLE:
             value = pushPrefs.isVibrateEnabled();
@@ -121,9 +121,9 @@ public class UAPreferenceAdapter {
             break;
         case LOCATION_ENABLE:
             if ((Boolean) value) {
-                UALocationManager.enableForegroundLocation();
+                UALocationManager.enableLocation();
             } else {
-                UALocationManager.disableForegroundLocation();
+                UALocationManager.disableLocation();
             }
             break;
         case LOCATION_FOREGROUND_ENABLE:
