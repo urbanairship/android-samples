@@ -34,8 +34,6 @@ public class UAPreferenceAdapter {
      * @param screen PreferenceScreen that contains any UAPreferences.  Only UAPreferences will be affected.
      */
     public UAPreferenceAdapter(PreferenceScreen screen) {
-        populatePreferences();
-
         checkForUAPreferences(screen);
     }
 
@@ -45,102 +43,129 @@ public class UAPreferenceAdapter {
      * This should be called on the onStop() method of a preference activity
      */
     public void applyUrbanAirshipPreferences() {
-        if (pushPrefs != null) {
-            applyPushOptions();
-        }
-
-        if (locPrefs != null) {
-            applyLocationOptions();
-        }
-    }
-
-    /**
-     * Populates the preference map from the urban airship options
-     */
-    private void populatePreferences() {
-        if (pushPrefs != null) {
-            preferences.put(UAPreference.PreferenceType.PUSH_ENABLE, pushPrefs.isPushEnabled());
-            preferences.put(UAPreference.PreferenceType.SOUND_ENABLE, pushPrefs.isSoundEnabled());
-            preferences.put(UAPreference.PreferenceType.VIBRATE_ENABLE, pushPrefs.isVibrateEnabled());
-            preferences.put(UAPreference.PreferenceType.QUIET_TIME_ENABLE, pushPrefs.isQuietTimeEnabled());
-
-
-            Date[] quietDates = pushPrefs.getQuietTimeInterval();
-            if (quietDates != null) {
-                preferences.put(UAPreference.PreferenceType.QUIET_TIME_START, quietDates[0].getTime());
-                preferences.put(UAPreference.PreferenceType.QUIET_TIME_END, quietDates[1].getTime());
+        for (UAPreference.PreferenceType preferenceType : preferences.keySet()) {
+            Object value = preferences.get(preferenceType);
+            if (value == null) {
+                continue;
             }
-        }
 
-        if (locPrefs != null) {
-            preferences.put(UAPreference.PreferenceType.LOCATION_ENABLE, locPrefs.isLocationEnabled());
-            preferences.put(UAPreference.PreferenceType.LOCATION_BACKGROUND_ENABLE, locPrefs.isBackgroundLocationEnabled());
-            preferences.put(UAPreference.PreferenceType.LOCATION_FOREGROUND_ENABLE, locPrefs.isForegroundLocationEnabled());
-        }
-    }
-
-    /**
-     * Sets the Push Urban Airship preferences from the preference map
-     */
-    private void applyPushOptions() {
-        boolean isPushEnabled = getBoolean(UAPreference.PreferenceType.PUSH_ENABLE, pushPrefs.isPushEnabled());
-        boolean isSoundEnabled = getBoolean(UAPreference.PreferenceType.SOUND_ENABLE, pushPrefs.isSoundEnabled());
-        boolean isVibrateEnabled = getBoolean(UAPreference.PreferenceType.VIBRATE_ENABLE, pushPrefs.isVibrateEnabled());
-        boolean isQuietTimeEnabledInActivity = getBoolean(UAPreference.PreferenceType.QUIET_TIME_ENABLE, pushPrefs.isQuietTimeEnabled());
-
-        if (isPushEnabled) {
-            PushManager.enablePush();
-        } else {
-            PushManager.disablePush();
-        }
-
-        pushPrefs.setSoundEnabled(isSoundEnabled);
-        pushPrefs.setVibrateEnabled(isVibrateEnabled);
-        pushPrefs.setQuietTimeEnabled(isQuietTimeEnabledInActivity);
-
-        if (isQuietTimeEnabledInActivity) {
-            long startTimeMillis = getLong(UAPreference.PreferenceType.QUIET_TIME_START, -1);
-            long endTimeMillis = getLong(UAPreference.PreferenceType.QUIET_TIME_END, -1);
-
-            Date startDate = startTimeMillis == -1 ? null : new Date(startTimeMillis);
-            Date endDate = endTimeMillis == -1 ? null : new Date(endTimeMillis);
-
-            if (startDate != null && endDate != null) {
-                pushPrefs.setQuietTimeInterval(startDate, endDate);
+            try {
+                setInternalPreference(preferenceType, value);
+            } catch (Exception ex) {
+                Logger.warn("Unable to set " + preferenceType + ", invalid value " + value, ex);
             }
         }
     }
 
     /**
-     * Sets the Location Urban Airship preferences from the preference map
+     * Gets the internal UAirship preferences
+     * 
+     * @return Object value of the internal preference
      */
-    private void applyLocationOptions() {
-        boolean isLocationEnabled = getBoolean(UAPreference.PreferenceType.LOCATION_ENABLE, locPrefs.isLocationEnabled());
-        boolean isBackgroundEnabled = getBoolean(UAPreference.PreferenceType.LOCATION_BACKGROUND_ENABLE, locPrefs.isBackgroundLocationEnabled());
-        boolean isForegroundEnabled = getBoolean(UAPreference.PreferenceType.LOCATION_FOREGROUND_ENABLE, locPrefs.isForegroundLocationEnabled());
+    private Object getInternalPreference(UAPreference.PreferenceType preferenceType) {
+        Date[] quietTimes = null;
+        Object value = null;
 
-        if (isLocationEnabled) {
-            UALocationManager.enableLocation();
-        } else {
-            UALocationManager.disableLocation();
+        switch (preferenceType) {
+        case LOCATION_BACKGROUND_ENABLE:
+            value = locPrefs.isLocationEnabled();
+            break;
+        case LOCATION_ENABLE:
+            value = locPrefs.isLocationEnabled();
+            break;
+        case LOCATION_FOREGROUND_ENABLE:
+            value = locPrefs.isLocationEnabled();
+            break;
+        case PUSH_ENABLE:
+            value = pushPrefs.isPushEnabled();
+            break;
+        case QUIET_TIME_ENABLE:
+            value = pushPrefs.isQuietTimeEnabled();
+            break;
+        case QUIET_TIME_END:
+            quietTimes = pushPrefs.getQuietTimeInterval();
+            value = quietTimes != null ? quietTimes[1].getTime() : null;
+            break;
+        case QUIET_TIME_START:
+            quietTimes = pushPrefs.getQuietTimeInterval();
+            value = quietTimes != null ? quietTimes[0].getTime() : null;
+            break;
+        case SOUND_ENABLE:
+            value = pushPrefs.isVibrateEnabled();
+            break;
+        case VIBRATE_ENABLE:
+            value = pushPrefs.isVibrateEnabled();
+            break;
         }
 
-        if (isBackgroundEnabled) {
-            UALocationManager.enableBackgroundLocation();
-        } else {
-            UALocationManager.disableBackgroundLocation();
-        }
+        return value;
+    }
 
-        if (isForegroundEnabled) {
-            UALocationManager.enableForegroundLocation();
-        } else {
-            UALocationManager.disableForegroundLocation();
+
+    /**
+     * Sets the internal UAirship preferences
+     * 
+     * @param preferenceType UAPreference.PreferenceType type of preference to set
+     * @param value Object Value of the preference
+     */
+    private void setInternalPreference(UAPreference.PreferenceType preferenceType, Object value) {
+        Date[] quietTimes = null;
+
+        switch (preferenceType) {
+        case LOCATION_BACKGROUND_ENABLE:
+            if ((Boolean) value) {
+                UALocationManager.enableBackgroundLocation();
+            } else {
+                UALocationManager.disableBackgroundLocation();
+            }
+            break;
+        case LOCATION_ENABLE:
+            if ((Boolean) value) {
+                UALocationManager.enableForegroundLocation();
+            } else {
+                UALocationManager.disableForegroundLocation();
+            }
+            break;
+        case LOCATION_FOREGROUND_ENABLE:
+            if ((Boolean) value) {
+                UALocationManager.enableForegroundLocation();
+            } else {
+                UALocationManager.disableForegroundLocation();
+            }
+            break;
+        case PUSH_ENABLE:
+            if ((Boolean) value) {
+                PushManager.enablePush();
+            } else {
+                PushManager.disablePush();
+            }
+            break;
+        case QUIET_TIME_ENABLE:
+            pushPrefs.setQuietTimeEnabled((Boolean) value);
+            break;
+        case SOUND_ENABLE:
+            pushPrefs.setSoundEnabled((Boolean) value);
+            break;
+        case VIBRATE_ENABLE:
+            pushPrefs.setVibrateEnabled((Boolean) value);
+            break;
+        case QUIET_TIME_END:
+            quietTimes = pushPrefs.getQuietTimeInterval();
+            Date start = quietTimes != null ? quietTimes[0] : new Date();
+            pushPrefs.setQuietTimeInterval(start, new Date((Long)value));
+            break;
+        case QUIET_TIME_START:
+            quietTimes = pushPrefs.getQuietTimeInterval();
+            Date end = quietTimes != null ? quietTimes[1] : new Date();
+            pushPrefs.setQuietTimeInterval(new Date((Long)value), end);
+            break;
         }
     }
 
     /**
      * Finds any UAPreference, sets its value, and listens for any
      * value changes
+     * 
      * @param PreferenceGroup to check for preferences
      */
     private void checkForUAPreferences(PreferenceGroup group) {
@@ -154,57 +179,67 @@ public class UAPreferenceAdapter {
             if(preference instanceof PreferenceGroup) {
                 checkForUAPreferences((PreferenceGroup) preference);
             } else if (preference instanceof UAPreference) {
-                preference.setPersistent(false);
-
-                UAPreference uaPreference = (UAPreference) preference;
-                UAPreference.PreferenceType preferenceType = uaPreference.getPreferenceType();
-                if (preferenceType == null) {
-                    Logger.warn("Ignoring preference " + preference.toString() + ".  Preference returned a null preference type.");
-                    continue;
-                }
-
-                Object defaultValue = preferences.get(preferenceType);
-                if (defaultValue != null) {
-                    try {
-                        uaPreference.setValue(defaultValue);
-                    } catch (Exception ex) {
-                        Logger.warn("Ignoring preference " + preference.toString() + ". Exception setting value " + defaultValue + " on preference.", ex);
-                        continue;
-                    }
-                }
-
-                preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                    @Override
-                    public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        preferences.put(((UAPreference)preference).getPreferenceType(), newValue);
-                        return true;
-                    }
-                });
+                trackPreference((UAPreference) preference);
             }
         }
     }
 
-    /**
-     * A helper method to retrieve values inside the preference map
-     * 
-     * @param preferenceType UAPreference.PreferenceType key into the preferences
-     * @param defaultValue Default value if the preference is not stored in the preferences
-     * @return Value inside the preferences map, or default value if it does not exist
-     */
-    private boolean getBoolean(UAPreference.PreferenceType preferenceType, boolean defaultValue) {
-        Boolean value = (Boolean) preferences.get(preferenceType);
-        return value == null ? defaultValue : value;
-    }
 
     /**
-     * A helper method to retrieve values inside the preference map
+     * Tries to track a UAPreference if the service it depends on is enabled,
+     * it has a valid preference type, and is able to have its value set
      * 
-     * @param preferenceType UAPreference.PreferenceType key into the preferences
-     * @param defaultValue Default value if the preference is not stored in the preferences
-     * @return Value inside the preferences map, or default value if it does not exist
+     * @param preference UAPreference to track
      */
-    private long getLong(UAPreference.PreferenceType preferenceType, long defaultValue) {
-        Long value = (Long) preferences.get(preferenceType);
-        return value == null ? defaultValue : value;
+    private void trackPreference(UAPreference preference) {
+        final UAPreference.PreferenceType preferenceType = preference.getPreferenceType();
+
+        if (preferenceType == null) {
+            Logger.warn("Preference returned a null preference type. " + "Ignoring preference " + preference);
+            return;
+        }
+
+        // Check that the service is enabled for this preference type
+        switch (preferenceType) {
+        case LOCATION_BACKGROUND_ENABLE:
+        case LOCATION_ENABLE:
+        case LOCATION_FOREGROUND_ENABLE:
+            if (locPrefs == null) {
+                Logger.warn("Unable to modify preference " + preferenceType + " becasue the locationService is not enabled. Ignoring preference");
+                return;
+            }
+            break;
+        case PUSH_ENABLE:
+        case QUIET_TIME_ENABLE:
+        case QUIET_TIME_END:
+        case QUIET_TIME_START:
+        case SOUND_ENABLE:
+        case VIBRATE_ENABLE:
+            if (pushPrefs == null) {
+                Logger.warn("Unable to modify preference " + preferenceType + " becasue the pushService is not enabled");
+                return;
+            }
+            break;
+        }
+
+        // Try to set the initial value if its not null
+        Object defaultValue =  getInternalPreference(preferenceType);
+        if (defaultValue != null) {
+            try {
+                preference.setValue(defaultValue);
+            } catch (Exception ex) {
+                Logger.warn("Exception setting value " + defaultValue + ". Ignoring preference " + preference, ex);
+                return;
+            }
+        }
+
+        // Track any changes to the preference
+        ((Preference) preference).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                preferences.put(preferenceType, newValue);
+                return true;
+            }
+        });
     }
 }
