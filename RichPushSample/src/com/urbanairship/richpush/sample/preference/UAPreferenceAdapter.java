@@ -31,8 +31,7 @@ public class UAPreferenceAdapter {
 
     /**
      * UAPreferenceAdapter constructor
-     * @param screen PreferenceScreen that contains any UAPreferences.  Any none UAPreferences will
-     * not be affected.
+     * @param screen PreferenceScreen that contains any UAPreferences.  Only UAPreferences will be affected.
      */
     public UAPreferenceAdapter(PreferenceScreen screen) {
         populatePreferences();
