@@ -140,7 +140,8 @@ public class UAPreferenceAdapter {
     }
 
     /**
-     * 
+     * Finds any UAPreference, sets its value, and listens for any
+     * value changes
      * @param PreferenceGroup to check for preferences
      */
     private void checkForUAPreferences(PreferenceGroup group) {
