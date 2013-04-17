@@ -70,13 +70,12 @@ public class UAPreferenceAdapter {
                 preferences.put(UAPreference.PreferenceType.QUIET_TIME_START, quietDates[0].getTime());
                 preferences.put(UAPreference.PreferenceType.QUIET_TIME_END, quietDates[1].getTime());
             }
+        }
 
-
-            if (locPrefs != null) {
-                preferences.put(UAPreference.PreferenceType.LOCATION_ENABLE, locPrefs.isLocationEnabled());
-                preferences.put(UAPreference.PreferenceType.LOCATION_BACKGROUND_ENABLE, locPrefs.isBackgroundLocationEnabled());
-                preferences.put(UAPreference.PreferenceType.LOCATION_FOREGROUND_ENABLE, locPrefs.isForegroundLocationEnabled());
-            }
+        if (locPrefs != null) {
+            preferences.put(UAPreference.PreferenceType.LOCATION_ENABLE, locPrefs.isLocationEnabled());
+            preferences.put(UAPreference.PreferenceType.LOCATION_BACKGROUND_ENABLE, locPrefs.isBackgroundLocationEnabled());
+            preferences.put(UAPreference.PreferenceType.LOCATION_FOREGROUND_ENABLE, locPrefs.isForegroundLocationEnabled());
         }
     }
 
