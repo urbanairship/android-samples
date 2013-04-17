@@ -18,7 +18,7 @@ public class QuietTimeEnablePreference extends UACheckBoxPreference {
     }
 
     @Override
-    public UAPreference.PreferenceType getPreferenceType() {
-        return UAPreference.PreferenceType.QUIET_TIME_ENABLE;
+    public PreferenceType getPreferenceType() {
+        return PreferenceType.QUIET_TIME_ENABLE;
     }
 }

@@ -18,7 +18,7 @@ public class SoundEnablePreference extends UACheckBoxPreference {
     }
 
     @Override
-    public UAPreference.PreferenceType getPreferenceType() {
-        return UAPreference.PreferenceType.SOUND_ENABLE;
+    public PreferenceType getPreferenceType() {
+        return PreferenceType.SOUND_ENABLE;
     }
 }

@@ -18,7 +18,7 @@ public class LocationEnablePreference extends UACheckBoxPreference {
     }
 
     @Override
-    public UAPreference.PreferenceType getPreferenceType() {
-        return UAPreference.PreferenceType.LOCATION_ENABLE;
+    public PreferenceType getPreferenceType() {
+        return PreferenceType.LOCATION_ENABLE;
     }
 }

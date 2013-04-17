@@ -18,7 +18,7 @@ public class QuietTimeEndPreference extends QuietTimePickerPreference {
     }
 
     @Override
-    public UAPreference.PreferenceType getPreferenceType() {
-        return UAPreference.PreferenceType.QUIET_TIME_END;
+    public PreferenceType getPreferenceType() {
+        return PreferenceType.QUIET_TIME_END;
     }
 }

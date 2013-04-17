@@ -18,7 +18,7 @@ public class PushEnablePreference extends UACheckBoxPreference {
     }
 
     @Override
-    public UAPreference.PreferenceType getPreferenceType() {
-        return UAPreference.PreferenceType.PUSH_ENABLE;
+    public PreferenceType getPreferenceType() {
+        return PreferenceType.PUSH_ENABLE;
     }
 }

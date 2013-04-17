@@ -18,7 +18,7 @@ public class LocationForegroundEnablePreference extends UACheckBoxPreference {
     }
 
     @Override
-    public UAPreference.PreferenceType getPreferenceType() {
-        return UAPreference.PreferenceType.LOCATION_FOREGROUND_ENABLE;
+    public PreferenceType getPreferenceType() {
+        return PreferenceType.LOCATION_FOREGROUND_ENABLE;
     }
 }
