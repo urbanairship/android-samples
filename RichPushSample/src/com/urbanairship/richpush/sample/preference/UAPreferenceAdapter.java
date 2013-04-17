@@ -145,6 +145,10 @@ public class UAPreferenceAdapter {
      * @param PreferenceGroup to check for preferences
      */
     private void checkForUAPreferences(PreferenceGroup group) {
+        if (group == null) {
+            return;
+        }
+
         for (int i = 0; i < group.getPreferenceCount(); i ++) {
             Preference preference = group.getPreference(i);
 
