@@ -173,10 +173,10 @@ public class UAPreferenceAdapter {
             return;
         }
 
-        for (int i = 0; i < group.getPreferenceCount(); i ++) {
+        for (int i = 0; i < group.getPreferenceCount(); i++) {
             Preference preference = group.getPreference(i);
 
-            if(preference instanceof PreferenceGroup) {
+            if (preference instanceof PreferenceGroup) {
                 checkForUAPreferences((PreferenceGroup) preference);
             } else if (preference instanceof UAPreference) {
                 trackPreference((UAPreference) preference);
@@ -205,7 +205,7 @@ public class UAPreferenceAdapter {
         case LOCATION_ENABLE:
         case LOCATION_FOREGROUND_ENABLE:
             if (locPrefs == null) {
-                Logger.warn("Unable to modify preference " + preferenceType + " becasue the locationService is not enabled. Ignoring preference");
+                Logger.warn("Unable to modify preference " + preferenceType + " because the locationService is not enabled. Ignoring preference");
                 return;
             }
             break;
@@ -216,7 +216,7 @@ public class UAPreferenceAdapter {
         case SOUND_ENABLE:
         case VIBRATE_ENABLE:
             if (pushPrefs == null) {
-                Logger.warn("Unable to modify preference " + preferenceType + " becasue the pushService is not enabled");
+                Logger.warn("Unable to modify preference " + preferenceType + " because the pushService is not enabled");
                 return;
             }
             break;
