@@ -255,6 +255,11 @@ RichPushInbox.Listener {
     }
 
     private void showMessage(String messageId) {
+        //Message is already deleted, skip
+        if (richPushInbox.getMessage(messageId) == null) {
+            return;
+        }
+
         if (messagePager != null) {
             this.messagePager.setCurrentItem(RichPushMessageUtils.getMessagePosition(messageId, messages));
         } else {
