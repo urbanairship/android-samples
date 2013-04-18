@@ -48,8 +48,14 @@ public class MessageActivity extends SherlockFragmentActivity {
         messageAdapter.setRichPushMessages(messages);
         this.messagePager.setAdapter(messageAdapter);
 
+        // Get the first item to show
+        int firstItem = RichPushMessageUtils.getMessagePosition(messageId, messages);
+
+        // Mark it as read
+        messages.get(firstItem).markRead();
+
         // Sets the current item to the position of the current message
-        this.messagePager.setCurrentItem(RichPushMessageUtils.getMessagePosition(messageId, messages));
+        this.messagePager.setCurrentItem(firstItem);
     }
 
     @Override
