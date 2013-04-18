@@ -78,8 +78,6 @@ RichPushInbox.Listener {
         if (savedInstanceState == null) {
             this.setPendingMessageIdFromIntent(getIntent());
         }
-
-        updateRichPushMessages();
     }
 
     @Override
@@ -101,6 +99,7 @@ RichPushInbox.Listener {
         RichPushManager.shared().addListener(this);
         RichPushManager.shared().getRichPushUser().getInbox().addListener(this);
 
+        updateRichPushMessages();
         showPendingMessageId();
         startActionModeIfNecessary();
     }
