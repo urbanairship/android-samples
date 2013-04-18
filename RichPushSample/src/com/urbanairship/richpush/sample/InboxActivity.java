@@ -78,8 +78,6 @@ RichPushInbox.Listener {
         if (savedInstanceState == null) {
             this.setPendingMessageIdFromIntent(getIntent());
         }
-
-        updateRichPushMessages();
     }
 
     @Override
@@ -101,6 +99,7 @@ RichPushInbox.Listener {
         RichPushManager.shared().addListener(this);
         RichPushManager.shared().getRichPushUser().getInbox().addListener(this);
 
+        updateRichPushMessages();
         showPendingMessageId();
         startActionModeIfNecessary();
     }
@@ -259,6 +258,11 @@ RichPushInbox.Listener {
     }
 
     private void showMessage(String messageId) {
+        //Message is already deleted, skip
+        if (richPushInbox.getMessage(messageId) == null) {
+            return;
+        }
+
         if (messagePager != null) {
             this.messagePager.setCurrentItem(RichPushMessageUtils.getMessagePosition(messageId, messages));
         } else {
