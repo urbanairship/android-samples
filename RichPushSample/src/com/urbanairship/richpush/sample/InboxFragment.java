@@ -99,18 +99,12 @@ public abstract class InboxFragment extends SherlockListFragment {
     /**
      * @return The layout id to use in the RichPushMessageAdapter
      */
-    private int getRowLayoutId() {
-        return this.getArguments() != null && this.getArguments().containsKey(ROW_LAYOUT_ID_KEY) ?
-                this.getArguments().getInt(ROW_LAYOUT_ID_KEY) : R.layout.inbox_message;
-    }
+    public abstract int getRowLayoutId();
 
     /**
      * @return The string id of the message to display when no messages are available
      */
-    private int getEmptyListStringId() {
-        return this.getArguments() != null && this.getArguments().containsKey(EMPTY_LIST_STRING_KEY) ?
-                this.getArguments().getInt(EMPTY_LIST_STRING_KEY) : R.string.no_messages;
-    }
+    public abstract int getEmptyListStringId();
 
     /**
      * Tries to set the activity as an OnMessageListener

@@ -1,22 +1,27 @@
 /*
- * Copyright 2012 Urban Airship and Contributors
+ * Copyright 2013 Urban Airship and Contributors
  */
 
 package com.urbanairship.richpush.sample;
 
-import android.os.Bundle;
 import android.util.SparseArray;
 
 import com.urbanairship.UrbanAirshipProvider;
 
+/**
+ * Sample implementation of the InboxFragment
+ *
+ */
 public class RichPushSampleInboxFragment extends InboxFragment {
 
-    public static RichPushSampleInboxFragment newInstance(int rowLayoutId, int emptyListStringId) {
-        RichPushSampleInboxFragment inbox = new RichPushSampleInboxFragment();
-        Bundle arguments = new Bundle();
-        arguments.putInt(ROW_LAYOUT_ID_KEY, rowLayoutId);
-        arguments.putInt(EMPTY_LIST_STRING_KEY, emptyListStringId);
-        return inbox;
+    @Override
+    public int getRowLayoutId() {
+        return R.layout.inbox_message;
+    }
+
+    @Override
+    public int getEmptyListStringId() {
+        return R.string.no_messages;
     }
 
     @Override
