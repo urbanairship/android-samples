@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Urban Airship and Contributors
+ * Copyright 2013 Urban Airship and Contributors
  */
 
 package com.urbanairship.richpush.sample;
@@ -17,6 +17,14 @@ import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushUser;
 import com.urbanairship.util.UAStringUtil;
 
+/**
+ * An empty activity used for the home.
+ *
+ * If activity is started with an intent that has a message id under the key
+ * <code>RichPushApplication.MESSAGE_ID_RECEIVED_KEY</code> it will display
+ * the message in a dialog fragment.
+ *
+ */
 public class MainActivity extends SherlockFragmentActivity implements
 ActionBar.OnNavigationListener {
     protected static final String TAG = "MainActivity";
@@ -37,7 +45,7 @@ ActionBar.OnNavigationListener {
 
         this.user = RichPushManager.shared().getRichPushUser();
 
-        // If we have a message id and its the first create, display the message in a dialog
+        // If we have a message id and its the first create, set the pending message id if available
         if (savedInstanceState == null) {
             pendingMessageId = getIntent().getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
         }
@@ -51,12 +59,16 @@ ActionBar.OnNavigationListener {
     @Override
     protected void onStart() {
         super.onStart();
+
+        // Activity instrumentation for analytic tracking
         UAirship.shared().getAnalytics().activityStarted(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+
+        // Activity instrumentation for analytic tracking
         UAirship.shared().getAnalytics().activityStopped(this);
     }
 
@@ -65,12 +77,11 @@ ActionBar.OnNavigationListener {
         super.onResume();
         setNavigationToMainActivity();
 
+        // Show a message dialog if the pending message id is not null
         if (!UAStringUtil.isEmpty(pendingMessageId)) {
             showRichPushMessage(pendingMessageId);
             pendingMessageId = null;
         }
-
-        this.getSupportActionBar().setSelectedNavigationItem(this.navAdapter.getPosition("Home"));
     }
 
     @Override
@@ -104,13 +115,19 @@ ActionBar.OnNavigationListener {
         return true;
     }
 
-    // helpers
-
+    /**
+     * Displays the rich push message in a RichPushMessageDialogFragment
+     * @param messageId The specified message id
+     */
     private void showRichPushMessage(String messageId) {
         RichPushMessageDialogFragment message = RichPushMessageDialogFragment.newInstance(messageId);
         message.show(this.getSupportFragmentManager(), "message");
     }
 
+    /**
+     * Configures the action bar to have a navigation list of
+     * 'Home' and 'Inbox'
+     */
     private void configureActionBar() {
         ActionBar actionBar = this.getSupportActionBar();
         actionBar.setDisplayUseLogoEnabled(true);
@@ -122,6 +139,9 @@ ActionBar.OnNavigationListener {
         actionBar.setListNavigationCallbacks(this.navAdapter, this);
     }
 
+    /**
+     * Sets the action bar navigation to show 'Home'
+     */
     private void setNavigationToMainActivity() {
         int position = this.navAdapter.getPosition("Home");
         getSupportActionBar().setSelectedNavigationItem(position);

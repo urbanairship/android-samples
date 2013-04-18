@@ -33,14 +33,18 @@ public class PushPreferencesActivity extends SherlockPreferenceActivity {
 
 
         AirshipConfigOptions options = UAirship.shared().getAirshipConfigOptions();
+
+        // Only add the push preferences if the pushServiceEnabled is true
         if (options.pushServiceEnabled) {
             this.addPreferencesFromResource(R.xml.push_preferences);
         }
 
+        // Only add the location preferences if the locationServiceEnabled is true
         if (options.locationOptions.locationServiceEnabled) {
             this.addPreferencesFromResource(R.xml.location_preferences);
         }
 
+        // Creates the UAPreferenceAdapter with the entire preference screen
         preferenceAdapter = new UAPreferenceAdapter(getPreferenceScreen());
     }
 

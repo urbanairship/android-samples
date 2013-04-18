@@ -23,6 +23,10 @@ import com.urbanairship.richpush.RichPushUser;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * Displays the rich push message
+ *
+ */
 public class RichPushMessageView extends WebView {
 
     boolean isJSInterfaceAdded = false;
@@ -56,6 +60,10 @@ public class RichPushMessageView extends WebView {
         return super.onTouchEvent(event);
     }
 
+    /**
+     * Loads the web view with the rich push message
+     * @param message
+     */
     @SuppressWarnings("unchecked")
     public void loadRichPushMessage(RichPushMessage message) {
         if (isJSInterfaceAdded) {
@@ -63,6 +71,7 @@ public class RichPushMessageView extends WebView {
             isJSInterfaceAdded = false;
         }
 
+        // Try to load the javascript interface
         Class<? extends RichPushMessageJavaScript> jsInterfaceClass = RichPushManager.getJsInterface();
         if (jsInterfaceClass != null) {
             try {
@@ -86,6 +95,9 @@ public class RichPushMessageView extends WebView {
         loadUrl(message.getMessageBodyUrl());
     }
 
+    /**
+     * Configures the web view to display a rich push message
+     */
     private void configureBrowser() {
         WebSettings settings = getSettings();
         settings.setJavaScriptEnabled(true);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Urban Airship and Contributors
+ * Copyright 2013 Urban Airship and Contributors
  */
 
 package com.urbanairship.richpush.sample;
@@ -12,6 +12,10 @@ import com.urbanairship.richpush.RichPushMessage;
 
 import java.util.List;
 
+/**
+ * Pager adapter that manages the message fragments
+ *
+ */
 public class MessageFragmentAdapter extends FragmentStatePagerAdapter {
 
     private List<RichPushMessage> messages;
@@ -39,17 +43,19 @@ public class MessageFragmentAdapter extends FragmentStatePagerAdapter {
         return messages.size();
     }
 
-    //the default implementation of this method returns POSITION_UNCHANGED, which effectively
-    //assumes that fragments will never change position or be destroyed
     @Override
     public int getItemPosition(Object item) {
+
+        // The default implementation of this method returns POSITION_UNCHANGED, which effectively
+        // assumes that fragments will never change position or be destroyed
         return POSITION_NONE;
     }
 
-    // helpers
-
+    /**
+     * Set the list of rich push messages
+     * @param messages The current list of rich push messages to display
+     */
     public void setRichPushMessages(List<RichPushMessage> messages) {
         this.messages = messages;
     }
-
 }
