@@ -22,7 +22,7 @@ public class MessageActivity extends SherlockFragmentActivity {
 
     public static final String EXTRA_MESSAGE_ID_KEY = "com.urbanairship.richpush.sample.EXTRA_MESSAGE_ID_KEY";
 
-    private MessageViewPager messagePager;
+    private ViewPager messagePager;
     private List<RichPushMessage> messages;
 
     @Override
@@ -37,14 +37,16 @@ public class MessageActivity extends SherlockFragmentActivity {
         this.messages = RichPushManager.shared().getRichPushUser().getInbox().getMessages();
 
         // Sets up the MessageViewPager
-        this.messagePager = (MessageViewPager) this.findViewById(R.id.message_pager);
+        this.messagePager = (ViewPager) this.findViewById(R.id.message_pager);
+        MessageFragmentAdapter  messageAdapter = new MessageFragmentAdapter(this.getSupportFragmentManager());
         this.messagePager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 messages.get(position).markRead();
             }
         });
-        this.messagePager.setMessages(messages);
+        messageAdapter.setRichPushMessages(messages);
+        this.messagePager.setAdapter(messageAdapter);
 
         // Sets the current item to the position of the current message
         this.messagePager.setCurrentItem(RichPushMessageUtils.getMessagePosition(messageId, messages));

@@ -47,7 +47,8 @@ RichPushInbox.Listener {
     private ActionMode actionMode;
     private ArrayAdapter<String> navAdapter;
 
-    private MessageViewPager messagePager;
+    private ViewPager messagePager;
+
     private InboxFragment inbox;
     private RichPushInbox richPushInbox;
 
@@ -69,8 +70,9 @@ RichPushInbox.Listener {
         this.inbox.getListView().setBackgroundColor(Color.BLACK);
 
         // Set up the message view pager if it exists
-        this.messagePager = (MessageViewPager) this.findViewById(R.id.message_pager);
+        this.messagePager = (ViewPager) this.findViewById(R.id.message_pager);
         if (messagePager != null) {
+            messagePager.setAdapter(new MessageFragmentAdapter(this.getSupportFragmentManager()));
             this.messagePager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
                 @Override
                 public void onPageSelected(int position) {
@@ -368,7 +370,7 @@ RichPushInbox.Listener {
         messages = RichPushManager.shared().getRichPushUser().getInbox().getMessages();
         this.inbox.setMessages(messages);
         if (messagePager != null) {
-            this.messagePager.setMessages(messages);
+            ((MessageFragmentAdapter) messagePager.getAdapter()).setRichPushMessages(messages);
         }
     }
 
