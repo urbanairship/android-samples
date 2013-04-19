@@ -8,6 +8,7 @@ import android.content.Context;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TimePicker;
 
 import java.text.SimpleDateFormat;
@@ -27,6 +28,13 @@ abstract class QuietTimePickerPreference extends DialogPreference implements UAP
 
     public QuietTimePickerPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
+    }
+
+    @Override
+    public View onCreateView(ViewGroup parent) {
+        View view = super.onCreateView(parent);
+        view.setContentDescription(getPreferenceType().toString());
+        return view;
     }
 
     @Override

@@ -1,0 +1,8 @@
+#!/bin/bash -ex
+
+adb shell pm clear com.urbanairship.push.sample
+ant build
+
+adb push bin/RichPushSampleUITests.jar /data/local/tmp
+adb shell uiautomator runtest RichPushSampleUITests.jar -c com.urbanairship.richpush.sample.test.RichPushSettings
+

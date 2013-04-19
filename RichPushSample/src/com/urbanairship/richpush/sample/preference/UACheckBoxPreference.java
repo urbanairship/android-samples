@@ -7,6 +7,8 @@ package com.urbanairship.richpush.sample.preference;
 import android.content.Context;
 import android.preference.CheckBoxPreference;
 import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewGroup;
 
 /**
  * Abstract CheckBoxPreference that implements UAPreference
@@ -15,6 +17,13 @@ import android.util.AttributeSet;
 abstract class UACheckBoxPreference extends CheckBoxPreference implements UAPreference {
     public UACheckBoxPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
+    }
+
+    @Override
+    public View onCreateView(ViewGroup parent) {
+        View view = super.onCreateView(parent);
+        view.setContentDescription(getPreferenceType().toString());
+        return view;
     }
 
     @Override
