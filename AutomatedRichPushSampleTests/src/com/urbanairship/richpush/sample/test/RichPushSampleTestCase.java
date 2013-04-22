@@ -76,7 +76,6 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     }
 
     public void testInbox() throws Exception {
-
         navigateToInbox();
 
         // Enable push
@@ -88,7 +87,12 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         Thread.sleep(5000);
 
         // Count number of messages
-        int originalMessageCount = new UiCollection(new UiSelector().className("android.widget.ListView")).getChildCount();
+        int originalMessageCount = 0;
+        try {
+            originalMessageCount = new UiCollection(new UiSelector().className("android.widget.ListView")).getChildCount();
+        } catch (Exception ex) {
+            // must not exist yet
+        }
 
         // Send push
         SendPushUtils.sendRichPushMessage();
@@ -131,8 +135,15 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         deleteAction.click();
         this.getUiDevice().waitForWindowUpdate(null, 5000);
 
+        int lastMessageCount = 0;
+        try {
+            lastMessageCount = new UiCollection(new UiSelector().className("android.widget.ListView")).getChildCount();
+        } catch (Exception ex) {
+            // must not exist anymore
+        }
+
         // Check that we have one less message
-        assertEquals(originalMessageCount, new UiCollection(new UiSelector().className("android.widget.ListView")).getChildCount());
+        assertEquals(originalMessageCount, lastMessageCount);
     }
 
     public void testPreferences() throws UiObjectNotFoundException {
