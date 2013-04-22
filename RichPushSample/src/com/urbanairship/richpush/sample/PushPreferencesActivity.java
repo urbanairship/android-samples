@@ -54,8 +54,19 @@ public class PushPreferencesActivity extends SherlockPreferenceActivity {
     }
 
     @Override
-    public void onStop() {
+    protected void onStart() {
+        super.onStart();
+
+        // Activity instrumentation for analytic tracking
+        UAirship.shared().getAnalytics().activityStarted(this);
+    }
+
+    @Override
+    protected void onStop() {
         super.onStop();
+
+        // Activity instrumentation for analytic tracking
+        UAirship.shared().getAnalytics().activityStopped(this);
 
         // Apply any changed UA preferences from the preference screen
         preferenceAdapter.applyUrbanAirshipPreferences();
