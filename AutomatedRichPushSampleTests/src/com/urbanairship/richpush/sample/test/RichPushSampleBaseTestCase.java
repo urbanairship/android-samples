@@ -21,7 +21,7 @@ import java.net.URL;
 
 public abstract class RichPushSampleBaseTestCase extends UiAutomatorTestCase {
 
-    private static final String TAG = "RichPushSettings";
+    static final String TAG = "RichPushSampleUiTests";
 
     private static final String RICH_PUSH_URL = "https://go.urbanairship.com/api/airmail/send/";
     private static final String MASTER_SECRET = "";
@@ -84,11 +84,13 @@ public abstract class RichPushSampleBaseTestCase extends UiAutomatorTestCase {
         return sb.toString();
     }
 
-    void enablePreference(String preferenceDescription) throws UiObjectNotFoundException {
-        UiObject preference = getPreferenceCheckbox(preferenceDescription);
+    void setPreferenceCheckBoxEnabled(String setting, boolean enabled) throws UiObjectNotFoundException {
+        UiObject preference = new UiObject(new UiSelector().description(setting));
+        UiObject preferenceCheckBox =  preference.getChild(new UiSelector().className(android.widget.CheckBox.class));
 
-        if (!preference.isChecked()) {
-            preference.click();
+
+        if (preferenceCheckBox.isChecked() != enabled) {
+            preferenceCheckBox.click();
         }
     }
 
@@ -97,11 +99,6 @@ public abstract class RichPushSampleBaseTestCase extends UiAutomatorTestCase {
         UiObject preferencesButton = new UiObject(new UiSelector().description("Preferences"));
         assertTrue("Unable to detect Preferences button.", preferencesButton.exists());
         preferencesButton.click();
-    }
-
-    UiObject getPreferenceCheckbox(String preferenceDescription) throws UiObjectNotFoundException {
-        UiObject preference = new UiObject(new UiSelector().description(preferenceDescription));
-        return preference.getChild(new UiSelector().className(android.widget.CheckBox.class));
     }
 
     void clearNotifications() throws UiObjectNotFoundException {
@@ -117,6 +114,78 @@ public abstract class RichPushSampleBaseTestCase extends UiAutomatorTestCase {
         } else {
             this.getUiDevice().pressBack();
         }
+    }
+
+
+    void assertPreferenceViewDisabled(String setting) throws UiObjectNotFoundException {
+        UiObject preferenceView = new UiObject(new UiSelector().description(setting));
+        assertFalse(preferenceView.isEnabled());
+    }
+
+    void verifyTimePickerSetting(String setting) throws UiObjectNotFoundException {
+        UiObject timePicker = new UiObject(new UiSelector().description(setting));
+        UiObject okButton = new UiObject(new UiSelector().className("android.widget.Button").text("OK"));
+
+        timePicker.click();
+
+        // Change the time and capture
+        for (int i = 0; i < 3; i++) {
+            UiObject numberPicker = new UiObject(new UiSelector().className("android.widget.NumberPicker").index(i));
+            UiObject button = numberPicker.getChild(new UiSelector().className("android.widget.Button"));
+            button.click();
+        }
+
+        // Go in and out of the time picker to grab the set text.  The edit text is not available
+        // if we do it right away...
+        okButton.click();
+        timePicker.click();
+
+        // Capture the set time
+        String capturedTime = "";
+        for (int i = 0; i < 3; i++) {
+            UiObject numberPicker = new UiObject(new UiSelector().className("android.widget.NumberPicker").index(i));
+            UiObject editText = numberPicker.getChild(new UiSelector().className("android.widget.EditText"));
+            capturedTime += editText.getText();
+        }
+
+        // Back out of activity
+        okButton.click();
+        this.getUiDevice().pressBack();
+
+        // Go back into the time picker
+        goToPreferences();
+        timePicker.click();
+
+        // Grab the current time
+        String setTime = "";
+        for (int i = 0; i < 3; i++) {
+            UiObject numberPicker = new UiObject(new UiSelector().className("android.widget.NumberPicker").index(i));
+            UiObject editText = numberPicker.getChild(new UiSelector().className("android.widget.EditText"));
+            setTime += editText.getText();
+        }
+
+        okButton.click();
+
+        assertEquals("Failed to set quiet times", capturedTime, setTime);
+    }
+
+    void verifyCheckBoxSetting(String setting) throws UiObjectNotFoundException {
+        boolean isEnabled;
+        UiObject settingCheckBox = new UiObject(new UiSelector().description(setting));
+
+        settingCheckBox.click();
+        isEnabled = settingCheckBox.isChecked();
+        this.getUiDevice().pressBack();
+        goToPreferences();
+
+        assertEquals("Setting " + setting + " did not toggle correctly", isEnabled, settingCheckBox.isChecked());
+
+        settingCheckBox.click();
+        isEnabled = settingCheckBox.isChecked();
+        this.getUiDevice().pressBack();
+        goToPreferences();
+
+        assertEquals("Setting " + setting + " did not toggle correctly", isEnabled, settingCheckBox.isChecked());
     }
 
     void navigateToAppHome() throws Exception {
