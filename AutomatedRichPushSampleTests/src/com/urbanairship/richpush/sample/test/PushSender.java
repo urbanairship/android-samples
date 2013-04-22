@@ -10,29 +10,34 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class SendPushUtils {
-    static final String TAG = "RichPushSampleUiTests";
-
+public class PushSender {
+    private static final String TAG = "RichPushSampleUiTests";
+    private static final String RICH_PUSH_USER_TAG = "testing";
     private static final String RICH_PUSH_URL = "https://go.urbanairship.com/api/airmail/send/";
-    private static final String MASTER_SECRET = "";
-    private static final String APP_KEY = "";
-    private static final String RICH_PUSH_USER_ID = "";
 
-    public static void sendRichPushMessage() throws Exception {
+    private final String masterSecret;
+    private final String appKey;
+
+    public PushSender(String masterSecret, String appKey) {
+        this.masterSecret = masterSecret;
+        this.appKey = appKey;
+    }
+
+    public void sendRichPushMessage() throws Exception {
         sendRichPushMessage("");
     }
 
-    public static void sendRichPushMessage(String activity) throws Exception {
+    public void sendRichPushMessage(String activity) throws Exception {
         StringBuilder builder = new StringBuilder();
         builder.append("{ \"push\": {\"android\": { \"alert\": \"Rich Push Alert\", \"extra\": { \"activity\": \"" + activity + "\" } } },");
-        builder.append("\"users\": [\"" + RICH_PUSH_USER_ID + "\"],");
+        builder.append("\"tags\": [\"" + RICH_PUSH_USER_TAG + "\"],");
         builder.append("\"title\": \"Rich Push Title\",");
         builder.append("\"message\": \"Rich Push Message\",");
         builder.append("\"content-type\": \"text/html\"}");
 
         String json = builder.toString();
         URL url = new URL(RICH_PUSH_URL);
-        String basicAuthString =  "Basic "+Base64.encodeToString(String.format("%s:%s", APP_KEY, MASTER_SECRET).getBytes(), Base64.NO_WRAP);
+        String basicAuthString =  "Basic "+Base64.encodeToString(String.format("%s:%s", appKey, masterSecret).getBytes(), Base64.NO_WRAP);
 
         try {
             sendMessage(url, json, basicAuthString);
@@ -43,7 +48,7 @@ public class SendPushUtils {
         }
     }
 
-    private static void sendMessage(URL url, String message, String basicAuthString) throws IOException {
+    private void sendMessage(URL url, String message, String basicAuthString) throws IOException {
         HttpURLConnection conn = null;
 
         try {

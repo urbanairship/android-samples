@@ -11,8 +11,18 @@ import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 
 public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
+    // Time to wait for notifications to appear in milliseconds.
+    private static int NOTIFICATION_WAIT_TIME = 60000; // 60 seconds - push to tags is slower than to user
+
+    private PushSender pushSender;
+
     @Override
     public void setUp() throws Exception {
+        // Create a push sender with the master secret and app key from the params
+        String masterSecret = getParams().getString("MASTER_SECRET");
+        String appKey = getParams().getString("APP_KEY");
+        pushSender = new PushSender(masterSecret, appKey);
+
         // Open application
         openApp();
 
@@ -31,11 +41,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
         clearNotifications();
 
-        SendPushUtils.sendRichPushMessage();
+        pushSender.sendRichPushMessage();
 
-        // Wait for notification to arrive
-        this.getUiDevice().waitForWindowUpdate(null, 10000);
-
+        openNotificationArea();
+        waitForNotificationToArrive();
         openRichPushNotification();
 
         // Wait for views to load
@@ -46,11 +55,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         assertTrue("Failed to display notification in a webview", webview.exists());
 
         // Send push to main activity
-        SendPushUtils.sendRichPushMessage("home");
+        pushSender.sendRichPushMessage("home");
 
-        // Wait for notification to arrive
-        this.getUiDevice().waitForWindowUpdate(null, 10000);
-
+        openNotificationArea();
+        waitForNotificationToArrive();
         openRichPushNotification();
 
         // Make sure we have a dialog fragment and web view in main activity
@@ -65,15 +73,15 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         this.getUiDevice().pressBack();
 
         // Send a notification
-        SendPushUtils.sendRichPushMessage();
-
-        // Give time for a notification to arrive
-        this.getUiDevice().waitForWindowUpdate(null, 10000);
+        pushSender.sendRichPushMessage();
 
         openNotificationArea();
+        waitForNotificationToArrive();
 
         assertFalse("Received push notification when push is disabled", richPushNotificationExists());
+        this.getUiDevice().pressBack();
     }
+
 
     public void testInbox() throws Exception {
         navigateToInbox();
@@ -95,8 +103,12 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         }
 
         // Send push
-        SendPushUtils.sendRichPushMessage();
-        this.getUiDevice().waitForWindowUpdate(null, 10000);
+        pushSender.sendRichPushMessage();
+
+        // Wait for it to arrive
+        openNotificationArea();
+        waitForNotificationToArrive();
+        this.getUiDevice().pressBack();
 
         // Check that we have one more message
         assertEquals(originalMessageCount + 1, new UiCollection(new UiSelector().className("android.widget.ListView")).getChildCount());
@@ -109,7 +121,6 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
         assertTrue(messageUnreadIndicator.exists());
         assertFalse(messageReadIndicator.exists());
-
 
         // mark as read and check indicator
         messageCheckBox.click();
@@ -205,6 +216,13 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     }
 
     // Helpers
+
+    private void waitForNotificationToArrive() throws InterruptedException {
+        long startTime = System.currentTimeMillis();
+        while (System.currentTimeMillis() - startTime < NOTIFICATION_WAIT_TIME && !richPushNotificationExists()) {
+            Thread.sleep(1000);
+        }
+    }
 
     private void setPreferenceCheckBoxEnabled(String setting, boolean enabled) throws UiObjectNotFoundException {
         UiObject preference = new UiObject(new UiSelector().description(setting));
@@ -390,9 +408,6 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     }
 
     private void openRichPushNotification() throws UiObjectNotFoundException {
-        // Open notification area
-        openNotificationArea();
-
         assertTrue("No push notifications to open",  richPushNotificationExists());
 
         // Open notification
