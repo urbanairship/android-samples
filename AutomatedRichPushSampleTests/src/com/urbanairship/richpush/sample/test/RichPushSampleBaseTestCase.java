@@ -34,9 +34,13 @@ public abstract class RichPushSampleBaseTestCase extends UiAutomatorTestCase {
         navigateToAppHome();
     }
 
-    String sendRichPushMessage() throws Exception {
+    void sendRichPushMessage() throws Exception {
+        sendRichPushMessage("");
+    }
+
+    void sendRichPushMessage(String activity) throws Exception {
         StringBuilder builder = new StringBuilder();
-        builder.append("{ \"push\": {\"android\": { \"alert\": \"Rich Push Alert\" } },");
+        builder.append("{ \"push\": {\"android\": { \"alert\": \"Rich Push Alert\", \"extra\": { \"activity\": \"" + activity + "\" } } },");
         builder.append("\"users\": [\"" + RICH_PUSH_USER_ID + "\"],");
         builder.append("\"title\": \"Rich Push Title\",");
         builder.append("\"message\": \"Rich Push Message\",");
@@ -81,7 +85,6 @@ public abstract class RichPushSampleBaseTestCase extends UiAutomatorTestCase {
         rd.close();
 
         conn.disconnect();
-        return sb.toString();
     }
 
     void setPreferenceCheckBoxEnabled(String setting, boolean enabled) throws UiObjectNotFoundException {
@@ -201,6 +204,20 @@ public abstract class RichPushSampleBaseTestCase extends UiAutomatorTestCase {
         }
     }
 
+    void navigateToInbox() throws Exception {
+        navigateToAppHome();
+        UiObject spinner = new UiObject(new UiSelector().className("android.widget.Spinner"));
+        spinner.click();
+
+        this.getUiDevice().waitForWindowUpdate(null, 1000);
+
+        UiObject inbox = new UiObject(new UiSelector().text("Inbox"));
+        inbox.click();
+
+        // Wait for activity
+        this.getUiDevice().waitForWindowUpdate(null, 1000);
+    }
+
     void openApp() throws UiObjectNotFoundException {
         try {
             getUiDevice().wakeUp();
@@ -252,5 +269,29 @@ public abstract class RichPushSampleBaseTestCase extends UiAutomatorTestCase {
         // Validate that the package name is the expected one
         UiObject pushSampleValidation = new UiObject(new UiSelector().packageName("com.urbanairship.richpush.sample"));
         assertTrue("Unable to detect Rich Push Sample", pushSampleValidation.exists());
+    }
+
+    void openRichPushNotification() throws UiObjectNotFoundException {
+        // Open notification area
+        openNotificationArea();
+
+        assertTrue("No push notifications to open",  richPushNotificationExists());
+
+        // Open notification
+        UiObject notificationAlert = new UiObject(new UiSelector().text("Rich Push Alert"));
+        notificationAlert.click();
+    }
+
+
+    void openNotificationArea() {
+        this.getUiDevice().swipe(50, 2, 50, this.getUiDevice().getDisplayHeight(), 5);
+    }
+
+    boolean richPushNotificationExists() {
+        // Check for notification
+        UiObject notificationTitle = new UiObject(new UiSelector().text("Rich Push Sample"));
+        UiObject notificationAlert = new UiObject(new UiSelector().text("Rich Push Alert"));
+
+        return notificationTitle.exists() && notificationAlert.exists();
     }
 }

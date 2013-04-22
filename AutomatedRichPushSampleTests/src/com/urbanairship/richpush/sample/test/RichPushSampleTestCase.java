@@ -1,5 +1,6 @@
 package com.urbanairship.richpush.sample.test;
 
+import com.android.uiautomator.core.UiCollection;
 import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
 import com.android.uiautomator.core.UiSelector;
@@ -20,19 +21,9 @@ public class RichPushSampleTestCase extends RichPushSampleBaseTestCase {
         sendRichPushMessage();
 
         // Wait for notification to arrive
-        this.getUiDevice().waitForWindowUpdate(null, 5000);
+        this.getUiDevice().waitForWindowUpdate(null, 10000);
 
-        // Open notification area
-        this.getUiDevice().swipe(50, 2, 50, this.getUiDevice().getDisplayHeight(), 5);
-
-        // Check for notification
-        UiObject notificationTitle = new UiObject(new UiSelector().text("Rich Push Sample"));
-        UiObject notificationAlert = new UiObject(new UiSelector().text("Rich Push Alert"));
-        assertTrue("Failed to receive rich push notification", notificationTitle.exists());
-        assertTrue("Failed to receive rich push notification alert", notificationAlert.exists());
-
-        // Open notification
-        notificationAlert.click();
+        openRichPushNotification();
 
         // Wait for views to load
         this.getUiDevice().waitForWindowUpdate(null, 1000);
@@ -40,6 +31,95 @@ public class RichPushSampleTestCase extends RichPushSampleBaseTestCase {
         // Check for notification being displayed (web view)
         UiObject webview = new UiObject(new UiSelector().className("android.webkit.WebView"));
         assertTrue("Failed to display notification in a webview", webview.exists());
+
+        // Send push to main activity
+        sendRichPushMessage("home");
+
+        // Wait for notification to arrive
+        this.getUiDevice().waitForWindowUpdate(null, 10000);
+
+        openRichPushNotification();
+
+        // Make sure we have a dialog fragment and web view in main activity
+        UiObject richPushDialog = new UiObject(new UiSelector().className("android.webkit.WebView").description("Rich push message dialog"));
+        assertTrue("Failed to display notification in a webview", richPushDialog.exists());
+
+        this.getUiDevice().pressBack();
+
+        // Disable push to verify we don't receive push notifications
+        goToPreferences();
+        setPreferenceCheckBoxEnabled("PUSH_ENABLE", false);
+        this.getUiDevice().pressBack();
+
+        // Send a notification
+        sendRichPushMessage();
+
+        // Give time for a notification to arrive
+        this.getUiDevice().waitForWindowUpdate(null, 10000);
+
+        openNotificationArea();
+
+        assertFalse("Received push notification when push is disabled", richPushNotificationExists());
+    }
+
+    public void testInbox() throws Exception {
+
+        navigateToInbox();
+
+        // Enable push
+        goToPreferences();
+        setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
+        this.getUiDevice().pressBack();
+
+        // Wait a second for any push registration to take place
+        Thread.sleep(3000);
+
+        // Count number of messages
+        int originalMessageCount = new UiCollection(new UiSelector().className("android.widget.ListView")).getChildCount();
+
+        // Send push
+        sendRichPushMessage();
+        this.getUiDevice().waitForWindowUpdate(null, 10000);
+
+        // Check that we have one more message
+        assertEquals(originalMessageCount + 1, new UiCollection(new UiSelector().className("android.widget.ListView")).getChildCount());
+
+        // grab 1st message, mark as read if not already read
+        UiObject message = new UiObject(new UiSelector().description("Inbox message").index(0));
+        UiObject messageCheckBox = message.getChild(new UiSelector().className("android.widget.CheckBox"));
+        UiObject messageReadIndicator = message.getChild(new UiSelector().description("Message read"));
+        UiObject messageUnreadIndicator =  message.getChild(new UiSelector().description("Message unread"));
+
+        assertTrue(messageUnreadIndicator.exists());
+        assertFalse(messageReadIndicator.exists());
+
+
+        // mark as read and check indicator
+        messageCheckBox.click();
+        UiObject markReadAction = new UiObject(new UiSelector().description("Mark Read"));
+        markReadAction.click();
+        this.getUiDevice().waitForWindowUpdate(null, 5000);
+
+        assertTrue(messageReadIndicator.exists());
+        assertFalse(messageUnreadIndicator.exists());
+
+        // mark as unread and check indicator
+        messageCheckBox.click();
+        UiObject markUnreadAction = new UiObject(new UiSelector().description("Mark Unread"));
+        markUnreadAction.click();
+        this.getUiDevice().waitForWindowUpdate(null, 5000);
+
+        assertTrue(messageUnreadIndicator.exists());
+        assertFalse(messageReadIndicator.exists());
+
+        // delete message and compare count of messages
+        messageCheckBox.click();
+        UiObject deleteAction = new UiObject(new UiSelector().description("Delete"));
+        deleteAction.click();
+        this.getUiDevice().waitForWindowUpdate(null, 5000);
+
+        // Check that we have one less message
+        assertEquals(originalMessageCount, new UiCollection(new UiSelector().className("android.widget.ListView")).getChildCount());
     }
 
     public void testPreferences() throws UiObjectNotFoundException {

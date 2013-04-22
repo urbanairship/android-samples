@@ -135,7 +135,13 @@ public abstract class InboxFragment extends SherlockListFragment {
         @Override
         public void setViewValue(View view, RichPushMessage message, String columnName) {
             if (columnName.equals(UrbanAirshipProvider.RichPush.COLUMN_NAME_UNREAD)) {
-                view.setBackgroundColor(message.isRead() ? Color.BLACK : Color.YELLOW);
+                if (message.isRead()) {
+                    view.setBackgroundColor(Color.BLACK);
+                    view.setContentDescription("Message read");
+                } else {
+                    view.setBackgroundColor(Color.YELLOW);
+                    view.setContentDescription("Message unread");
+                }
             } else if (columnName.equals(UrbanAirshipProvider.RichPush.COLUMN_NAME_TITLE)) {
                 ((TextView) view).setText(message.getTitle());
             } else if (columnName.equals(UrbanAirshipProvider.COLUMN_NAME_TIMESTAMP)) {
