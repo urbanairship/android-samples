@@ -9,6 +9,10 @@ import com.android.uiautomator.core.UiScrollable;
 import com.android.uiautomator.core.UiSelector;
 import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 
+/**
+ * Automated testing of the Rich Push Sample application
+ *
+ */
 public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
     // Time to wait for notifications to appear in milliseconds.
@@ -16,6 +20,9 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
     private PushSender pushSender;
 
+    /**
+     * Prepare for testing, which includes getting the masterSecret and appKey
+     */
     @Override
     public void setUp() throws Exception {
         // Create a push sender with the master secret and app key from the params
@@ -30,6 +37,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         navigateToAppHome();
     }
 
+    /**
+     * Test the sending and receiving of a rich push message
+     * @throws Exception
+     */
     public void testRichPushNotification() throws Exception {
         // Make sure push is enabled
         goToPreferences();
@@ -82,7 +93,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         this.getUiDevice().pressBack();
     }
 
-
+    /**
+     * Tests the UI for receiving a rich push message, marking it read, unread and deleting it
+     * @throws Exception
+     */
     public void testInbox() throws Exception {
         navigateToInbox();
 
@@ -157,6 +171,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         assertEquals(originalMessageCount, lastMessageCount);
     }
 
+    /**
+     * Test the setting of all push and location preferences
+     * @throws UiObjectNotFoundException
+     */
     public void testPreferences() throws UiObjectNotFoundException {
         goToPreferences();
 
@@ -217,6 +235,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
     // Helpers
 
+    /**
+     * Wait for the notification alert to arrive by polling the notification area
+     * @throws InterruptedException
+     */
     private void waitForNotificationToArrive() throws InterruptedException {
         long startTime = System.currentTimeMillis();
         while (System.currentTimeMillis() - startTime < NOTIFICATION_WAIT_TIME && !richPushNotificationExists()) {
@@ -224,6 +246,12 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         }
     }
 
+    /**
+     * Set the specified preference setting
+     * @param setting The specified preference to be set
+     * @param enabled Boolean to enable or disable the specified setting
+     * @throws UiObjectNotFoundException
+     */
     private void setPreferenceCheckBoxEnabled(String setting, boolean enabled) throws UiObjectNotFoundException {
         UiObject preference = new UiObject(new UiSelector().description(setting));
         UiObject preferenceCheckBox =  preference.getChild(new UiSelector().className(android.widget.CheckBox.class));
@@ -234,6 +262,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         }
     }
 
+    /**
+     * Navigate to the Preferences screen
+     * @throws UiObjectNotFoundException
+     */
     private void goToPreferences() throws UiObjectNotFoundException {
         // Select the Preferences
         UiObject preferencesButton = new UiObject(new UiSelector().description("Preferences"));
@@ -241,6 +273,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         preferencesButton.click();
     }
 
+    /**
+     * Clears all the notifications in the notification area
+     * @throws UiObjectNotFoundException
+     */
     private void clearNotifications() throws UiObjectNotFoundException {
 
         // Open notification area
@@ -256,11 +292,21 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         }
     }
 
+    /**
+     * Check specified preference view is disabled
+     * @param setting The specified preference setting
+     * @throws UiObjectNotFoundException
+     */
     private void assertPreferenceViewDisabled(String setting) throws UiObjectNotFoundException {
         UiObject preferenceView = new UiObject(new UiSelector().description(setting));
         assertFalse(preferenceView.isEnabled());
     }
 
+    /**
+     * Check the time picker setting was set
+     * @param setting The specified time picker
+     * @throws UiObjectNotFoundException
+     */
     private void verifyTimePickerSetting(String setting) throws UiObjectNotFoundException {
         UiObject timePicker = new UiObject(new UiSelector().description(setting));
         UiObject okButton = new UiObject(new UiSelector().className("android.widget.Button").text("OK"));
@@ -308,6 +354,11 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         assertEquals("Failed to set quiet times", capturedTime, setTime);
     }
 
+    /**
+     * Verify the checkbox state of the preference
+     * @param setting The specified preference
+     * @throws UiObjectNotFoundException
+     */
     private void verifyCheckBoxSetting(String setting) throws UiObjectNotFoundException {
         boolean isEnabled;
         UiObject settingCheckBox = new UiObject(new UiSelector().description(setting));
@@ -327,6 +378,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         assertEquals("Setting " + setting + " did not toggle correctly", isEnabled, settingCheckBox.isChecked());
     }
 
+    /**
+     * Navigate to the application's home screen
+     * @throws Exception
+     */
     private void navigateToAppHome() throws Exception {
         UiObject navigateHomeButton = new UiObject(new UiSelector().description("Navigate home"));
         UiObject navigateUpButton = new UiObject(new UiSelector().description("Navigate up"));
@@ -340,6 +395,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         }
     }
 
+    /**
+     * Navigate to the Inbox screen
+     * @throws Exception
+     */
     private void navigateToInbox() throws Exception {
         navigateToAppHome();
         UiObject spinner = new UiObject(new UiSelector().className("android.widget.Spinner"));
@@ -354,6 +413,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         this.getUiDevice().waitForWindowUpdate(null, 1000);
     }
 
+    /**
+     * Find and open the Rich Push Sample app
+     * @throws UiObjectNotFoundException
+     */
     private void openApp() throws UiObjectNotFoundException {
         try {
             getUiDevice().wakeUp();
@@ -407,6 +470,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         assertTrue("Unable to detect Rich Push Sample", pushSampleValidation.exists());
     }
 
+    /**
+     * Open the rich push notification from the notification area
+     * @throws UiObjectNotFoundException
+     */
     private void openRichPushNotification() throws UiObjectNotFoundException {
         assertTrue("No push notifications to open",  richPushNotificationExists());
 
@@ -415,10 +482,17 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         notificationAlert.click();
     }
 
+    /**
+     * Open the notification area
+     */
     private void openNotificationArea() {
         this.getUiDevice().swipe(50, 2, 50, this.getUiDevice().getDisplayHeight(), 5);
     }
 
+    /**
+     * Checks to see if the rich push notification exists in the notification area
+     * @return
+     */
     private boolean richPushNotificationExists() {
         // Check for notification
         UiObject notificationTitle = new UiObject(new UiSelector().text("Rich Push Sample"));

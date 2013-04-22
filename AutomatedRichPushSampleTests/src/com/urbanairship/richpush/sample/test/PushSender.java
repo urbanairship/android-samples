@@ -10,6 +10,10 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * Helper class to send push notifications
+ *
+ */
 public class PushSender {
     private static final String TAG = "RichPushSampleUiTests";
     private static final String RICH_PUSH_USER_TAG = "testing";
@@ -18,15 +22,29 @@ public class PushSender {
     private final String masterSecret;
     private final String appKey;
 
+    /**
+     * Constructor for PushSender
+     * @param masterSecret The specified master secret for the app
+     * @param appKey The specified app key for the app
+     */
     public PushSender(String masterSecret, String appKey) {
         this.masterSecret = masterSecret;
         this.appKey = appKey;
     }
 
+    /**
+     * Sends a rich push message
+     * @throws Exception
+     */
     public void sendRichPushMessage() throws Exception {
         sendRichPushMessage("");
     }
 
+    /**
+     * Sends a rich push message to an activity
+     * @param activity The specified activity to send the rich push message to
+     * @throws Exception
+     */
     public void sendRichPushMessage(String activity) throws Exception {
         StringBuilder builder = new StringBuilder();
         builder.append("{ \"push\": {\"android\": { \"alert\": \"Rich Push Alert\", \"extra\": { \"activity\": \"" + activity + "\" } } },");
@@ -48,6 +66,13 @@ public class PushSender {
         }
     }
 
+    /**
+     * Actually sends the rich push message
+     * @param url The specified url the message is sent to
+     * @param message The json formatted message to be sent
+     * @param basicAuthString The basicAuthString to be sent
+     * @throws IOException
+     */
     private void sendMessage(URL url, String message, String basicAuthString) throws IOException {
         HttpURLConnection conn = null;
 
