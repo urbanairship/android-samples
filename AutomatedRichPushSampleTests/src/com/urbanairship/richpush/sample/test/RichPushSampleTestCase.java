@@ -42,8 +42,10 @@ public class RichPushSampleTestCase extends RichPushSampleBaseTestCase {
         assertTrue("Failed to display notification in a webview", webview.exists());
     }
 
-    public void testPushSettings() throws UiObjectNotFoundException {
+    public void testPreferences() throws UiObjectNotFoundException {
         goToPreferences();
+
+        // Push Settings
 
         // Test for parent push setting
         verifyCheckBoxSetting("PUSH_ENABLE");
@@ -73,9 +75,28 @@ public class RichPushSampleTestCase extends RichPushSampleBaseTestCase {
         // Disable push settings
         setPreferenceCheckBoxEnabled("PUSH_ENABLE", false);
 
-        // Make sure the rest of the preference views are disabled
+        // Make sure the rest of the push preference views are disabled
         assertPreferenceViewDisabled("SOUND_ENABLE");
         assertPreferenceViewDisabled("VIBRATE_ENABLE");
         assertPreferenceViewDisabled("QUIET_TIME_ENABLE");
+
+        // Location Settings
+
+        // Test for parent location setting
+        verifyCheckBoxSetting("LOCATION_ENABLE");
+
+        // The other location preferences depend on having location enabled
+        setPreferenceCheckBoxEnabled("LOCATION_ENABLE", true);
+
+        // Test foreground and background enable preferences
+        verifyCheckBoxSetting("LOCATION_FOREGROUND_ENABLE");
+        verifyCheckBoxSetting("LOCATION_BACKGROUND_ENABLE");
+
+        // Disable location settings
+        setPreferenceCheckBoxEnabled("LOCATION_ENABLE", false);
+
+        // Make sure the rest of the location preference views are disabled
+        assertPreferenceViewDisabled("LOCATION_FOREGROUND_ENABLE");
+        assertPreferenceViewDisabled("LOCATION_BACKGROUND_ENABLE");
     }
 }
