@@ -58,15 +58,9 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         waitForNotificationToArrive();
         openRichPushNotification();
 
-        // Wait for views to load
-        this.getUiDevice().waitForWindowUpdate(null, 5000);
-
-        // This second wait is for the slow emulator
-        this.getUiDevice().waitForWindowUpdate(null, 5000);
-
         // Check for notification being displayed (web view)
         UiObject webview = new UiObject(new UiSelector().className("android.webkit.WebView"));
-        assertTrue("Failed to display notification in a webview", webview.exists());
+        assertTrue("Failed to display notification in a webview", waitForUiObjectsToExist(10000, webview));
 
         // Send push to main activity
         pushSender.sendRichPushMessage("home");
@@ -75,12 +69,9 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         waitForNotificationToArrive();
         openRichPushNotification();
 
-        // This second wait is for the slow emulator
-        this.getUiDevice().waitForWindowUpdate(null, 5000);
-
         // Make sure we have a dialog fragment and web view in main activity
         UiObject richPushDialog = new UiObject(new UiSelector().className("android.webkit.WebView").description("Rich push message dialog"));
-        assertTrue("Failed to display notification in a webview", richPushDialog.exists());
+        assertTrue("Failed to display notification in a webview",  waitForUiObjectsToExist(10000, richPushDialog));
 
         this.getUiDevice().pressBack();
 
@@ -93,11 +84,13 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         pushSender.sendRichPushMessage();
 
         openNotificationArea();
-        waitForNotificationToArrive();
+        assertFalse("Received push notification when push is disabled", waitForNotificationToArrive());
 
-        assertFalse("Received push notification when push is disabled", richPushNotificationExists());
+
         this.getUiDevice().pressBack();
     }
+
+
 
     /**
      * Tests the UI for receiving a rich push message, marking it read, unread and deleting it
@@ -240,18 +233,6 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     }
 
     // Helpers
-
-    /**
-     * Wait for the notification alert to arrive by polling the notification area
-     * @throws InterruptedException
-     */
-    private void waitForNotificationToArrive() throws InterruptedException {
-        long startTime = System.currentTimeMillis();
-        while (System.currentTimeMillis() - startTime < NOTIFICATION_WAIT_TIME && !richPushNotificationExists()) {
-            Thread.sleep(1000);
-        }
-    }
-
     /**
      * Set the specified preference setting
      * @param setting The specified preference to be set
@@ -259,9 +240,12 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
      * @throws UiObjectNotFoundException
      */
     private void setPreferenceCheckBoxEnabled(String setting, boolean enabled) throws UiObjectNotFoundException {
+        // Scroll to the preference if its not visible in the list
+        UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
+        listView.scrollDescriptionIntoView(setting);
+
         UiObject preference = new UiObject(new UiSelector().description(setting));
         UiObject preferenceCheckBox =  preference.getChild(new UiSelector().className(android.widget.CheckBox.class));
-
 
         if (preferenceCheckBox.isChecked() != enabled) {
             preferenceCheckBox.click();
@@ -314,6 +298,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
      * @throws UiObjectNotFoundException
      */
     private void verifyTimePickerSetting(String setting) throws UiObjectNotFoundException {
+        // Scroll to the preference if its not visible in the list
+        UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
+        listView.scrollDescriptionIntoView(setting);
+
         UiObject timePicker = new UiObject(new UiSelector().description(setting));
         UiObject okButton = new UiObject(new UiSelector().className("android.widget.Button").text("OK"));
 
@@ -345,6 +333,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
         // Go back into the time picker
         goToPreferences();
+
+        // Scroll to the preference if its not visible in the list
+        listView.scrollDescriptionIntoView(setting);
+
         timePicker.click();
 
         // Grab the current time
@@ -367,6 +359,11 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
      */
     private void verifyCheckBoxSetting(String setting) throws UiObjectNotFoundException {
         boolean isEnabled;
+
+        // Scroll to the preference if its not visible in the list
+        UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
+        listView.scrollDescriptionIntoView(setting);
+
         UiObject settingCheckBox = new UiObject(new UiSelector().description(setting));
 
         settingCheckBox.click();
@@ -374,12 +371,18 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         this.getUiDevice().pressBack();
         goToPreferences();
 
+        // Scroll to the preference if its not visible in the list
+        listView.scrollDescriptionIntoView(setting);
+
         assertEquals("Setting " + setting + " did not toggle correctly", isEnabled, settingCheckBox.isChecked());
 
         settingCheckBox.click();
         isEnabled = settingCheckBox.isChecked();
         this.getUiDevice().pressBack();
         goToPreferences();
+
+        // Scroll to the preference if its not visible in the list
+        listView.scrollDescriptionIntoView(setting);
 
         assertEquals("Setting " + setting + " did not toggle correctly", isEnabled, settingCheckBox.isChecked());
     }
@@ -410,9 +413,8 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         UiObject spinner = new UiObject(new UiSelector().className("android.widget.Spinner"));
         spinner.click();
 
-        this.getUiDevice().waitForWindowUpdate(null, 1000);
-
         UiObject inbox = new UiObject(new UiSelector().text("Inbox"));
+        this.waitForUiObjectsToExist(1000, inbox);
         inbox.click();
 
         // Wait for activity
@@ -481,10 +483,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
      * @throws UiObjectNotFoundException
      */
     private void openRichPushNotification() throws UiObjectNotFoundException {
-        assertTrue("No push notifications to open",  richPushNotificationExists());
-
         // Open notification
         UiObject notificationAlert = new UiObject(new UiSelector().text("Rich Push Alert"));
+
+        assertTrue("No push notifications to open",  notificationAlert.exists());
         notificationAlert.click();
     }
 
@@ -496,14 +498,45 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     }
 
     /**
-     * Checks to see if the rich push notification exists in the notification area
-     * @return
+     * Wait for the notification alert to arrive by polling the notification area
+     * @return <code>true</code> if a notification exists, otherwise <code>false</code>
+     * @throws InterruptedException
      */
-    private boolean richPushNotificationExists() {
-        // Check for notification
+    private boolean waitForNotificationToArrive() throws InterruptedException {
         UiObject notificationTitle = new UiObject(new UiSelector().text("Rich Push Sample"));
         UiObject notificationAlert = new UiObject(new UiSelector().text("Rich Push Alert"));
 
-        return notificationTitle.exists() && notificationAlert.exists();
+        return waitForUiObjectsToExist(NOTIFICATION_WAIT_TIME, notificationTitle, notificationAlert);
+    }
+
+    /**
+     * Waits for UiObjects to exist
+     * @param timeInMilliseconds Time to wait for ui objects to exist
+     * @param uiObjects UiObjects to check for
+     * @return <code>true</code> if all ui objects exist, otherwise <code>false</code>
+     * @throws InterruptedException
+     */
+    private boolean waitForUiObjectsToExist(int timeInMilliseconds, UiObject... uiObjects) throws InterruptedException {
+        if (uiObjects == null || uiObjects.length == 0) {
+            return false;
+        }
+
+        long startTime = System.currentTimeMillis();
+        while (System.currentTimeMillis() - startTime < timeInMilliseconds) {
+            boolean allExist = true;
+            for (UiObject uiObject : uiObjects) {
+                if (!uiObject.exists()) {
+                    allExist = false;
+                }
+            }
+
+            if (allExist) {
+                return true;
+            } else {
+                Thread.sleep(1000);
+            }
+        }
+
+        return false;
     }
 }
