@@ -59,7 +59,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         openRichPushNotification();
 
         // Wait for views to load
-        this.getUiDevice().waitForWindowUpdate(null, 1000);
+        this.getUiDevice().waitForWindowUpdate(null, 5000);
+
+        // This second wait is for the slow emulator
+        this.getUiDevice().waitForWindowUpdate(null, 5000);
 
         // Check for notification being displayed (web view)
         UiObject webview = new UiObject(new UiSelector().className("android.webkit.WebView"));
@@ -71,6 +74,9 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         openNotificationArea();
         waitForNotificationToArrive();
         openRichPushNotification();
+
+        // This second wait is for the slow emulator
+        this.getUiDevice().waitForWindowUpdate(null, 5000);
 
         // Make sure we have a dialog fragment and web view in main activity
         UiObject richPushDialog = new UiObject(new UiSelector().className("android.webkit.WebView").description("Rich push message dialog"));
