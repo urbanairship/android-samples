@@ -4,5 +4,5 @@ adb shell pm clear com.urbanairship.richpush.sample
 ant build
 
 adb push bin/RichPushSampleUITests.jar /data/local/tmp
-adb shell uiautomator runtest RichPushSampleUITests.jar -c com.urbanairship.richpush.sample.test.RichPushSampleTestCase -e MASTER_SECRET $1 -e APP_KEY $2
+adb shell uiautomator runtest RichPushSampleUITests.jar -c com.urbanairship.richpush.sample.test.RichPushSampleTestCase -e APP_KEY $1 -e MASTER_SECRET $2
 

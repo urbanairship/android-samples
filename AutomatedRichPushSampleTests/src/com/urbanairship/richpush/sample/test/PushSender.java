@@ -16,8 +16,7 @@ import java.net.URL;
  */
 public class PushSender {
     private static final String TAG = "RichPushSampleUiTests";
-    private static final String RICH_PUSH_USER_TAG = "testing";
-    private static final String RICH_PUSH_URL = "https://go.urbanairship.com/api/airmail/send/";
+    private static final String RICH_PUSH_BROADCAST_URL = "https://go.urbanairship.com/api/airmail/send/broadcast/";
 
     private final String masterSecret;
     private final String appKey;
@@ -48,13 +47,12 @@ public class PushSender {
     public void sendRichPushMessage(String activity) throws Exception {
         StringBuilder builder = new StringBuilder();
         builder.append("{ \"push\": {\"android\": { \"alert\": \"Rich Push Alert\", \"extra\": { \"activity\": \"" + activity + "\" } } },");
-        builder.append("\"tags\": [\"" + RICH_PUSH_USER_TAG + "\"],");
         builder.append("\"title\": \"Rich Push Title\",");
         builder.append("\"message\": \"Rich Push Message\",");
         builder.append("\"content-type\": \"text/html\"}");
 
         String json = builder.toString();
-        URL url = new URL(RICH_PUSH_URL);
+        URL url = new URL(RICH_PUSH_BROADCAST_URL);
         String basicAuthString =  "Basic "+Base64.encodeToString(String.format("%s:%s", appKey, masterSecret).getBytes(), Base64.NO_WRAP);
 
         try {
