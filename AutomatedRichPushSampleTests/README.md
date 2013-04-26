@@ -5,7 +5,7 @@ To run the test:
    - API 16 or higher
    - Internet connection to push rich push messages 
    - Rich Push Sample App already installed and configured
- - Run by `./run <appKey> <masterSecret`
+ - Run by `./run <appKey> <masterSecret>`
    - appKey is your Urban Airship application key.
    - masterSecret is your Urban Airship master secret.
  
