@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Urban Airship and Contributors
+ * Copyright 2013 Urban Airship and Contributors
  */
 
 package com.urbanairship.richpush.sample;
@@ -12,12 +12,18 @@ import com.urbanairship.Logger;
 import com.urbanairship.push.PushManager;
 import com.urbanairship.richpush.RichPushManager;
 
+/**
+ * Broadcast receiver to handle all push notifications
+ *
+ */
 public class PushReceiver extends BroadcastReceiver {
 
     public static final String ACTIVITY_NAME_KEY = "activity";
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
+        // Only takes action when a notification is opened
         if (!PushManager.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
             return;
         }
@@ -31,6 +37,8 @@ public class PushReceiver extends BroadcastReceiver {
         Logger.debug("Notified of a notification opened with id " + messageId);
 
         Intent messageIntent = null;
+
+        // Set the activity to receive the intent
         if ("home".equals(intent.getStringExtra(ACTIVITY_NAME_KEY))) {
             messageIntent = new Intent(context, MainActivity.class);
         } else {
@@ -42,5 +50,4 @@ public class PushReceiver extends BroadcastReceiver {
         messageIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(messageIntent);
     }
-
 }

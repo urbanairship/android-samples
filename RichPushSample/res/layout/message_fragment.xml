@@ -3,4 +3,5 @@
     android:id="@+id/browser"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:contentDescription="Rich push message"
 />

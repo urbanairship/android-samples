@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Urban Airship and Contributors
+ * Copyright 2013 Urban Airship and Contributors
  */
 
 package com.urbanairship.richpush.sample;
@@ -14,11 +14,19 @@ import com.urbanairship.Logger;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 
+/**
+ * Fragment that displays a rich push message in a RichPushMessageView
+ */
 public class MessageFragment extends SherlockFragment {
 
     private static final String MESSAGE_ID_KEY = "com.urbanairship.richpush.URL_KEY";
     private RichPushMessageView browser;
 
+    /**
+     * Creates a new MessageFragment
+     * @param messageId The message's id to display
+     * @return messageFragment new MessageFragment
+     */
     public static MessageFragment newInstance(String messageId) {
         MessageFragment message = new MessageFragment();
         Bundle arguments = new Bundle();

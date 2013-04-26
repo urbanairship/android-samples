@@ -14,9 +14,18 @@ import android.view.ViewGroup;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 
+/**
+ * Dialog Fragment that displays a rich push message
+ *
+ */
 public class RichPushMessageDialogFragment extends DialogFragment {
     private static final String MESSAGE_ID_KEY = "com.urbanairship.richpush.sample.FIRST_MESSAGE_ID";
 
+    /**
+     * Creates a new instance of RichPushMessageDialogFragment
+     * @param messageId The message's id to display
+     * @return RichPushMessageDialogFragment
+     */
     public static RichPushMessageDialogFragment newInstance(String messageId) {
         RichPushMessageDialogFragment fragment = new RichPushMessageDialogFragment();
 
