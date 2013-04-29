@@ -2,7 +2,7 @@
  * Copyright 2013 Urban Airship and Contributors
  */
 
-package com.urbanairship.richpush.sample.preference;
+package com.urbanairship.richpush.sample;
 
 import android.content.Context;
 import android.preference.DialogPreference;
@@ -11,28 +11,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.urbanairship.UAirship;
+import com.urbanairship.push.PushManager;
+import com.urbanairship.push.PushPreferences;
+import com.urbanairship.richpush.RichPushManager;
+import com.urbanairship.util.UAStringUtil;
+
 /**
- * DialogPreference to set the quiet time start
+ * DialogPreference to set the alias
  *
  */
-public class SetAliasPreference extends DialogPreference implements UAPreference {
+public class SetAliasPreference extends DialogPreference {
 
     private EditText editTextView;
     private String currentAlias;
 
+    private PushPreferences pushPrefs = PushManager.shared().getPreferences();
+
     public SetAliasPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-    }
 
-    @Override
-    public PreferenceType getPreferenceType() {
-        return PreferenceType.SET_ALIAS;
-    }
-
-    @Override
-    public void setValue(Object value) {
-        currentAlias = (String) value;
-        notifyChanged();
+        currentAlias = pushPrefs.getAlias();
     }
 
     @Override
@@ -46,7 +45,7 @@ public class SetAliasPreference extends DialogPreference implements UAPreference
     @Override
     public View onCreateView(ViewGroup parent) {
         View view = super.onCreateView(parent);
-        view.setContentDescription(getPreferenceType().toString());
+        view.setContentDescription("SET_ALIAS");
         return view;
     }
 
@@ -55,10 +54,22 @@ public class SetAliasPreference extends DialogPreference implements UAPreference
         if (positiveResult) {
             String alias = editTextView.getText().toString();
             if (callChangeListener(alias)) {
-                currentAlias = alias;
+                setAlias(alias);
                 notifyChanged();
             }
         }
+    }
+
+    private void setAlias(String alias) {
+        alias = UAStringUtil.isEmpty(alias) ? null : alias;
+
+        pushPrefs.setAlias(alias);
+
+        if (UAirship.shared().getAirshipConfigOptions().richPushEnabled) {
+            RichPushManager.shared().getRichPushUser().setAlias(alias);
+        }
+
+        currentAlias = alias;
     }
 
     @Override

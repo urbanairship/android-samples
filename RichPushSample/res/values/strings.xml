@@ -29,6 +29,8 @@
     <string name="apid_preference_title">APID</string>
     <string name="rich_push_user_id_preference_title">Rich Push User ID</string>
     <string name="set_alias_preference_title">Set Alias</string>
+    <string name="set_tags_preference_title">Set Tags</string>
+    <string name="duplicate_tag_warning">Tag already exists</string>
 
 </resources>
 

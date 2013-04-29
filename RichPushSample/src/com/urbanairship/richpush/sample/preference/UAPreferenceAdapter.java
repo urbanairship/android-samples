@@ -15,7 +15,6 @@ import com.urbanairship.location.UALocationManager;
 import com.urbanairship.push.PushManager;
 import com.urbanairship.push.PushPreferences;
 import com.urbanairship.richpush.RichPushManager;
-import com.urbanairship.util.UAStringUtil;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -99,9 +98,6 @@ public class UAPreferenceAdapter {
         case VIBRATE_ENABLE:
             value = pushPrefs.isVibrateEnabled();
             break;
-        case SET_ALIAS:
-            value = pushPrefs.getAlias();
-            break;
         case APID:
             value = PushManager.shared().getAPID();
             break;
@@ -171,16 +167,11 @@ public class UAPreferenceAdapter {
             Date end = quietTimes != null ? quietTimes[1] : new Date();
             pushPrefs.setQuietTimeInterval(new Date((Long)value), end);
             break;
-        case SET_ALIAS:
-            String alias = (String) value;
-            alias = UAStringUtil.isEmpty(alias) ? null : alias;
-
-            pushPrefs.setAlias(alias);
-
-            if (UAirship.shared().getAirshipConfigOptions().richPushEnabled) {
-                RichPushManager.shared().getRichPushUser().setAlias(alias);
-            }
-
+        case APID:
+        case RICH_PUSH_USER_ID:
+            // do nothing
+            break;
+        default:
             break;
         }
     }
@@ -239,7 +230,6 @@ public class UAPreferenceAdapter {
         case SOUND_ENABLE:
         case VIBRATE_ENABLE:
         case APID:
-        case SET_ALIAS:
             if (pushPrefs == null) {
                 Logger.warn("Unable to modify preference " + preferenceType + " because the pushService is not enabled");
                 return;

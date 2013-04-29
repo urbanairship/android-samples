@@ -65,12 +65,7 @@ public interface UAPreference {
         /**
          * Rich Push User ID
          */
-        RICH_PUSH_USER_ID,
-
-        /**
-         * Set the user's alias preference
-         */
-        SET_ALIAS
+        RICH_PUSH_USER_ID
     }
 
     /**
