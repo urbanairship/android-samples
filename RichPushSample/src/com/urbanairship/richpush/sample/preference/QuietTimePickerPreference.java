@@ -21,6 +21,8 @@ import java.util.Calendar;
 abstract class QuietTimePickerPreference extends DialogPreference implements UAPreference {
     private TimePicker timePicker = null;
     private long currentTime = -1;
+    private final static SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
+
 
     public QuietTimePickerPreference(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -65,7 +67,6 @@ abstract class QuietTimePickerPreference extends DialogPreference implements UAP
 
     @Override
     public String getSummary() {
-        SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
         return formatter.format(getCalendar().getTime());
     }
 

@@ -55,7 +55,22 @@ public interface UAPreference {
         /**
          * Location background tracking preference
          */
-        LOCATION_BACKGROUND_ENABLE
+        LOCATION_BACKGROUND_ENABLE,
+
+        /**
+         * APID preference
+         */
+        APID,
+
+        /**
+         * Rich Push User ID
+         */
+        RICH_PUSH_USER_ID,
+
+        /**
+         * Set the user's alias preference
+         */
+        SET_ALIAS
     }
 
     /**
