@@ -17,6 +17,9 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
     // Time to wait for notifications to appear in milliseconds.
     private static int NOTIFICATION_WAIT_TIME = 60000; // 60 seconds - push to tags is slower than to user
+    private static final String TEST_ALIAS_STRING = "TEST_ALIAS";
+    private static final String TEST_FIRST_TAG_STRING = "TEST_FIRST_TAG";
+    private static final String TEST_SECOND_TAG_STRING = "TEST_SECOND_TAG";
 
     private PushSender pushSender;
 
@@ -173,8 +176,9 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     /**
      * Test the setting of all push and location preferences
      * @throws UiObjectNotFoundException
+     * @throws InterruptedException
      */
-    public void testPreferences() throws UiObjectNotFoundException {
+    public void testPreferences() throws UiObjectNotFoundException, InterruptedException {
         goToPreferences();
 
         // Push Settings
@@ -230,6 +234,86 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         // Make sure the rest of the location preference views are disabled
         assertPreferenceViewDisabled("LOCATION_FOREGROUND_ENABLE");
         assertPreferenceViewDisabled("LOCATION_BACKGROUND_ENABLE");
+
+        // Advanced Settings
+
+        // Test for parent push setting
+        verifyCheckBoxSetting("PUSH_ENABLE");
+
+        // The rest depend on having push enabled
+        setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
+
+        // Test set alias
+        // Scroll to the preference if its not visible in the list
+        UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
+        listView.scrollDescriptionIntoView("SET_ALIAS");
+
+        UiObject setAlias = new UiObject(new UiSelector().description("SET_ALIAS"));
+        UiObject aliasStringDisplayed = new UiObject(new UiSelector().text(TEST_ALIAS_STRING));
+        boolean aliasExist = false;
+        if (aliasStringDisplayed.exists()) {
+            aliasExist = true;
+        }
+
+        setAlias.click();
+
+        if (aliasExist) {
+            UiObject aliasEditText = new UiObject(new UiSelector().text(TEST_ALIAS_STRING));
+            aliasEditText.click();
+            UiObject deleteAlias = new UiObject(new UiSelector().text("Delete"));
+            if (deleteAlias.exists()) {
+                // Alias exist, so clear it
+                deleteAlias.click();
+            }
+        }
+
+        UiObject setAliasText = new UiObject(new UiSelector().className("android.widget.EditText"));
+        setAliasText.click();
+
+        // Set the alias
+        setAliasText.setText(TEST_ALIAS_STRING);
+
+        // save
+        UiObject okButton = new UiObject(new UiSelector().text("OK"));
+        okButton.click();
+
+        // Check alias string is displayed
+        listView.scrollDescriptionIntoView(TEST_ALIAS_STRING);
+        aliasStringDisplayed = new UiObject(new UiSelector().text(TEST_ALIAS_STRING));
+        assertTrue("Failed to display alias string", waitForUiObjectsToExist(10000, aliasStringDisplayed));
+
+        // Test set tags
+        // Scroll to the preference if its not visible in the list
+        listView.scrollDescriptionIntoView("SET_TAGS");
+
+        UiObject setTags = new UiObject(new UiSelector().description("SET_TAGS"));
+        setTags.click();
+
+        // Set tags
+        UiObject setTagsText = new UiObject(new UiSelector().className("android.widget.EditText"));
+
+        // Add first tag
+        setTagsText.click();
+
+        // Check if a tag exist
+        UiObject listViewOfTags = new UiObject(new UiSelector().className("android.widget.ListView"));
+        if (listViewOfTags.exists()) {
+            // Tags exist, so clear them
+            // TODO
+        }
+
+        setTagsText.setText(TEST_FIRST_TAG_STRING);
+        UiObject addTagButton = new UiObject(new UiSelector().className("android.widget.ImageButton"));
+        addTagButton.click();
+
+        // Save first tag
+        okButton = new UiObject(new UiSelector().text("OK"));
+        okButton.click();
+
+        // Check first added tag is displayed
+        listView.scrollDescriptionIntoView(TEST_FIRST_TAG_STRING);
+        UiObject firstTagStringDisplayed = new UiObject(new UiSelector().text(TEST_FIRST_TAG_STRING));
+        assertTrue("Failed to display first tag string", waitForUiObjectsToExist(10000, firstTagStringDisplayed));
     }
 
     // Helpers
