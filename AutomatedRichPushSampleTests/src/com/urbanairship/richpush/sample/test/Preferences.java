@@ -5,6 +5,10 @@ import com.android.uiautomator.core.UiObjectNotFoundException;
 import com.android.uiautomator.core.UiScrollable;
 import com.android.uiautomator.core.UiSelector;
 
+/**
+ * Helper class to test the preferences
+ *
+ */
 public class Preferences {
     private UiSelector getPreferenceSummarySelector(String description) {
         return new UiSelector().description(description)
@@ -25,7 +29,6 @@ public class Preferences {
         return preferenceView.isEnabled();
     }
 
-
     /**
      * Set the specified preference setting
      * @param setting The specified preference to be set
@@ -45,7 +48,12 @@ public class Preferences {
         }
     }
 
-
+    /**
+     * Toggle the checkbox for specified preference setting
+     * @param setting The specified preference to select
+     * @return <code>true</code> if checkbox is selected, otherwise <code>false</code>
+     * @throws UiObjectNotFoundException
+     */
     public boolean getCheckBoxSetting(String setting) throws UiObjectNotFoundException {
         UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
         listView.scrollDescriptionIntoView(setting);
@@ -56,7 +64,11 @@ public class Preferences {
         return settingCheckBox.isChecked();
     }
 
-
+    /**
+     * Change the time preference value
+     * @param setting The specified preference to change
+     * @throws UiObjectNotFoundException
+     */
     public void changeTimePreferenceValue(String setting) throws UiObjectNotFoundException {
         // Scroll to the preference if its not visible in the list
         UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
@@ -77,6 +89,12 @@ public class Preferences {
         okButton.click();
     }
 
+    /**
+     * Get the preference summary
+     * @param setting The specified preference
+     * @return The string value of the preference
+     * @throws UiObjectNotFoundException
+     */
     public String getPreferenceSummary(String setting) throws UiObjectNotFoundException {
         // Scroll to the preference if its not visible in the list
         UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
@@ -86,6 +104,11 @@ public class Preferences {
         return new UiObject(summary).getText();
     }
 
+    /**
+     * Set an alias
+     * @param alias The string to set to
+     * @throws UiObjectNotFoundException
+     */
     public void setAlias(String alias) throws UiObjectNotFoundException {
         // Test set alias
         // Scroll to the preference if its not visible in the list
@@ -126,6 +149,11 @@ public class Preferences {
         okButton.click();
     }
 
+    /**
+     * Set a tag
+     * @param tags The string to set to
+     * @throws UiObjectNotFoundException
+     */
     public void setTags(String tags) throws UiObjectNotFoundException {
         // Scroll to the preference if its not visible in the list
         UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));

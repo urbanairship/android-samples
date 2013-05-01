@@ -5,6 +5,10 @@ import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
 import com.android.uiautomator.core.UiSelector;
 
+/**
+ * Helper class to navigate through the app
+ *
+ */
 public class RichPushSampleNavigator {
 
     /**
@@ -42,6 +46,10 @@ public class RichPushSampleNavigator {
         UiDevice.getInstance().waitForWindowUpdate(null, 1000);
     }
 
+    /**
+     * Navigate to the Preferences screen
+     * @throws UiObjectNotFoundException
+     */
     public void navigateToPreferences() throws UiObjectNotFoundException {
         new UiObject(new UiSelector().description("Preferences")).click();
     }

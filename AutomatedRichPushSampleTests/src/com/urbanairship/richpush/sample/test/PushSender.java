@@ -82,7 +82,12 @@ public class PushSender {
         }
     }
 
-
+    /**
+     * Actually sends the rich push message
+     * @param urlString The specified url the message is sent to
+     * @param message The json formatted message to be sent
+     * @throws IOException
+     */
     private void sendMessageHelper(String urlString, String message) throws IOException  {
         URL url = new URL(urlString);
         HttpURLConnection conn = null;
@@ -119,6 +124,12 @@ public class PushSender {
         }
     }
 
+    /**
+     * Builds the message to be sent
+     * @param pushString The string to append based on the type of push (user, alias, tag)
+     * @param activity The activity to send the push to
+     * @return The message to be sent
+     */
     private String createMessage(String pushString, String activity) {
         StringBuilder builder = new StringBuilder();
         builder.append("{ \"push\": {\"android\": { \"alert\": \"Rich Push Alert\", \"extra\": { \"activity\": \"" + activity + "\" } } },");

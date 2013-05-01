@@ -8,6 +8,10 @@ import com.android.uiautomator.core.UiObjectNotFoundException;
 import com.android.uiautomator.core.UiScrollable;
 import com.android.uiautomator.core.UiSelector;
 
+/**
+ * Utility class for automation
+ *
+ */
 public class AutomatorUtils {
     /**
      * Open the notification area
@@ -48,9 +52,11 @@ public class AutomatorUtils {
         return false;
     }
 
-
     /**
-     * Find and open the Rich Push Sample app
+     * Find and open the app
+     * @param appName The name of the app to open
+     * @param packageName The package name of the app to open
+     * @return <code>true</code> if app was opened, otherwise <code>false</code>
      * @throws UiObjectNotFoundException
      */
     public static boolean openApp(String appName, String packageName) throws UiObjectNotFoundException {

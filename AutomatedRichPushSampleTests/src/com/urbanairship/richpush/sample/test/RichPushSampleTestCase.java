@@ -81,6 +81,11 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         this.getUiDevice().pressBack();
     }
 
+    /**
+     * Test the setting of an alias and a tag. Test the sending and receiving
+     * push messages via rich push user, alias and tag.
+     * @throws Exception
+     */
     public void testAliasAndTags() throws Exception {
         // The rest depend on having push enabled
         appNavigator.navigateToPreferences();
@@ -201,7 +206,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     }
 
     /**
-     * Test the setting of all push, location and advanced preferences
+     * Test the setting of all push and location preferences
      * @throws Exception
      */
     public void testPreferences() throws Exception {
@@ -328,6 +333,12 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         return AutomatorUtils.waitForUiObjectsToExist(NOTIFICATION_WAIT_TIME, notificationTitle, notificationAlert);
     }
 
+    /**
+     * Verify the notification alert is received
+     * @param description The content description string
+     * @throws InterruptedException
+     * @throws UiObjectNotFoundException
+     */
     private void verifyPushNotification(String description) throws InterruptedException, UiObjectNotFoundException {
         AutomatorUtils.openNotificationArea();
         waitForNotificationToArrive();
@@ -350,5 +361,4 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         UiObject richPushDialog = new UiObject(webViewSelector);
         assertTrue("Failed to display notification in a webview",  AutomatorUtils.waitForUiObjectsToExist(20000, richPushDialog));
     }
-
 }
