@@ -19,7 +19,6 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     private static int NOTIFICATION_WAIT_TIME = 60000; // 60 seconds - push to tags is slower than to user
     private static final String TEST_ALIAS_STRING = "TEST_ALIAS";
     private static final String TEST_FIRST_TAG_STRING = "TEST_FIRST_TAG";
-    private static final String TEST_SECOND_TAG_STRING = "TEST_SECOND_TAG";
 
     private PushSender pushSender;
 
@@ -74,7 +73,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
         // Make sure we have a dialog fragment and web view in main activity
         UiObject richPushDialog = new UiObject(new UiSelector().className("android.webkit.WebView").description("Rich push message dialog"));
-        assertTrue("Failed to display notification in a webview",  waitForUiObjectsToExist(10000, richPushDialog));
+        assertTrue("Failed to display notification in a webview",  waitForUiObjectsToExist(15000, richPushDialog));
 
         this.getUiDevice().pressBack();
 
@@ -88,7 +87,6 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
         openNotificationArea();
         assertFalse("Received push notification when push is disabled", waitForNotificationToArrive());
-
 
         this.getUiDevice().pressBack();
     }
@@ -174,11 +172,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     }
 
     /**
-     * Test the setting of all push and location preferences
-     * @throws UiObjectNotFoundException
-     * @throws InterruptedException
+     * Test the setting of all push, location and advanced preferences
+     * @throws Exception
      */
-    public void testPreferences() throws UiObjectNotFoundException, InterruptedException {
+    public void testPreferences() throws Exception {
         goToPreferences();
 
         // Push Settings
@@ -237,15 +234,33 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
         // Advanced Settings
 
-        // Test for parent push setting
-        verifyCheckBoxSetting("PUSH_ENABLE");
-
         // The rest depend on having push enabled
         setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
+        this.getUiDevice().pressBack();
+
+        goToPreferences();
+
+        // Send Rich Push Message to Rich Push User Id
+        // Scroll to the preference if its not visible in the list
+        UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
+        UiSelector richPushSelector = getPreferenceSummarySelector("RICH_PUSH_USER_ID");
+        listView.scrollIntoView(richPushSelector);
+        UiObject richPushUserId = listView.getChild(richPushSelector);
+
+        pushSender.sendRichPushMessage(PushSender.SendPushType.RICH_PUSH_USER, richPushUserId.getText());
+
+        openNotificationArea();
+        waitForNotificationToArrive();
+        openRichPushNotification();
+
+        // Check for notification being displayed (web view)
+        UiObject webview = new UiObject(new UiSelector().className("android.webkit.WebView"));
+        assertTrue("Failed to display notification in a webview", waitForUiObjectsToExist(15000, webview));
+
+        goToPreferences();
 
         // Test set alias
         // Scroll to the preference if its not visible in the list
-        UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
         listView.scrollDescriptionIntoView("SET_ALIAS");
 
         UiObject setAlias = new UiObject(new UiSelector().description("SET_ALIAS"));
@@ -257,6 +272,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
         setAlias.click();
 
+        // Check if an alias already exist
         if (aliasExist) {
             UiObject aliasEditText = new UiObject(new UiSelector().text(TEST_ALIAS_STRING));
             aliasEditText.click();
@@ -264,6 +280,9 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
             if (deleteAlias.exists()) {
                 // Alias exist, so clear it
                 deleteAlias.click();
+                UiObject okButton = new UiObject(new UiSelector().text("OK"));
+                okButton.click();
+                setAlias.click();
             }
         }
 
@@ -282,6 +301,22 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         aliasStringDisplayed = new UiObject(new UiSelector().text(TEST_ALIAS_STRING));
         assertTrue("Failed to display alias string", waitForUiObjectsToExist(10000, aliasStringDisplayed));
 
+        // Send Rich Push Message to Alias
+        UiSelector setAliasSelector = getPreferenceSummarySelector("SET_ALIAS");
+        UiObject alias = listView.getChild(setAliasSelector);
+
+        pushSender.sendRichPushMessage(PushSender.SendPushType.ALIAS, alias.getText());
+
+        openNotificationArea();
+        waitForNotificationToArrive();
+        openRichPushNotification();
+
+        // Check for notification being displayed (web view)
+        webview = new UiObject(new UiSelector().className("android.webkit.WebView"));
+        assertTrue("Failed to display notification in a webview", waitForUiObjectsToExist(10000, webview));
+
+        goToPreferences();
+
         // Test set tags
         // Scroll to the preference if its not visible in the list
         listView.scrollDescriptionIntoView("SET_TAGS");
@@ -289,19 +324,22 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         UiObject setTags = new UiObject(new UiSelector().description("SET_TAGS"));
         setTags.click();
 
-        // Set tags
+        // Check if a tag already exist
+        UiObject tagsListView = new UiObject(new UiSelector().className("android.widget.ListView"));
+        if (tagsListView.exists()) {
+            UiObject tagLinearLayout = tagsListView.getChild(new UiSelector().className("android.widget.LinearLayout"));
+            UiObject tagDeleteButton = tagLinearLayout.getChild(new UiSelector().className("android.widget.ImageButton"));
+            tagDeleteButton.click();
+            okButton = new UiObject(new UiSelector().text("OK"));
+            okButton.click();
+            setTags.click();
+        }
+
+        // Set tag
         UiObject setTagsText = new UiObject(new UiSelector().className("android.widget.EditText"));
 
         // Add first tag
         setTagsText.click();
-
-        // Check if a tag exist
-        UiObject listViewOfTags = new UiObject(new UiSelector().className("android.widget.ListView"));
-        if (listViewOfTags.exists()) {
-            // Tags exist, so clear them
-            // TODO
-        }
-
         setTagsText.setText(TEST_FIRST_TAG_STRING);
         UiObject addTagButton = new UiObject(new UiSelector().className("android.widget.ImageButton"));
         addTagButton.click();
@@ -314,6 +352,22 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         listView.scrollDescriptionIntoView(TEST_FIRST_TAG_STRING);
         UiObject firstTagStringDisplayed = new UiObject(new UiSelector().text(TEST_FIRST_TAG_STRING));
         assertTrue("Failed to display first tag string", waitForUiObjectsToExist(10000, firstTagStringDisplayed));
+
+        // Send Rich Push Message to Tag
+        UiSelector setTagsSelector = getPreferenceSummarySelector("SET_TAGS");
+        UiObject tag = listView.getChild(setTagsSelector);
+
+        pushSender.sendRichPushMessage(PushSender.SendPushType.TAG, tag.getText());
+
+        openNotificationArea();
+        waitForNotificationToArrive();
+        openRichPushNotification();
+
+        // Check for notification being displayed (web view)
+        webview = new UiObject(new UiSelector().className("android.webkit.WebView"));
+        assertTrue("Failed to display notification in a webview", waitForUiObjectsToExist(10000, webview));
+
+        goToPreferences();
     }
 
     // Helpers
@@ -622,5 +676,12 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         }
 
         return false;
+    }
+
+    private UiSelector getPreferenceSummarySelector(String description) {
+        return new UiSelector().description(description)
+                .childSelector(new UiSelector()
+                .className("android.widget.RelativeLayout")
+                .childSelector(new UiSelector().index(1)));
     }
 }

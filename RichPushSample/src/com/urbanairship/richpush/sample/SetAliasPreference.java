@@ -67,6 +67,7 @@ public class SetAliasPreference extends DialogPreference {
 
         if (UAirship.shared().getAirshipConfigOptions().richPushEnabled) {
             RichPushManager.shared().getRichPushUser().setAlias(alias);
+            RichPushManager.shared().updateUser();
         }
 
         currentAlias = alias;

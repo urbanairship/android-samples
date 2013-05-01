@@ -17,9 +17,17 @@ import java.net.URL;
 public class PushSender {
     private static final String TAG = "RichPushSampleUiTests";
     private static final String RICH_PUSH_BROADCAST_URL = "https://go.urbanairship.com/api/airmail/send/broadcast/";
+    private static final String RICH_PUSH_URL = "https://go.urbanairship.com/api/airmail/send/";
 
     private final String masterSecret;
     private final String appKey;
+
+    public enum SendPushType {
+        BROADCAST,
+        RICH_PUSH_USER,
+        ALIAS,
+        TAG
+    }
 
     /**
      * Constructor for PushSender
@@ -52,7 +60,48 @@ public class PushSender {
         builder.append("\"content-type\": \"text/html\"}");
 
         String json = builder.toString();
+        String basicAuthString =  "Basic "+Base64.encodeToString(String.format("%s:%s", appKey, masterSecret).getBytes(), Base64.NO_WRAP);
         URL url = new URL(RICH_PUSH_BROADCAST_URL);
+        try {
+            sendMessage(url, json, basicAuthString);
+        } catch (Exception ex) {
+            // Try again if we fail for whatever reason
+            Thread.sleep(3000);
+            sendMessage(url, json, basicAuthString);
+        }
+    }
+
+    /**
+     * Sends a rich push message via a specific push type
+     * @param type The specified push type
+     * @param string The string related to the type of push
+     * @throws Exception
+     */
+    public void sendRichPushMessage(SendPushType type, String pushString) throws Exception {
+        URL url = new URL(RICH_PUSH_URL);
+        StringBuilder builder = new StringBuilder();
+        builder.append("{ \"push\": {\"android\": { \"alert\": \"Rich Push Alert\", \"extra\": { \"activity\": \"\" } } },");
+
+        switch (type) {
+        case RICH_PUSH_USER:
+            builder.append("\"users\": [\"" + pushString + "\"],");
+            break;
+        case ALIAS:
+            builder.append("\"aliases\": [\"" + pushString + "\", \"anotherAlias\"],");
+            break;
+        case TAG:
+            builder.append("\"tags\": [\"" + pushString + "\"],");
+            break;
+        case BROADCAST:
+        default:
+            url = new URL(RICH_PUSH_BROADCAST_URL);
+            break;
+        }
+        builder.append("\"title\": \"Rich Push Title\",");
+        builder.append("\"message\": \"Rich Push Message\",");
+        builder.append("\"content-type\": \"text/html\"}");
+
+        String json = builder.toString();
         String basicAuthString =  "Basic "+Base64.encodeToString(String.format("%s:%s", appKey, masterSecret).getBytes(), Base64.NO_WRAP);
 
         try {

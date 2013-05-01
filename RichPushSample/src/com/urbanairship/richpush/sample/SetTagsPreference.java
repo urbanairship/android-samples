@@ -130,6 +130,7 @@ public class SetTagsPreference extends DialogPreference  {
 
         if (UAirship.shared().getAirshipConfigOptions().richPushEnabled) {
             RichPushManager.shared().getRichPushUser().setTags(new HashSet<String>(currentTags));
+            RichPushManager.shared().updateUser();
         }
     }
 
