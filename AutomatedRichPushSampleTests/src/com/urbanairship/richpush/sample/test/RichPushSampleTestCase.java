@@ -1,11 +1,9 @@
 package com.urbanairship.richpush.sample.test;
 
-import android.os.RemoteException;
-
 import com.android.uiautomator.core.UiCollection;
+import com.android.uiautomator.core.UiDevice;
 import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
-import com.android.uiautomator.core.UiScrollable;
 import com.android.uiautomator.core.UiSelector;
 import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 
@@ -21,6 +19,8 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     private static final String TEST_FIRST_TAG_STRING = "TEST_FIRST_TAG";
 
     private PushSender pushSender;
+    private Preferences preferences;
+    private RichPushSampleNavigator appNavigator;
 
     /**
      * Prepare for testing, which includes getting the masterSecret and appKey
@@ -32,11 +32,14 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         String appKey = getParams().getString("APP_KEY");
         pushSender = new PushSender(masterSecret, appKey);
 
+        preferences = new Preferences();
+        appNavigator = new RichPushSampleNavigator();
+
         // Open application
-        openApp();
+        assertTrue("Failed to open Rich Push Sample", AutomatorUtils.openApp("Rich Push Sample", "com.urbanairship.richpush.sample"));
 
         // Navigate to home
-        navigateToAppHome();
+        appNavigator.navigateToAppHome();
     }
 
     /**
@@ -45,64 +48,90 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
      */
     public void testRichPushNotification() throws Exception {
         // Make sure push is enabled
-        goToPreferences();
-        setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
+        appNavigator.navigateToPreferences();
+        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
         this.getUiDevice().pressBack();
 
         // Wait a second for any push registration to take place
         Thread.sleep(5000);
 
-        clearNotifications();
+        AutomatorUtils.clearNotifications();
 
+        // Verify that we can send a push and open in a webview
         pushSender.sendRichPushMessage();
-
-        openNotificationArea();
-        waitForNotificationToArrive();
-        openRichPushNotification();
-
-        // Check for notification being displayed (web view)
-        UiObject webview = new UiObject(new UiSelector().className("android.webkit.WebView"));
-        assertTrue("Failed to display notification in a webview", waitForUiObjectsToExist(10000, webview));
+        verifyPushNotification(null);
 
         // Send push to main activity
         pushSender.sendRichPushMessage("home");
-
-        openNotificationArea();
-        waitForNotificationToArrive();
-        openRichPushNotification();
-
-        // Make sure we have a dialog fragment and web view in main activity
-        UiObject richPushDialog = new UiObject(new UiSelector().className("android.webkit.WebView").description("Rich push message dialog"));
-        assertTrue("Failed to display notification in a webview",  waitForUiObjectsToExist(15000, richPushDialog));
+        verifyPushNotification("Rich push message dialog");
 
         this.getUiDevice().pressBack();
 
         // Disable push to verify we don't receive push notifications
-        goToPreferences();
-        setPreferenceCheckBoxEnabled("PUSH_ENABLE", false);
+        appNavigator.navigateToPreferences();
+        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", false);
         this.getUiDevice().pressBack();
 
         // Send a notification
         pushSender.sendRichPushMessage();
 
-        openNotificationArea();
+        AutomatorUtils.openNotificationArea();
         assertFalse("Received push notification when push is disabled", waitForNotificationToArrive());
 
         this.getUiDevice().pressBack();
     }
 
+    public void testAliasAndTags() throws Exception {
+        // The rest depend on having push enabled
+        appNavigator.navigateToPreferences();
+        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
+        this.getUiDevice().pressBack();
 
+        appNavigator.navigateToPreferences();
+
+        // Send Rich Push Message to Rich Push User Id
+        String richPushId = preferences.getPreferenceSummary("RICH_PUSH_USER_ID");
+        pushSender.sendRichPushToUser(richPushId);
+        verifyPushNotification(null);
+
+
+        this.getUiDevice().pressBack();
+        appNavigator.navigateToPreferences();
+
+        preferences.setAlias(TEST_ALIAS_STRING);
+        assertEquals("Failed to set alias string", TEST_ALIAS_STRING, preferences.getPreferenceSummary("SET_ALIAS"));
+
+        // Wait a second for any push registration to take place
+        Thread.sleep(1000);
+
+        pushSender.sendRichPushToAlias(TEST_ALIAS_STRING);
+        verifyPushNotification(null);
+
+        UiDevice.getInstance().pressBack();
+        appNavigator.navigateToPreferences();
+
+        preferences.setTags(TEST_FIRST_TAG_STRING);
+        assertEquals("Failed to display first tag string", TEST_FIRST_TAG_STRING, preferences.getPreferenceSummary("SET_TAGS"));
+
+        // Wait a second for any push registration to take place
+        Thread.sleep(1000);
+
+        pushSender.sendRichPushToTag(TEST_FIRST_TAG_STRING);
+        verifyPushNotification(null);
+
+        this.getUiDevice().pressBack();
+    }
 
     /**
      * Tests the UI for receiving a rich push message, marking it read, unread and deleting it
      * @throws Exception
      */
     public void testInbox() throws Exception {
-        navigateToInbox();
+        appNavigator.navigateToInbox();
 
         // Enable push
-        goToPreferences();
-        setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
+        appNavigator.navigateToPreferences();
+        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
         this.getUiDevice().pressBack();
 
         // Wait a second for any push registration to take place
@@ -120,7 +149,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         pushSender.sendRichPushMessage();
 
         // Wait for it to arrive
-        openNotificationArea();
+        AutomatorUtils.openNotificationArea();
         waitForNotificationToArrive();
         this.getUiDevice().pressBack();
 
@@ -176,7 +205,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
      * @throws Exception
      */
     public void testPreferences() throws Exception {
-        goToPreferences();
+        appNavigator.navigateToPreferences();
 
         // Push Settings
 
@@ -184,7 +213,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         verifyCheckBoxSetting("PUSH_ENABLE");
 
         // The rest depend on having push enabled
-        setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
+        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
 
         // Test sound, vibrate, and quiet time enable preferences
         verifyCheckBoxSetting("SOUND_ENABLE");
@@ -192,26 +221,26 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         verifyCheckBoxSetting("QUIET_TIME_ENABLE");
 
         // Quiet times depend on having quiet time enabled
-        setPreferenceCheckBoxEnabled("QUIET_TIME_ENABLE", true);
+        preferences.setPreferenceCheckBoxEnabled("QUIET_TIME_ENABLE", true);
 
         // Test for quiet time start and end times
         verifyTimePickerSetting("QUIET_TIME_START");
         verifyTimePickerSetting("QUIET_TIME_END");
 
         // Disable quiet time enable
-        setPreferenceCheckBoxEnabled("QUIET_TIME_ENABLE", false);
+        preferences.setPreferenceCheckBoxEnabled("QUIET_TIME_ENABLE", false);
 
         // Make sure quiet time setting views are disabled
-        assertPreferenceViewDisabled("QUIET_TIME_START");
-        assertPreferenceViewDisabled("QUIET_TIME_END");
+        assertFalse(preferences.isPreferenceViewEnabled("QUIET_TIME_START"));
+        assertFalse(preferences.isPreferenceViewEnabled("QUIET_TIME_END"));
 
         // Disable push settings
-        setPreferenceCheckBoxEnabled("PUSH_ENABLE", false);
+        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", false);
 
         // Make sure the rest of the push preference views are disabled
-        assertPreferenceViewDisabled("SOUND_ENABLE");
-        assertPreferenceViewDisabled("VIBRATE_ENABLE");
-        assertPreferenceViewDisabled("QUIET_TIME_ENABLE");
+        assertFalse(preferences.isPreferenceViewEnabled("SOUND_ENABLE"));
+        assertFalse(preferences.isPreferenceViewEnabled("VIBRATE_ENABLE"));
+        assertFalse(preferences.isPreferenceViewEnabled("QUIET_TIME_ENABLE"));
 
         // Location Settings
 
@@ -219,420 +248,72 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         verifyCheckBoxSetting("LOCATION_ENABLE");
 
         // The other location preferences depend on having location enabled
-        setPreferenceCheckBoxEnabled("LOCATION_ENABLE", true);
+        preferences.setPreferenceCheckBoxEnabled("LOCATION_ENABLE", true);
 
         // Test foreground and background enable preferences
         verifyCheckBoxSetting("LOCATION_FOREGROUND_ENABLE");
         verifyCheckBoxSetting("LOCATION_BACKGROUND_ENABLE");
 
         // Disable location settings
-        setPreferenceCheckBoxEnabled("LOCATION_ENABLE", false);
+        preferences.setPreferenceCheckBoxEnabled("LOCATION_ENABLE", false);
 
         // Make sure the rest of the location preference views are disabled
-        assertPreferenceViewDisabled("LOCATION_FOREGROUND_ENABLE");
-        assertPreferenceViewDisabled("LOCATION_BACKGROUND_ENABLE");
-
-        // Advanced Settings
-
-        // The rest depend on having push enabled
-        setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
-        this.getUiDevice().pressBack();
-
-        goToPreferences();
-
-        // Send Rich Push Message to Rich Push User Id
-        // Scroll to the preference if its not visible in the list
-        UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
-        UiSelector richPushSelector = getPreferenceSummarySelector("RICH_PUSH_USER_ID");
-        listView.scrollIntoView(richPushSelector);
-        UiObject richPushUserId = listView.getChild(richPushSelector);
-
-        pushSender.sendRichPushMessage(PushSender.SendPushType.RICH_PUSH_USER, richPushUserId.getText());
-
-        openNotificationArea();
-        waitForNotificationToArrive();
-        openRichPushNotification();
-
-        // Check for notification being displayed (web view)
-        UiObject webview = new UiObject(new UiSelector().className("android.webkit.WebView"));
-        assertTrue("Failed to display notification in a webview", waitForUiObjectsToExist(15000, webview));
-
-        goToPreferences();
-
-        // Test set alias
-        // Scroll to the preference if its not visible in the list
-        listView.scrollDescriptionIntoView("SET_ALIAS");
-
-        UiObject setAlias = new UiObject(new UiSelector().description("SET_ALIAS"));
-        UiObject aliasStringDisplayed = new UiObject(new UiSelector().text(TEST_ALIAS_STRING));
-        boolean aliasExist = false;
-        if (aliasStringDisplayed.exists()) {
-            aliasExist = true;
-        }
-
-        setAlias.click();
-
-        // Check if an alias already exist
-        if (aliasExist) {
-            UiObject aliasEditText = new UiObject(new UiSelector().text(TEST_ALIAS_STRING));
-            aliasEditText.click();
-            UiObject deleteAlias = new UiObject(new UiSelector().text("Delete"));
-            if (deleteAlias.exists()) {
-                // Alias exist, so clear it
-                deleteAlias.click();
-                UiObject okButton = new UiObject(new UiSelector().text("OK"));
-                okButton.click();
-                setAlias.click();
-            }
-        }
-
-        UiObject setAliasText = new UiObject(new UiSelector().className("android.widget.EditText"));
-        setAliasText.click();
-
-        // Set the alias
-        setAliasText.setText(TEST_ALIAS_STRING);
-
-        // save
-        UiObject okButton = new UiObject(new UiSelector().text("OK"));
-        okButton.click();
-
-        // Check alias string is displayed
-        listView.scrollDescriptionIntoView(TEST_ALIAS_STRING);
-        aliasStringDisplayed = new UiObject(new UiSelector().text(TEST_ALIAS_STRING));
-        assertTrue("Failed to display alias string", waitForUiObjectsToExist(10000, aliasStringDisplayed));
-
-        // Send Rich Push Message to Alias
-        UiSelector setAliasSelector = getPreferenceSummarySelector("SET_ALIAS");
-        UiObject alias = listView.getChild(setAliasSelector);
-
-        pushSender.sendRichPushMessage(PushSender.SendPushType.ALIAS, alias.getText());
-
-        openNotificationArea();
-        waitForNotificationToArrive();
-        openRichPushNotification();
-
-        // Check for notification being displayed (web view)
-        webview = new UiObject(new UiSelector().className("android.webkit.WebView"));
-        assertTrue("Failed to display notification in a webview", waitForUiObjectsToExist(10000, webview));
-
-        goToPreferences();
-
-        // Test set tags
-        // Scroll to the preference if its not visible in the list
-        listView.scrollDescriptionIntoView("SET_TAGS");
-
-        UiObject setTags = new UiObject(new UiSelector().description("SET_TAGS"));
-        setTags.click();
-
-        // Check if a tag already exist
-        UiObject tagsListView = new UiObject(new UiSelector().className("android.widget.ListView"));
-        if (tagsListView.exists()) {
-            UiObject tagLinearLayout = tagsListView.getChild(new UiSelector().className("android.widget.LinearLayout"));
-            UiObject tagDeleteButton = tagLinearLayout.getChild(new UiSelector().className("android.widget.ImageButton"));
-            tagDeleteButton.click();
-            okButton = new UiObject(new UiSelector().text("OK"));
-            okButton.click();
-            setTags.click();
-        }
-
-        // Set tag
-        UiObject setTagsText = new UiObject(new UiSelector().className("android.widget.EditText"));
-
-        // Add first tag
-        setTagsText.click();
-        setTagsText.setText(TEST_FIRST_TAG_STRING);
-        UiObject addTagButton = new UiObject(new UiSelector().className("android.widget.ImageButton"));
-        addTagButton.click();
-
-        // Save first tag
-        okButton = new UiObject(new UiSelector().text("OK"));
-        okButton.click();
-
-        // Check first added tag is displayed
-        listView.scrollDescriptionIntoView(TEST_FIRST_TAG_STRING);
-        UiObject firstTagStringDisplayed = new UiObject(new UiSelector().text(TEST_FIRST_TAG_STRING));
-        assertTrue("Failed to display first tag string", waitForUiObjectsToExist(10000, firstTagStringDisplayed));
-
-        // Send Rich Push Message to Tag
-        UiSelector setTagsSelector = getPreferenceSummarySelector("SET_TAGS");
-        UiObject tag = listView.getChild(setTagsSelector);
-
-        pushSender.sendRichPushMessage(PushSender.SendPushType.TAG, tag.getText());
-
-        openNotificationArea();
-        waitForNotificationToArrive();
-        openRichPushNotification();
-
-        // Check for notification being displayed (web view)
-        webview = new UiObject(new UiSelector().className("android.webkit.WebView"));
-        assertTrue("Failed to display notification in a webview", waitForUiObjectsToExist(10000, webview));
-
-        goToPreferences();
+        assertFalse(preferences.isPreferenceViewEnabled("LOCATION_FOREGROUND_ENABLE"));
+        assertFalse(preferences.isPreferenceViewEnabled("LOCATION_BACKGROUND_ENABLE"));
     }
 
     // Helpers
     /**
-     * Set the specified preference setting
-     * @param setting The specified preference to be set
-     * @param enabled Boolean to enable or disable the specified setting
-     * @throws UiObjectNotFoundException
+     * Verify the checkbox state of the preference
+     * @param setting The specified preference
+     * @throws Exception
      */
-    private void setPreferenceCheckBoxEnabled(String setting, boolean enabled) throws UiObjectNotFoundException {
-        // Scroll to the preference if its not visible in the list
-        UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
-        listView.scrollDescriptionIntoView(setting);
+    private void verifyCheckBoxSetting(String setting) throws Exception {
+        boolean originalValue = preferences.getCheckBoxSetting(setting);
 
-        UiObject preference = new UiObject(new UiSelector().description(setting));
-        UiObject preferenceCheckBox =  preference.getChild(new UiSelector().className(android.widget.CheckBox.class));
+        // Toggle it
+        preferences.setPreferenceCheckBoxEnabled(setting, !originalValue);
 
-        if (preferenceCheckBox.isChecked() != enabled) {
-            preferenceCheckBox.click();
-        }
-    }
+        // Reopen settings
+        this.getUiDevice().pressBack();
+        appNavigator.navigateToPreferences();
 
-    /**
-     * Navigate to the Preferences screen
-     * @throws UiObjectNotFoundException
-     */
-    private void goToPreferences() throws UiObjectNotFoundException {
-        // Select the Preferences
-        UiObject preferencesButton = new UiObject(new UiSelector().description("Preferences"));
-        assertTrue("Unable to detect Preferences button.", preferencesButton.exists());
-        preferencesButton.click();
-    }
+        // Make sure its the toggled value
+        assertEquals("Setting " + setting + " did not toggle correctly", originalValue, preferences.getCheckBoxSetting(setting));
 
-    /**
-     * Clears all the notifications in the notification area
-     * @throws UiObjectNotFoundException
-     */
-    private void clearNotifications() throws UiObjectNotFoundException {
+        // Set it back to the original value
+        preferences.setPreferenceCheckBoxEnabled(setting, originalValue);
 
-        // Open notification area
-        this.getUiDevice().swipe(50, 2, 50, this.getUiDevice().getDisplayHeight(), 5);
+        // Reopen settings
+        this.getUiDevice().pressBack();
+        appNavigator.navigateToPreferences();
 
-        // Click the clear all notifications button
-        UiObject clearButton = new UiObject(new UiSelector().description("Clear all notifications."));
-
-        if (clearButton.exists()) {
-            clearButton.click();
-        } else {
-            this.getUiDevice().pressBack();
-        }
-    }
-
-    /**
-     * Check specified preference view is disabled
-     * @param setting The specified preference setting
-     * @throws UiObjectNotFoundException
-     */
-    private void assertPreferenceViewDisabled(String setting) throws UiObjectNotFoundException {
-        UiObject preferenceView = new UiObject(new UiSelector().description(setting));
-        assertFalse(preferenceView.isEnabled());
+        assertEquals("Setting " + setting + " did not toggle correctly", originalValue, preferences.getCheckBoxSetting(setting));
     }
 
     /**
      * Check the time picker setting was set
      * @param setting The specified time picker
-     * @throws UiObjectNotFoundException
-     */
-    private void verifyTimePickerSetting(String setting) throws UiObjectNotFoundException {
-        // Scroll to the preference if its not visible in the list
-        UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
-        listView.scrollDescriptionIntoView(setting);
-
-        UiObject timePicker = new UiObject(new UiSelector().description(setting));
-        UiObject okButton = new UiObject(new UiSelector().className("android.widget.Button").text("OK"));
-
-        timePicker.click();
-
-        // Change the time and capture
-        for (int i = 0; i < 3; i++) {
-            UiObject numberPicker = new UiObject(new UiSelector().className("android.widget.NumberPicker").index(i));
-            UiObject button = numberPicker.getChild(new UiSelector().className("android.widget.Button"));
-            button.click();
-        }
-
-        // Go in and out of the time picker to grab the set text.  The edit text is not available
-        // if we do it right away...
-        okButton.click();
-        timePicker.click();
-
-        // Capture the set time
-        String capturedTime = "";
-        for (int i = 0; i < 3; i++) {
-            UiObject numberPicker = new UiObject(new UiSelector().className("android.widget.NumberPicker").index(i));
-            UiObject editText = numberPicker.getChild(new UiSelector().className("android.widget.EditText"));
-            capturedTime += editText.getText();
-        }
-
-        // Back out of activity
-        okButton.click();
-        this.getUiDevice().pressBack();
-
-        // Go back into the time picker
-        goToPreferences();
-
-        // Scroll to the preference if its not visible in the list
-        listView.scrollDescriptionIntoView(setting);
-
-        timePicker.click();
-
-        // Grab the current time
-        String setTime = "";
-        for (int i = 0; i < 3; i++) {
-            UiObject numberPicker = new UiObject(new UiSelector().className("android.widget.NumberPicker").index(i));
-            UiObject editText = numberPicker.getChild(new UiSelector().className("android.widget.EditText"));
-            setTime += editText.getText();
-        }
-
-        okButton.click();
-
-        assertEquals("Failed to set quiet times", capturedTime, setTime);
-    }
-
-    /**
-     * Verify the checkbox state of the preference
-     * @param setting The specified preference
-     * @throws UiObjectNotFoundException
-     */
-    private void verifyCheckBoxSetting(String setting) throws UiObjectNotFoundException {
-        boolean isEnabled;
-
-        // Scroll to the preference if its not visible in the list
-        UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
-        listView.scrollDescriptionIntoView(setting);
-
-        UiObject settingCheckBox = new UiObject(new UiSelector().description(setting));
-
-        settingCheckBox.click();
-        isEnabled = settingCheckBox.isChecked();
-        this.getUiDevice().pressBack();
-        goToPreferences();
-
-        // Scroll to the preference if its not visible in the list
-        listView.scrollDescriptionIntoView(setting);
-
-        assertEquals("Setting " + setting + " did not toggle correctly", isEnabled, settingCheckBox.isChecked());
-
-        settingCheckBox.click();
-        isEnabled = settingCheckBox.isChecked();
-        this.getUiDevice().pressBack();
-        goToPreferences();
-
-        // Scroll to the preference if its not visible in the list
-        listView.scrollDescriptionIntoView(setting);
-
-        assertEquals("Setting " + setting + " did not toggle correctly", isEnabled, settingCheckBox.isChecked());
-    }
-
-    /**
-     * Navigate to the application's home screen
      * @throws Exception
      */
-    private void navigateToAppHome() throws Exception {
-        UiObject navigateHomeButton = new UiObject(new UiSelector().description("Navigate home"));
-        UiObject navigateUpButton = new UiObject(new UiSelector().description("Navigate up"));
-        if (navigateHomeButton.exists()) {
-            navigateHomeButton.click();
-        } else if (navigateUpButton.exists()) {
-            navigateUpButton.click();
-            navigateHomeButton.click();
-        } else {
-            throw new Exception("Where are we?");
-        }
-    }
+    private void verifyTimePickerSetting(String setting) throws Exception {
+        String originalTime = preferences.getPreferenceSummary(setting);
 
-    /**
-     * Navigate to the Inbox screen
-     * @throws Exception
-     */
-    private void navigateToInbox() throws Exception {
-        navigateToAppHome();
-        UiObject spinner = new UiObject(new UiSelector().className("android.widget.Spinner"));
-        spinner.click();
+        // Change the current time preference
+        preferences.changeTimePreferenceValue(setting);
 
-        UiObject inbox = new UiObject(new UiSelector().text("Inbox"));
-        this.waitForUiObjectsToExist(1000, inbox);
-        inbox.click();
+        // Capture the value
+        String changedTime = preferences.getPreferenceSummary(setting);
 
-        // Wait for activity
-        this.getUiDevice().waitForWindowUpdate(null, 1000);
-    }
+        //verify it actually changed
+        assertNotSame(originalTime, changedTime);
 
-    /**
-     * Find and open the Rich Push Sample app
-     * @throws UiObjectNotFoundException
-     */
-    private void openApp() throws UiObjectNotFoundException {
-        try {
-            getUiDevice().wakeUp();
-        } catch (RemoteException e1) {
-            // We're probably doomed, but leave a note.
-            e1.printStackTrace();
-        }
+        // Reopen settings
+        this.getUiDevice().pressBack();
+        appNavigator.navigateToPreferences();
 
-        // Simulate a short press on the HOME button.
-        getUiDevice().pressHome();
-
-        // Hit it a few times to bypass the welcome screen
-        getUiDevice().pressHome();
-        getUiDevice().pressHome();
-
-        // We're now in the home screen. Next, we want to simulate
-        // a user bringing up the All Apps screen.
-        // If you use the uiautomatorviewer tool to capture a snapshot
-        // of the Home screen, notice that the All Apps button's
-        // content-description property has the value "Apps".  We can
-        // use this property to create a UiSelector to find the button.
-        UiObject allAppsButton = new UiObject(new UiSelector().description("Apps"));
-
-        // Simulate a click to bring up the All Apps screen.
-        allAppsButton.clickAndWaitForNewWindow();
-
-        // In the All Apps screen, the Settings app is located in
-        // the Apps tab. To simulate the user bringing up the Apps tab,
-        // we create a UiSelector to find a tab with the text
-        // label "Apps".
-        UiObject appsTab = new UiObject(new UiSelector().text("Apps"));
-
-        // Simulate a click to enter the Apps tab.
-        appsTab.click();
-
-        // Next, in the apps tabs, we can simulate a user swiping until
-        // they come to the Settings app icon.  Since the container view
-        // is scrollable, we can use a UiScrollable object.
-        UiScrollable appViews = new UiScrollable(new UiSelector().scrollable(true));
-
-        // Set the swiping mode to horizontal (the default is vertical)
-        appViews.setAsHorizontalList();
-
-        // Create a UiSelector to find the Settings app and simulate
-        // a user click to launch the app.
-        UiObject settingsApp = appViews.getChildByText(new UiSelector().className(android.widget.TextView.class.getName()), "Rich Push Sample");
-        settingsApp.clickAndWaitForNewWindow();
-
-        // Validate that the package name is the expected one
-        UiObject pushSampleValidation = new UiObject(new UiSelector().packageName("com.urbanairship.richpush.sample"));
-        assertTrue("Unable to detect Rich Push Sample", pushSampleValidation.exists());
-    }
-
-    /**
-     * Open the rich push notification from the notification area
-     * @throws UiObjectNotFoundException
-     */
-    private void openRichPushNotification() throws UiObjectNotFoundException {
-        // Open notification
-        UiObject notificationAlert = new UiObject(new UiSelector().text("Rich Push Alert"));
-
-        assertTrue("No push notifications to open",  notificationAlert.exists());
-        notificationAlert.click();
-    }
-
-    /**
-     * Open the notification area
-     */
-    private void openNotificationArea() {
-        this.getUiDevice().swipe(50, 2, 50, this.getUiDevice().getDisplayHeight(), 5);
+        // Verify its still the captured value
+        assertEquals(changedTime, preferences.getPreferenceSummary(setting));
     }
 
     /**
@@ -644,44 +325,30 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         UiObject notificationTitle = new UiObject(new UiSelector().text("Rich Push Sample"));
         UiObject notificationAlert = new UiObject(new UiSelector().text("Rich Push Alert"));
 
-        return waitForUiObjectsToExist(NOTIFICATION_WAIT_TIME, notificationTitle, notificationAlert);
+        return AutomatorUtils.waitForUiObjectsToExist(NOTIFICATION_WAIT_TIME, notificationTitle, notificationAlert);
     }
 
-    /**
-     * Waits for UiObjects to exist
-     * @param timeInMilliseconds Time to wait for ui objects to exist
-     * @param uiObjects UiObjects to check for
-     * @return <code>true</code> if all ui objects exist, otherwise <code>false</code>
-     * @throws InterruptedException
-     */
-    private boolean waitForUiObjectsToExist(int timeInMilliseconds, UiObject... uiObjects) throws InterruptedException {
-        if (uiObjects == null || uiObjects.length == 0) {
-            return false;
+    private void verifyPushNotification(String description) throws InterruptedException, UiObjectNotFoundException {
+        AutomatorUtils.openNotificationArea();
+        waitForNotificationToArrive();
+
+        UiObject notificationAlert = new UiObject(new UiSelector().text("Rich Push Alert"));
+
+        assertTrue("No push notifications to open",  notificationAlert.exists());
+
+        // Wait a second for any messsage retrieval to take place
+        Thread.sleep(1000);
+
+        notificationAlert.click();
+
+        // Make sure we have a dialog fragment and web view in main activity
+        UiSelector webViewSelector = new UiSelector().className("android.webkit.WebView");
+        if (description != null) {
+            webViewSelector.description(description);
         }
 
-        long startTime = System.currentTimeMillis();
-        while (System.currentTimeMillis() - startTime < timeInMilliseconds) {
-            boolean allExist = true;
-            for (UiObject uiObject : uiObjects) {
-                if (!uiObject.exists()) {
-                    allExist = false;
-                }
-            }
-
-            if (allExist) {
-                return true;
-            } else {
-                Thread.sleep(1000);
-            }
-        }
-
-        return false;
+        UiObject richPushDialog = new UiObject(webViewSelector);
+        assertTrue("Failed to display notification in a webview",  AutomatorUtils.waitForUiObjectsToExist(20000, richPushDialog));
     }
 
-    private UiSelector getPreferenceSummarySelector(String description) {
-        return new UiSelector().description(description)
-                .childSelector(new UiSelector()
-                .className("android.widget.RelativeLayout")
-                .childSelector(new UiSelector().index(1)));
-    }
 }
