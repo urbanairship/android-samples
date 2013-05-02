@@ -55,7 +55,17 @@ public interface UAPreference {
         /**
          * Location background tracking preference
          */
-        LOCATION_BACKGROUND_ENABLE
+        LOCATION_BACKGROUND_ENABLE,
+
+        /**
+         * APID preference
+         */
+        APID,
+
+        /**
+         * User ID
+         */
+        USER_ID
     }
 
     /**

@@ -44,6 +44,11 @@ public class PushPreferencesActivity extends SherlockPreferenceActivity {
             this.addPreferencesFromResource(R.xml.location_preferences);
         }
 
+        // Display the advanced settings
+        if (options.pushServiceEnabled) {
+            this.addPreferencesFromResource(R.xml.advanced_preferences);
+        }
+
         // Creates the UAPreferenceAdapter with the entire preference screen
         preferenceAdapter = new UAPreferenceAdapter(getPreferenceScreen());
     }
