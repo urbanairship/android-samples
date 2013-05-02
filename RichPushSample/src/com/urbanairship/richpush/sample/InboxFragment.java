@@ -5,20 +5,13 @@
 package com.urbanairship.richpush.sample;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.SparseArray;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
-import com.urbanairship.UrbanAirshipProvider;
 import com.urbanairship.richpush.RichPushMessage;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,15 +20,13 @@ import java.util.List;
  *
  */
 public abstract class InboxFragment extends SherlockListFragment {
-    private static final SimpleDateFormat UA_DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
     public static final String EMPTY_COLUMN_NAME = "";
     public static final String ROW_LAYOUT_ID_KEY = "row_layout_id";
     public static final String EMPTY_LIST_STRING_KEY = "empty_list_string";
 
     private OnMessageListener listener;
     private RichPushMessageAdapter adapter;
-    private List<String> checkedIds = new ArrayList<String>();
+    private List<String> selectedMessageIds = new ArrayList<String>();
 
 
     @Override
@@ -49,8 +40,8 @@ public abstract class InboxFragment extends SherlockListFragment {
         super.onCreate(savedInstanceState);
 
         // Set the RichPushMessageAdapter
-        this.adapter = new RichPushMessageAdapter(getActivity(), getRowLayoutId(), createUIMapping());
-        adapter.setViewBinder(new MessageBinder());
+        this.adapter = new RichPushMessageAdapter(getActivity(), getRowLayoutId());
+        adapter.setViewBinder(getMessageBinder());
         this.setListAdapter(adapter);
 
         // Retain the instance so we keep list position and selection on activity re-creation
@@ -65,7 +56,7 @@ public abstract class InboxFragment extends SherlockListFragment {
 
     @Override
     public void onListItemClick(ListView list, View view, int position, long id) {
-        this.listener.onMessageSelected(this.adapter.getItem(position));
+        this.listener.onMessageOpen(this.adapter.getItem(position));
     }
 
     /**
@@ -80,21 +71,16 @@ public abstract class InboxFragment extends SherlockListFragment {
      * @return The list of ids of the selected messages
      */
     public List<String> getSelectedMessages() {
-        return checkedIds;
+        return selectedMessageIds;
     }
 
     /**
      * Clears the selected messages
      */
     public void clearSelection() {
-        checkedIds.clear();
+        selectedMessageIds.clear();
         adapter.notifyDataSetChanged();
     }
-
-    /**
-     * @return The map of view ids to message columns
-     */
-    public abstract SparseArray<String> createUIMapping();
 
     /**
      * @return The layout id to use in the RichPushMessageAdapter
@@ -124,59 +110,37 @@ public abstract class InboxFragment extends SherlockListFragment {
      *
      */
     public interface OnMessageListener {
-        void onMessageSelected(RichPushMessage message);
+        void onMessageOpen(RichPushMessage message);
         void onSelectionChanged();
     }
 
+
     /**
-     * Binds a rich push message value to a view
+     * Sets a message is selected or not
+     * @param messageId The id of the message
+     * @param isChecked Boolean indicating if the message is selected or not
      */
-    class MessageBinder implements RichPushMessageAdapter.ViewBinder {
-        @Override
-        public void setViewValue(View view, RichPushMessage message, String columnName) {
-            if (columnName.equals(UrbanAirshipProvider.RichPush.COLUMN_NAME_UNREAD)) {
-                if (message.isRead()) {
-                    view.setBackgroundColor(Color.BLACK);
-                    view.setContentDescription("Message read");
-                } else {
-                    view.setBackgroundColor(Color.YELLOW);
-                    view.setContentDescription("Message unread");
-                }
-            } else if (columnName.equals(UrbanAirshipProvider.RichPush.COLUMN_NAME_TITLE)) {
-                ((TextView) view).setText(message.getTitle());
-            } else if (columnName.equals(UrbanAirshipProvider.COLUMN_NAME_TIMESTAMP)) {
-                ((TextView) view).setText(UA_DATE_FORMATTER.format(message.getSentDate()));
-            } else {
-                // Checkbox
-
-                // Set the tag as the message id to retrieve the message later
-                view.setTag(message.getMessageId());
-
-                if (checkedIds.contains(message.getMessageId())) {
-                    ((CheckBox)view).setChecked(true);
-                } else {
-                    ((CheckBox)view).setChecked(false);
-                }
-
-                // Set a listener for the checkbox changes
-                view.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String messageId = (String) view.getTag();
-                        // Add or remove the message id in the list of checked messages
-                        if (((CheckBox)view).isChecked()) {
-                            checkedIds.add(messageId);
-                        } else {
-                            checkedIds.remove(messageId);
-                        }
-
-                        // Notify listener of a selection change
-                        listener.onSelectionChanged();
-                    }
-                });
-            }
-            view.setFocusable(false);
-            view.setFocusableInTouchMode(false);
+    protected void onMessageSelected(String messageId, boolean isChecked) {
+        if (isChecked && !selectedMessageIds.contains(messageId)) {
+            selectedMessageIds.add(messageId);
+        } else if (!isChecked && selectedMessageIds.contains(messageId)) {
+            selectedMessageIds.remove(messageId);
         }
+
+        listener.onSelectionChanged();
     }
+
+    /**
+     * Returns if a message is selected
+     * @param messageId The id of the message
+     * @return <code>true</code> If the message is selected, <code>false</code> otherwise.
+     */
+    protected boolean isMessageSelected(String messageId) {
+        return selectedMessageIds.contains(messageId);
+    }
+
+    /**
+     * @return
+     */
+    protected abstract RichPushMessageAdapter.ViewBinder getMessageBinder();
 }
