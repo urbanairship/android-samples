@@ -49,16 +49,29 @@ public class PushSender {
         sendMessage(RICH_PUSH_BROADCAST_URL, null, activity);
     }
 
-
+    /**
+     * Sends a rich push message to a tag
+     * @param tag The specified tag to send the rich push message to
+     * @throws Exception
+     */
     public void sendRichPushToTag(String tag) throws Exception {
         sendMessage(RICH_PUSH_URL, "\"tags\": [\"" + tag + "\"],", "");
     }
 
+    /**
+     * Sends a rich push message to an alias
+     * @param alias The specified alias to send the rich push message to
+     * @throws Exception
+     */
     public void sendRichPushToAlias(String alias) throws Exception {
         sendMessage(RICH_PUSH_URL, "\"aliases\": [\"" + alias + "\", \"anotherAlias\"],", "");
     }
 
-
+    /**
+     * Sends a rich push message to a user
+     * @param user The specified user id to send the rich push message to
+     * @throws Exception
+     */
     public void sendRichPushToUser(String user) throws Exception {
         sendMessage(RICH_PUSH_URL, "\"users\": [\"" + user + "\"],", "");
     }

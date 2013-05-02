@@ -101,7 +101,7 @@ public class UAPreferenceAdapter {
         case APID:
             value = PushManager.shared().getAPID();
             break;
-        case RICH_PUSH_USER_ID:
+        case USER_ID:
             value = RichPushManager.shared().getRichPushUser().getId();
             break;
         }
@@ -168,7 +168,7 @@ public class UAPreferenceAdapter {
             pushPrefs.setQuietTimeInterval(new Date((Long)value), end);
             break;
         case APID:
-        case RICH_PUSH_USER_ID:
+        case USER_ID:
             // do nothing
             break;
         default:
@@ -235,7 +235,7 @@ public class UAPreferenceAdapter {
                 return;
             }
             break;
-        case RICH_PUSH_USER_ID:
+        case USER_ID:
             if (pushPrefs == null || !UAirship.shared().getAirshipConfigOptions().richPushEnabled) {
                 return;
             }

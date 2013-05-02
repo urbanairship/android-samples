@@ -8,9 +8,9 @@
 	        android:persistent="false"
 	        android:title="@string/apid_preference_title" />    
 
-	    <com.urbanairship.richpush.sample.preference.RichPushUserIdPreference
+	    <com.urbanairship.richpush.sample.preference.UserIdPreference
 	        android:persistent="false"
-	        android:title="@string/rich_push_user_id_preference_title" />	
+	        android:title="@string/user_id_preference_title" />
 	        
 	    <com.urbanairship.richpush.sample.SetAliasPreference
 	        android:persistent="false"

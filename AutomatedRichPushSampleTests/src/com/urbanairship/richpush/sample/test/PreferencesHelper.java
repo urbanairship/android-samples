@@ -9,7 +9,7 @@ import com.android.uiautomator.core.UiSelector;
  * Helper class to test the preferences
  *
  */
-public class Preferences {
+public class PreferencesHelper {
     private UiSelector getPreferenceSummarySelector(String description) {
         return new UiSelector().description(description)
                 .childSelector(new UiSelector()

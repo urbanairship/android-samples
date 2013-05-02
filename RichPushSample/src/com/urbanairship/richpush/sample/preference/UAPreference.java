@@ -63,9 +63,9 @@ public interface UAPreference {
         APID,
 
         /**
-         * Rich Push User ID
+         * User ID
          */
-        RICH_PUSH_USER_ID
+        USER_ID
     }
 
     /**

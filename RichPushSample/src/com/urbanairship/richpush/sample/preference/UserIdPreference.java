@@ -6,9 +6,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class RichPushUserIdPreference extends Preference implements UAPreference {
+public class UserIdPreference extends Preference implements UAPreference {
 
-    public RichPushUserIdPreference(Context context, AttributeSet attrs) {
+    public UserIdPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -21,7 +21,7 @@ public class RichPushUserIdPreference extends Preference implements UAPreference
 
     @Override
     public PreferenceType getPreferenceType() {
-        return PreferenceType.RICH_PUSH_USER_ID;
+        return PreferenceType.USER_ID;
     }
 
     @Override

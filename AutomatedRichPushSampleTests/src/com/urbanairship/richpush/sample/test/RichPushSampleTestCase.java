@@ -19,7 +19,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     private static final String TEST_FIRST_TAG_STRING = "TEST_FIRST_TAG";
 
     private PushSender pushSender;
-    private Preferences preferences;
+    private PreferencesHelper preferences;
     private RichPushSampleNavigator appNavigator;
 
     /**
@@ -32,7 +32,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         String appKey = getParams().getString("APP_KEY");
         pushSender = new PushSender(masterSecret, appKey);
 
-        preferences = new Preferences();
+        preferences = new PreferencesHelper();
         appNavigator = new RichPushSampleNavigator();
 
         // Open application
@@ -83,7 +83,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
     /**
      * Test the setting of an alias and a tag. Test the sending and receiving
-     * push messages via rich push user, alias and tag.
+     * push messages to a user, alias and tag.
      * @throws Exception
      */
     public void testAliasAndTags() throws Exception {
@@ -94,8 +94,8 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
         appNavigator.navigateToPreferences();
 
-        // Send Rich Push Message to Rich Push User Id
-        String richPushId = preferences.getPreferenceSummary("RICH_PUSH_USER_ID");
+        // Send Rich Push Message to User Id
+        String richPushId = preferences.getPreferenceSummary("USER_ID");
         pushSender.sendRichPushToUser(richPushId);
         verifyPushNotification(null);
 
@@ -271,9 +271,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     /**
      * Verify the checkbox state of the preference
      * @param setting The specified preference
+     * @throws UiObjectNotFoundException
      * @throws Exception
      */
-    private void verifyCheckBoxSetting(String setting) throws Exception {
+    private void verifyCheckBoxSetting(String setting) throws UiObjectNotFoundException, Exception {
         boolean originalValue = preferences.getCheckBoxSetting(setting);
 
         // Toggle it
@@ -334,11 +335,13 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     }
 
     /**
-     * Verify the notification alert is received
+     * Verify the notification alert is received.
+     * Assert if the notification alert does not exist or display notification failed to display in a webview.
      * @param description The content description string
      * @throws InterruptedException
      * @throws UiObjectNotFoundException
      */
+
     private void verifyPushNotification(String description) throws InterruptedException, UiObjectNotFoundException {
         AutomatorUtils.openNotificationArea();
         waitForNotificationToArrive();
