@@ -336,7 +336,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
     /**
      * Verify the notification alert is received.
-     * Assert if the notification alert does not exist or display notification failed to display in a webview.
+     * Assert if the notification alert does not exist or the notification failed to display in a webview.
      * @param description The content description string
      * @throws InterruptedException
      * @throws UiObjectNotFoundException
