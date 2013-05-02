@@ -140,7 +140,8 @@ public abstract class InboxFragment extends SherlockListFragment {
     }
 
     /**
-     * @return
+     * @return RichPushMessageAdapter.ViewBinder to bind messages to a list view item
+     * in the list adapter.
      */
     protected abstract RichPushMessageAdapter.ViewBinder createMessageBinder();
 }
