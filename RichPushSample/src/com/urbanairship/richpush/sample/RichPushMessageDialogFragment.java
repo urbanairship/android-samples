@@ -23,7 +23,7 @@ public class RichPushMessageDialogFragment extends DialogFragment {
 
     /**
      * Creates a new instance of RichPushMessageDialogFragment
-     * @param messageId The message's id to display
+     * @param messageId The id of the message to display
      * @return RichPushMessageDialogFragment
      */
     public static RichPushMessageDialogFragment newInstance(String messageId) {
