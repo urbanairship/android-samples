@@ -41,7 +41,7 @@ public abstract class InboxFragment extends SherlockListFragment {
 
         // Set the RichPushMessageAdapter
         this.adapter = new RichPushMessageAdapter(getActivity(), getRowLayoutId());
-        adapter.setViewBinder(getMessageBinder());
+        adapter.setViewBinder(createMessageBinder());
         this.setListAdapter(adapter);
 
         // Retain the instance so we keep list position and selection on activity re-creation
@@ -142,5 +142,5 @@ public abstract class InboxFragment extends SherlockListFragment {
     /**
      * @return
      */
-    protected abstract RichPushMessageAdapter.ViewBinder getMessageBinder();
+    protected abstract RichPushMessageAdapter.ViewBinder createMessageBinder();
 }

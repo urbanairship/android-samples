@@ -34,7 +34,7 @@ public class RichPushSampleInboxFragment extends InboxFragment {
     }
 
     @Override
-    protected ViewBinder getMessageBinder() {
+    protected ViewBinder createMessageBinder() {
         return new RichPushMessageAdapter.ViewBinder() {
 
             @Override
