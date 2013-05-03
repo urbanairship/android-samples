@@ -5,7 +5,6 @@
 package com.urbanairship.richpush.sample;
 
 import android.content.Context;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ public class RichPushMessageAdapter extends ArrayAdapter<RichPushMessage> {
 
     int layout;
     ViewBinder binder;
-    SparseArray<String> mapping;
     private List<RichPushMessage> messages;
 
     /**
@@ -34,14 +32,13 @@ public class RichPushMessageAdapter extends ArrayAdapter<RichPushMessage> {
      * @param layout The layout for the created views
      * @param mapping The mapping for message value to view
      */
-    public RichPushMessageAdapter(Context context, int layout, SparseArray<String> mapping) {
-        this(context, layout, new ArrayList<RichPushMessage>(), mapping);
+    public RichPushMessageAdapter(Context context, int layout) {
+        this(context, layout, new ArrayList<RichPushMessage>());
     }
 
-    RichPushMessageAdapter(Context context, int layout, List<RichPushMessage> messages, SparseArray<String> mapping) {
+    RichPushMessageAdapter(Context context, int layout, List<RichPushMessage> messages) {
         super(context, layout, messages);
         this.layout = layout;
-        this.mapping = mapping;
         this.messages = messages;
     }
 
@@ -63,16 +60,7 @@ public class RichPushMessageAdapter extends ArrayAdapter<RichPushMessage> {
             return view;
         }
 
-        // Populate the views data with the rich push messsage
-        int count = this.mapping.size();
-        for (int i = 0; i < count; i++) {
-            int key = this.mapping.keyAt(i);
-            View toView = view.findViewById(key);
-            if (toView != null) {
-                this.binder.setViewValue(toView, message, this.mapping.get(key));
-            }
-        }
-
+        binder.bindView(view, message);
         return view;
     }
 
@@ -102,6 +90,6 @@ public class RichPushMessageAdapter extends ArrayAdapter<RichPushMessage> {
      *
      */
     public static interface ViewBinder {
-        void setViewValue(View view, RichPushMessage message, String columnName);
+        void bindView(View view, RichPushMessage message);
     }
 }

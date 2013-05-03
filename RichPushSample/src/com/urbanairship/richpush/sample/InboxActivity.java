@@ -141,7 +141,7 @@ RichPushInbox.Listener {
     }
 
     @Override
-    public void onMessageSelected(RichPushMessage message) {
+    public void onMessageOpen(RichPushMessage message) {
         message.markRead();
         showMessage(message.getMessageId());
     }
