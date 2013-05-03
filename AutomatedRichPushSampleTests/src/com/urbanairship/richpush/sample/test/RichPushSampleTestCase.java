@@ -164,8 +164,8 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         // grab 1st message, mark as read if not already read
         UiObject message = new UiObject(new UiSelector().description("Inbox message").index(0));
         UiObject messageCheckBox = message.getChild(new UiSelector().className("android.widget.CheckBox"));
-        UiObject messageReadIndicator = message.getChild(new UiSelector().description("Message read"));
-        UiObject messageUnreadIndicator =  message.getChild(new UiSelector().description("Message unread"));
+        UiObject messageReadIndicator = message.getChild(new UiSelector().description("Message is read"));
+        UiObject messageUnreadIndicator =  message.getChild(new UiSelector().description("Message is unread"));
 
         assertTrue(messageUnreadIndicator.exists());
         assertFalse(messageReadIndicator.exists());
