@@ -18,10 +18,13 @@
         android:id="@+id/message_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_toRightOf="@id/unread_indicator"
         android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/unread_indicator"
         android:focusable="false"
-        android:focusableInTouchMode="false" />
+        android:focusableInTouchMode="false"
+        android:paddingRight="6dp"
+        android:scaleX="1.50"
+        android:scaleY="1.50" />
     
     <TextView
         android:id="@+id/title"

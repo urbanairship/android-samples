@@ -4,11 +4,14 @@
 
 package com.urbanairship.richpush.sample;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.urbanairship.UAirship;
+import com.urbanairship.push.PushManager;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 
@@ -56,6 +59,14 @@ public class MessageActivity extends SherlockFragmentActivity {
 
         // Sets the current item to the position of the current message
         this.messagePager.setCurrentItem(firstItem);
+
+        //action_bar_home_as_up_indicator
+
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.getSupportActionBar().setHomeButtonEnabled(true);
+        //this.getSupportActionBar().setLogo(R.drawable.abs__ic_ab_back_holo_dark);
+
+
     }
 
     @Override
@@ -70,6 +81,9 @@ public class MessageActivity extends SherlockFragmentActivity {
     protected void onStop() {
         super.onStop();
 
+        InboxNotificationBuilder builder = (InboxNotificationBuilder)PushManager.shared().getNotificationBuilder();
+        builder.updateInboxNotification();
+
         // Activity instrumentation for analytic tracking
         UAirship.shared().getAnalytics().activityStopped(this);
     }
@@ -80,5 +94,15 @@ public class MessageActivity extends SherlockFragmentActivity {
         savedInstanceState.putString(EXTRA_MESSAGE_ID_KEY, messageId);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+
+        Intent intent = new Intent(this, InboxActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        this.startActivity(intent);
+
+        this.finish();
+        return true;
+    }
 
 }
