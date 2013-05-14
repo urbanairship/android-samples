@@ -14,7 +14,7 @@ import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
     // Time to wait for notifications to appear in milliseconds.
-    private static int NOTIFICATION_WAIT_TIME = 60000; // 60 seconds - push to tags is slower than to user
+    private static int NOTIFICATION_WAIT_TIME = 90000; // 90 seconds - push to tags is slower than to user
     private static final String TEST_ALIAS_STRING = "TEST_ALIAS";
     private static final String TEST_FIRST_TAG_STRING = "TEST_FIRST_TAG";
 
@@ -91,6 +91,9 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         appNavigator.navigateToPreferences();
         preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
         this.getUiDevice().pressBack();
+
+        // Wait a second for any push registration to take place
+        Thread.sleep(1000);
 
         appNavigator.navigateToPreferences();
 
