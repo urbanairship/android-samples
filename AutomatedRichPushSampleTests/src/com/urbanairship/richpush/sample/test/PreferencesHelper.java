@@ -155,8 +155,9 @@ public class PreferencesHelper {
      * Set a tag
      * @param tags The string to set to
      * @throws UiObjectNotFoundException
+     * @throws InterruptedException
      */
-    public void setTags(String tags) throws UiObjectNotFoundException {
+    public void setTags(String tags) throws UiObjectNotFoundException, InterruptedException {
         // Scroll to the preference if its not visible in the list
         scrollPreferenceIntoView("SET_TAGS");
 
@@ -177,6 +178,7 @@ public class PreferencesHelper {
 
         // Set tag
         UiObject setTagsText = new UiObject(new UiSelector().className("android.widget.EditText"));
+        AutomatorUtils.waitForUiObjectsToExist(1000, setTagsText);
 
         // Add first tag
         setTagsText.click();
