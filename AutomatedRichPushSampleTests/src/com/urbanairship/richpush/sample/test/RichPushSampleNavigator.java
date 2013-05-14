@@ -52,9 +52,12 @@ public class RichPushSampleNavigator {
     /**
      * Navigate to the Preferences screen
      * @throws UiObjectNotFoundException
+     * @throws InterruptedException
      */
-    public void navigateToPreferences() throws UiObjectNotFoundException {
-        new UiObject(new UiSelector().description("Preferences")).click();
+    public void navigateToPreferences() throws UiObjectNotFoundException, InterruptedException {
+        UiObject preferenceButton = new UiObject(new UiSelector().description("Preferences"));
+        AutomatorUtils.waitForUiObjectsToExist(1000, preferenceButton);
+        preferenceButton.click();
 
         // Wait for activity
         UiDevice.getInstance().waitForWindowUpdate(null, 1000);
