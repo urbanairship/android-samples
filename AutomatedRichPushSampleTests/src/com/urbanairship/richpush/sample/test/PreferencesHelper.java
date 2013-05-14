@@ -111,8 +111,9 @@ public class PreferencesHelper {
      * Set an alias
      * @param alias The string to set to
      * @throws UiObjectNotFoundException
+     * @throws InterruptedException
      */
-    public void setAlias(String alias) throws UiObjectNotFoundException {
+    public void setAlias(String alias) throws UiObjectNotFoundException, InterruptedException {
         // Test set alias
         // Scroll to the preference if its not visible in the list
         scrollPreferenceIntoView("SET_ALIAS");
@@ -125,10 +126,11 @@ public class PreferencesHelper {
         }
 
         setAlias.click();
+        UiObject aliasEditText = new UiObject(new UiSelector().text(alias));
+        AutomatorUtils.waitForUiObjectsToExist(1000, aliasEditText);
 
         // Check if an alias already exist
         if (aliasExist) {
-            UiObject aliasEditText = new UiObject(new UiSelector().text(alias));
             aliasEditText.click();
             UiObject deleteAlias = new UiObject(new UiSelector().text("Delete"));
             if (deleteAlias.exists()) {
