@@ -105,7 +105,7 @@ public class AutomatorUtils {
 
         // If a semi-transparent welcome help overlay exists,
         // click the OK button to dismiss it.
-        UiObject okDismissHelpOverlayButton = new UiObject(new UiSelector().text("OK"));
+        okDismissHelpOverlayButton = new UiObject(new UiSelector().text("OK"));
         if (okDismissHelpOverlayButton.exists()) {
             okDismissHelpOverlayButton.click();
         }
