@@ -93,7 +93,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         this.getUiDevice().pressBack();
 
         // Wait a second for any push registration to take place
-        Thread.sleep(1000);
+        Thread.sleep(5000);
 
         appNavigator.navigateToPreferences();
 
