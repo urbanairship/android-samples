@@ -169,6 +169,8 @@ public class PreferencesHelper {
 
         // Check if a tag already exist
         UiObject tagsListView = new UiObject(new UiSelector().className("android.widget.ListView"));
+        AutomatorUtils.waitForUiObjectsToExist(1000, tagsListView);
+
         if (tagsListView.exists()) {
             UiObject tagLinearLayout = tagsListView.getChild(new UiSelector().className("android.widget.LinearLayout"));
             UiObject tagDeleteButton = tagLinearLayout.getChild(new UiSelector().className("android.widget.ImageButton"));
@@ -180,7 +182,6 @@ public class PreferencesHelper {
 
         // Set tag
         UiObject setTagsText = new UiObject(new UiSelector().className("android.widget.EditText"));
-        AutomatorUtils.waitForUiObjectsToExist(1000, setTagsText);
 
         // Add first tag
         setTagsText.click();
