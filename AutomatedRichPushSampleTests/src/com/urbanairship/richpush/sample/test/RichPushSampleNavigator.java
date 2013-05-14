@@ -26,6 +26,9 @@ public class RichPushSampleNavigator {
         } else {
             throw new Exception("Where are we?");
         }
+
+        // Wait for activity
+        UiDevice.getInstance().waitForWindowUpdate(null, 1000);
     }
 
     /**
@@ -52,5 +55,8 @@ public class RichPushSampleNavigator {
      */
     public void navigateToPreferences() throws UiObjectNotFoundException {
         new UiObject(new UiSelector().description("Preferences")).click();
+
+        // Wait for activity
+        UiDevice.getInstance().waitForWindowUpdate(null, 1000);
     }
 }
