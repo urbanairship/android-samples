@@ -76,6 +76,13 @@ public class AutomatorUtils {
         device.pressHome();
         device.pressHome();
 
+        // If a semi-transparent welcome help overlay exists,
+        // click the OK button to dismiss it.
+        UiObject okDismissHelpOverlayButton = new UiObject(new UiSelector().text("OK"));
+        if (okDismissHelpOverlayButton.exists()) {
+            okDismissHelpOverlayButton.click();
+        }
+
         // We're now in the home screen. Next, we want to simulate
         // a user bringing up the All Apps screen.
         // If you use the uiautomatorviewer tool to capture a snapshot
@@ -95,6 +102,13 @@ public class AutomatorUtils {
 
         // Simulate a click to enter the Apps tab.
         appsTab.click();
+
+        // If a semi-transparent welcome help overlay exists,
+        // click the OK button to dismiss it.
+        UiObject okDismissHelpOverlayButton = new UiObject(new UiSelector().text("OK"));
+        if (okDismissHelpOverlayButton.exists()) {
+            okDismissHelpOverlayButton.click();
+        }
 
         // Next, in the apps tabs, we can simulate a user swiping until
         // they come to the Settings app icon.  Since the container view
