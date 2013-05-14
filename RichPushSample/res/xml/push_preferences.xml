@@ -4,36 +4,36 @@
     <PreferenceCategory 
         android:title="@string/push_preference_category_title" >
         
-	    <com.urbanairship.richpush.sample.preference.PushEnablePreference
+	    <com.urbanairship.preference.PushEnablePreference
 	        android:key="push_preference"
 	        android:persistent="false"
 	        android:title="@string/push_preference_title" />
 	    
-	    <com.urbanairship.richpush.sample.preference.SoundEnablePreference
+	    <com.urbanairship.preference.SoundEnablePreference
 	        android:dependency="push_preference"
 	        android:key="sound_preference"
 	        android:persistent="false"
 	        android:title="@string/sound_preference_title" />
 	    
-	    <com.urbanairship.richpush.sample.preference.VibrateEnablePreference
+	    <com.urbanairship.preference.VibrateEnablePreference
 	        android:dependency="push_preference"
 	        android:key="vibrate_preference"
 	        android:persistent="false"
 	        android:title="@string/vibrate_preference_title" />
 	    
-	    <com.urbanairship.richpush.sample.preference.QuietTimeEnablePreference
+	    <com.urbanairship.preference.QuietTimeEnablePreference
 	        android:dependency="push_preference"
 	        android:key="quiet_time_enabled_preference"
 	        android:persistent="false"
 	        android:title="@string/quiet_time_enable_preference_title" />
 		
-	    <com.urbanairship.richpush.sample.preference.QuietTimeStartPreference
+	    <com.urbanairship.preference.QuietTimeStartPreference
 	        android:dependency="quiet_time_enabled_preference"
 	        android:key="quiet_time_start_preference"
 	        android:persistent="false"
 	        android:title="@string/quiet_time_start_preference_title" />
 	    
-	    <com.urbanairship.richpush.sample.preference.QuietTimeEndPreference
+	    <com.urbanairship.preference.QuietTimeEndPreference
 	        android:dependency="quiet_time_enabled_preference"
 	        android:key="quiet_time_end_preference"
 	        android:persistent="false"
