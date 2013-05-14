@@ -99,7 +99,6 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         pushSender.sendRichPushToUser(richPushId);
         verifyPushNotification(null);
 
-
         this.getUiDevice().pressBack();
         appNavigator.navigateToPreferences();
 

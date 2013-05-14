@@ -17,6 +17,13 @@ public class PreferencesHelper {
                 .childSelector(new UiSelector().index(1)));
     }
 
+    private UiSelector getPreferenceTitleSelector(String description) {
+        return new UiSelector().description(description)
+                .childSelector(new UiSelector()
+                .className("android.widget.RelativeLayout")
+                .childSelector(new UiSelector().index(0)));
+    }
+
     /**
      * Check specified preference view is enabled
      * @param setting The specified preference setting
@@ -24,8 +31,7 @@ public class PreferencesHelper {
      */
     public boolean isPreferenceViewEnabled(String setting) throws UiObjectNotFoundException {
         UiObject preferenceView = new UiObject(new UiSelector().description(setting));
-        UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
-        listView.scrollDescriptionIntoView(setting);
+        scrollPreferenceIntoView(setting);
         return preferenceView.isEnabled();
     }
 
@@ -37,8 +43,7 @@ public class PreferencesHelper {
      */
     public void setPreferenceCheckBoxEnabled(String setting, boolean enabled) throws Exception {
         // Scroll to the preference if its not visible in the list
-        UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
-        listView.scrollDescriptionIntoView(setting);
+        scrollPreferenceIntoView(setting);
 
         UiObject preference = new UiObject(new UiSelector().description(setting));
         UiObject preferenceCheckBox =  preference.getChild(new UiSelector().className(android.widget.CheckBox.class));
@@ -55,8 +60,7 @@ public class PreferencesHelper {
      * @throws UiObjectNotFoundException
      */
     public boolean getCheckBoxSetting(String setting) throws UiObjectNotFoundException {
-        UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
-        listView.scrollDescriptionIntoView(setting);
+        scrollPreferenceIntoView(setting);
 
         UiObject settingCheckBox = new UiObject(new UiSelector().description(setting));
 
@@ -71,8 +75,7 @@ public class PreferencesHelper {
      */
     public void changeTimePreferenceValue(String setting) throws UiObjectNotFoundException {
         // Scroll to the preference if its not visible in the list
-        UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
-        listView.scrollDescriptionIntoView(setting);
+        scrollPreferenceIntoView(setting);
 
         UiObject timePicker = new UiObject(new UiSelector().description(setting));
         UiObject okButton = new UiObject(new UiSelector().className("android.widget.Button").text("OK"));
@@ -112,8 +115,7 @@ public class PreferencesHelper {
     public void setAlias(String alias) throws UiObjectNotFoundException {
         // Test set alias
         // Scroll to the preference if its not visible in the list
-        UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
-        listView.scrollDescriptionIntoView("SET_ALIAS");
+        scrollPreferenceIntoView("SET_ALIAS");
 
         UiObject setAlias = new UiObject(new UiSelector().description("SET_ALIAS"));
         UiObject aliasStringDisplayed = new UiObject(new UiSelector().text(alias));
@@ -156,8 +158,8 @@ public class PreferencesHelper {
      */
     public void setTags(String tags) throws UiObjectNotFoundException {
         // Scroll to the preference if its not visible in the list
-        UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
-        listView.scrollDescriptionIntoView("SET_TAGS");
+        scrollPreferenceIntoView("SET_TAGS");
+
         UiObject okButton = new UiObject(new UiSelector().text("OK"));
         UiObject setTags = new UiObject(new UiSelector().description("SET_TAGS"));
         setTags.click();
@@ -185,6 +187,16 @@ public class PreferencesHelper {
         // Save first tag
         okButton = new UiObject(new UiSelector().text("OK"));
         okButton.click();
+    }
+
+    /**
+     * Scrolls to the preference setting's title in the UI view
+     * @param setting The specified preference setting
+     * @throws UiObjectNotFoundException
+     */
+    private void scrollPreferenceIntoView(String setting) throws UiObjectNotFoundException {
+        UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
+        listView.scrollIntoView(getPreferenceTitleSelector(setting));
     }
 }
 
