@@ -145,6 +145,9 @@ public class PreferencesHelper {
         UiObject setAliasText = new UiObject(new UiSelector().className("android.widget.EditText"));
         setAliasText.click();
 
+        // Wait for keyboard to pop up
+        Thread.sleep(1000);
+
         // Set the alias
         setAliasText.setText(alias);
 
@@ -185,6 +188,10 @@ public class PreferencesHelper {
 
         // Add first tag
         setTagsText.click();
+
+        // Wait for keyboard to pop up
+        Thread.sleep(1000);
+
         setTagsText.setText(tags);
         UiObject addTagButton = new UiObject(new UiSelector().className("android.widget.ImageButton"));
         addTagButton.click();
