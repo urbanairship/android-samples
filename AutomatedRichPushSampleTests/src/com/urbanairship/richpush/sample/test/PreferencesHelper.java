@@ -143,12 +143,14 @@ public class PreferencesHelper {
         }
 
         UiObject setAliasText = new UiObject(new UiSelector().className("android.widget.EditText"));
+        AutomatorUtils.waitForUiObjectsToExist(1000, setAliasText);
         setAliasText.click();
 
         // Wait for keyboard to pop up
         Thread.sleep(1000);
 
         // Set the alias
+        AutomatorUtils.waitForUiObjectsToExist(1000, setAliasText);
         setAliasText.setText(alias);
 
         // save

@@ -58,8 +58,9 @@ public class AutomatorUtils {
      * @param packageName The package name of the app to open
      * @return <code>true</code> if app was opened, otherwise <code>false</code>
      * @throws UiObjectNotFoundException
+     * @throws InterruptedException
      */
-    public static boolean openApp(String appName, String packageName) throws UiObjectNotFoundException {
+    public static boolean openApp(String appName, String packageName) throws UiObjectNotFoundException, InterruptedException {
         UiDevice device = UiDevice.getInstance();
 
         try {
@@ -90,7 +91,7 @@ public class AutomatorUtils {
         // content-description property has the value "Apps".  We can
         // use this property to create a UiSelector to find the button.
         UiObject allAppsButton = new UiObject(new UiSelector().description("Apps"));
-
+        waitForUiObjectsToExist(5000, allAppsButton);
         // Simulate a click to bring up the All Apps screen.
         allAppsButton.clickAndWaitForNewWindow();
 
