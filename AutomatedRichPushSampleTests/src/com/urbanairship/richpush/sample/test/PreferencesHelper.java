@@ -28,8 +28,9 @@ public class PreferencesHelper {
      * Check specified preference view is enabled
      * @param setting The specified preference setting
      * @throws UiObjectNotFoundException
+     * @throws InterruptedException
      */
-    public boolean isPreferenceViewEnabled(String setting) throws UiObjectNotFoundException {
+    public boolean isPreferenceViewEnabled(String setting) throws UiObjectNotFoundException, InterruptedException {
         UiObject preferenceView = new UiObject(new UiSelector().description(setting));
         scrollPreferenceIntoView(setting);
         return preferenceView.isEnabled();
@@ -47,7 +48,7 @@ public class PreferencesHelper {
 
         UiObject preference = new UiObject(new UiSelector().description(setting));
         UiObject preferenceCheckBox =  preference.getChild(new UiSelector().className(android.widget.CheckBox.class));
-
+        AutomatorUtils.waitForUiObjectsToExist(1000, preferenceCheckBox);
         if (preferenceCheckBox.isChecked() != enabled) {
             preferenceCheckBox.click();
         }
@@ -58,8 +59,9 @@ public class PreferencesHelper {
      * @param setting The specified preference to select
      * @return <code>true</code> if checkbox is selected, otherwise <code>false</code>
      * @throws UiObjectNotFoundException
+     * @throws InterruptedException
      */
-    public boolean getCheckBoxSetting(String setting) throws UiObjectNotFoundException {
+    public boolean getCheckBoxSetting(String setting) throws UiObjectNotFoundException, InterruptedException {
         scrollPreferenceIntoView(setting);
 
         UiObject settingCheckBox = new UiObject(new UiSelector().description(setting));
@@ -72,8 +74,9 @@ public class PreferencesHelper {
      * Change the time preference value
      * @param setting The specified preference to change
      * @throws UiObjectNotFoundException
+     * @throws InterruptedException
      */
-    public void changeTimePreferenceValue(String setting) throws UiObjectNotFoundException {
+    public void changeTimePreferenceValue(String setting) throws UiObjectNotFoundException, InterruptedException {
         // Scroll to the preference if its not visible in the list
         scrollPreferenceIntoView(setting);
 
@@ -207,10 +210,11 @@ public class PreferencesHelper {
      * Scrolls to the preference setting's title in the UI view
      * @param setting The specified preference setting
      * @throws UiObjectNotFoundException
+     * @throws InterruptedException
      */
-    private void scrollPreferenceIntoView(String setting) throws UiObjectNotFoundException {
+    private void scrollPreferenceIntoView(String setting) throws UiObjectNotFoundException, InterruptedException {
         UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
+        AutomatorUtils.waitForUiObjectsToExist(1000, listView);
         listView.scrollIntoView(getPreferenceTitleSelector(setting));
     }
 }
-
