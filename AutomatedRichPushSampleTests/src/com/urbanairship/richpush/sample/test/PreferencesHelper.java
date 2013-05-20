@@ -47,6 +47,7 @@ public class PreferencesHelper {
         scrollPreferenceIntoView(setting);
 
         UiObject preference = new UiObject(new UiSelector().description(setting));
+        AutomatorUtils.waitForUiObjectsToExist(1000, preference);
         UiObject preferenceCheckBox =  preference.getChild(new UiSelector().className(android.widget.CheckBox.class));
         AutomatorUtils.waitForUiObjectsToExist(1000, preferenceCheckBox);
         if (preferenceCheckBox.isChecked() != enabled) {
