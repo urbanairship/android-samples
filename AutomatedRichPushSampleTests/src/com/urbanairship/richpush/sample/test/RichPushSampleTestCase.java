@@ -17,7 +17,6 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
     // Time to wait for notifications to appear in milliseconds.
     private static int NOTIFICATION_WAIT_TIME = 90000; // 90 seconds - push to tags is slower than to user
-    private static final String ALERT_STRING = "Rich Push Alert";
     private static final String APP_NAME = "Rich Push Sample";
     private static final String PACKAGE_NAME = "com.urbanairship.richpush.sample";
     private static final String TEST_ALIAS_STRING = "TEST_RICH_PUSH_SAMPLE_ALIAS";
@@ -29,6 +28,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     private PreferencesHelper preferences;
     private RichPushSampleNavigator appNavigator;
 
+    private String uniqueAlertId;
     /**
      * Prepare for testing, which includes getting the masterSecret and appKey
      */
@@ -37,8 +37,9 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         // Create a push sender with the master secret and app key from the params
         String masterSecret = getParams().getString("MASTER_SECRET");
         String appKey = getParams().getString("APP_KEY");
-        pushSender = new PushSender(masterSecret, appKey, APP_NAME, RICH_PUSH_BROADCAST_URL, RICH_PUSH_URL);
+        uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
 
+        pushSender = new PushSender(masterSecret, appKey, APP_NAME, RICH_PUSH_BROADCAST_URL, RICH_PUSH_URL, uniqueAlertId);
         preferences = new PreferencesHelper();
         appNavigator = new RichPushSampleNavigator();
 
@@ -114,9 +115,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
         preferences.setAlias(TEST_ALIAS_STRING);
         assertEquals("Failed to set alias string", TEST_ALIAS_STRING, preferences.getPreferenceSummary("SET_ALIAS"));
+        this.getUiDevice().pressBack();
 
         // Wait a second for any push registration to take place
-        Thread.sleep(1000);
+        Thread.sleep(REGISTRATION_WAIT_TIME);
 
         pushSender.sendPushToAlias(TEST_ALIAS_STRING);
         verifyPushNotification(null);
@@ -126,9 +128,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
         preferences.setTags(TEST_FIRST_TAG_STRING);
         assertEquals("Failed to display first tag string", TEST_FIRST_TAG_STRING, preferences.getPreferenceSummary("SET_TAGS"));
+        this.getUiDevice().pressBack();
 
         // Wait a second for any push registration to take place
-        Thread.sleep(1000);
+        Thread.sleep(REGISTRATION_WAIT_TIME);
 
         pushSender.sendPushToTag(TEST_FIRST_TAG_STRING);
         verifyPushNotification(null);
@@ -338,7 +341,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
      */
     private boolean waitForNotificationToArrive() throws InterruptedException {
         UiObject notificationTitle = new UiObject(new UiSelector().text(APP_NAME));
-        UiObject notificationAlert = new UiObject(new UiSelector().text(ALERT_STRING));
+        UiObject notificationAlert = new UiObject(new UiSelector().text(uniqueAlertId));
 
         return AutomatorUtils.waitForUiObjectsToExist(NOTIFICATION_WAIT_TIME, notificationTitle, notificationAlert);
     }
@@ -350,12 +353,11 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
      * @throws InterruptedException
      * @throws UiObjectNotFoundException
      */
-
     private void verifyPushNotification(String description) throws InterruptedException, UiObjectNotFoundException {
         AutomatorUtils.openNotificationArea();
         waitForNotificationToArrive();
 
-        UiObject notificationAlert = new UiObject(new UiSelector().text(ALERT_STRING));
+        UiObject notificationAlert = new UiObject(new UiSelector().text(uniqueAlertId));
 
         assertTrue("No push notifications to open",  notificationAlert.exists());
 

@@ -8,6 +8,8 @@ import com.android.uiautomator.core.UiObjectNotFoundException;
 import com.android.uiautomator.core.UiScrollable;
 import com.android.uiautomator.core.UiSelector;
 
+import java.util.UUID;
+
 /**
  * Utility class for automation
  *
@@ -149,5 +151,13 @@ public class AutomatorUtils {
         } else {
             device.pressBack();
         }
+    }
+
+    /**
+     * Generates a unique alert id for the test
+     * @return A unique alert id in string format
+     */
+    public static String generateUniqueAlertId() {
+        return UUID.randomUUID().toString();
     }
 }

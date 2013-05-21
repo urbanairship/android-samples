@@ -21,6 +21,7 @@ public class PushSender {
     private final String appName;
     private final String broadcastUrl;
     private final String pushUrl;
+    private final String uniqueAlertId;
 
     /**
      * Constructor for PushSender
@@ -30,12 +31,13 @@ public class PushSender {
      * @param broadcastUrl The url for broadcasting push messages
      * @param pushUrl The url for push messages
      */
-    public PushSender(String masterSecret, String appKey, String appName, String broadcastUrl, String pushUrl) {
+    public PushSender(String masterSecret, String appKey, String appName, String broadcastUrl, String pushUrl, String uniqueAlertId) {
         this.masterSecret = masterSecret;
         this.appKey = appKey;
         this.appName = appName;
         this.broadcastUrl = broadcastUrl;
         this.pushUrl = pushUrl;
+        this.uniqueAlertId = uniqueAlertId;
     }
 
     /**
@@ -50,9 +52,9 @@ public class PushSender {
             builder.append(pushString);
         }
         if (appName.equalsIgnoreCase("Push Sample")) {
-            builder.append("\"android\": { \"alert\": \"Hello from " + appName + "\", \"extra\": {\"a_key\":\"a_value\"} } }");
+            builder.append("\"android\": { \"alert\": \"" + uniqueAlertId + "\", \"extra\": {\"a_key\":\"a_value\"} } }");
         } else if (appName.equalsIgnoreCase("Rich Push Sample")) {
-            builder.append("\"push\": {\"android\": { \"alert\": \"Rich Push Alert\", \"extra\": { \"activity\": \"" + activity + "\" } } },");
+            builder.append("\"push\": {\"android\": { \"alert\": \"" + uniqueAlertId + "\", \"extra\": { \"activity\": \"" + activity + "\" } } },");
             builder.append("\"title\": \"Rich Push Title\",");
             builder.append("\"message\": \"Rich Push Message\",");
             builder.append("\"content-type\": \"text/html\"}");
