@@ -60,6 +60,6 @@ public class RichPushSampleNavigator {
         preferenceButton.click();
 
         // Wait for activity
-        UiDevice.getInstance().waitForWindowUpdate(null, 1000);
+        UiDevice.getInstance().waitForWindowUpdate(null, 5000);
     }
 }
