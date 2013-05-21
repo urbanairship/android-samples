@@ -28,7 +28,7 @@ public class RichPushSampleNavigator {
         }
 
         // Wait for activity
-        UiDevice.getInstance().waitForWindowUpdate(null, 1000);
+        UiDevice.getInstance().waitForWindowUpdate(null, 5000);
     }
 
     /**
@@ -46,7 +46,7 @@ public class RichPushSampleNavigator {
         inbox.click();
 
         // Wait for activity
-        UiDevice.getInstance().waitForWindowUpdate(null, 1000);
+        UiDevice.getInstance().waitForWindowUpdate(null, 5000);
     }
 
     /**
