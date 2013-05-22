@@ -102,6 +102,17 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     public void testAliasAndTags() throws Exception {
         // The rest depend on having push enabled
         appNavigator.navigateToPreferences();
+
+        // Enable push, disable push, then enable push
+        // Possible workaround to PHONE_REGISTRATION_ERROR on emulator
+        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
+        this.getUiDevice().pressBack();
+
+        appNavigator.navigateToPreferences();
+        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", false);
+        this.getUiDevice().pressBack();
+
+        appNavigator.navigateToPreferences();
         preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
         this.getUiDevice().pressBack();
 
@@ -111,23 +122,6 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         // Verify registration complete by checking for apid
         appNavigator.navigateToPreferences();
         String apid = preferences.getPreferenceSummary("APID");
-
-        // If apid does not exist, then retry because registration failed
-        // Possible workaround to PHONE_REGISTRATION_ERROR
-        if (apid.equalsIgnoreCase("")) {
-            preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", false);
-            this.getUiDevice().pressBack();
-            appNavigator.navigateToPreferences();
-            preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
-            this.getUiDevice().pressBack();
-
-            // Wait for push registration to take place
-            Thread.sleep(REGISTRATION_WAIT_TIME);
-
-            // Verify registration complete by checking for apid
-            appNavigator.navigateToPreferences();
-            apid = preferences.getPreferenceSummary("APID");
-        }
         assertNotSame(apid, "");
 
         // Set alias
