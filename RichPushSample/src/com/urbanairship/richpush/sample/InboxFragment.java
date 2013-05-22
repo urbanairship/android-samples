@@ -27,6 +27,7 @@ public abstract class InboxFragment extends SherlockListFragment {
     private OnMessageListener listener;
     private RichPushMessageAdapter adapter;
     private List<String> selectedMessageIds = new ArrayList<String>();
+    private List<RichPushMessage> messages;
 
 
     @Override
@@ -64,6 +65,7 @@ public abstract class InboxFragment extends SherlockListFragment {
      * @param messages Current list of rich push messages
      */
     public void setMessages(List<RichPushMessage> messages) {
+        this.messages = messages;
         adapter.setMessages(messages);
     }
 
@@ -80,6 +82,19 @@ public abstract class InboxFragment extends SherlockListFragment {
     public void clearSelection() {
         selectedMessageIds.clear();
         adapter.notifyDataSetChanged();
+        listener.onSelectionChanged();
+    }
+
+    /**
+     * Selects all the messages in the inbox
+     */
+    public void selectAll() {
+        selectedMessageIds.clear();
+        for (RichPushMessage message : messages) {
+            selectedMessageIds.add(message.getMessageId());
+        }
+        adapter.notifyDataSetChanged();
+        listener.onSelectionChanged();
     }
 
     /**
@@ -144,4 +159,8 @@ public abstract class InboxFragment extends SherlockListFragment {
      * in the list adapter.
      */
     protected abstract RichPushMessageAdapter.ViewBinder createMessageBinder();
+
+
+
+
 }

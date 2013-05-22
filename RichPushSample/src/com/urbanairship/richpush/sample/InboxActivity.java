@@ -13,9 +13,13 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SlidingPaneLayout;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -58,6 +62,8 @@ SlidingPaneLayout.PanelSlideListener {
     private String pendingMessageId;
     private List<RichPushMessage> messages;
     private CustomSlidingPaneLayout slidingPaneLayout;
+
+    private Button actionSelectionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +164,11 @@ SlidingPaneLayout.PanelSlideListener {
     @Override
     public void onSelectionChanged() {
         startActionModeIfNecessary();
+
+        if (actionMode != null) {
+            // Invalidate the action mode to update the selection text
+            actionMode.invalidate();
+        }
     }
 
     @Override
@@ -201,8 +212,39 @@ SlidingPaneLayout.PanelSlideListener {
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        Logger.debug("onPrepareActionMode");
         mode.getMenuInflater().inflate(R.menu.inbox_actions_menu, menu);
+
+        View customView = LayoutInflater.from(this).inflate(R.layout.cab_selection_dropdown, null);
+        actionSelectionButton = (Button) customView.findViewById(R.id.selection_button);
+
+        final PopupMenu popupMenu = new PopupMenu(this, customView);
+        popupMenu.getMenuInflater().inflate(R.menu.selection, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(android.view.MenuItem item) {
+                if (item.getItemId() == R.id.menu_deselect_all) {
+                    inbox.clearSelection();
+                } else {
+                    inbox.selectAll();
+                }
+                return true;
+            }
+        });
+
+        actionSelectionButton.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                android.view.Menu menu = popupMenu.getMenu();
+                menu.findItem(R.id.menu_deselect_all).setVisible(true);
+                menu.findItem(R.id.menu_select_all).setVisible( inbox.getSelectedMessages().size() != messages.size());
+                popupMenu.show();
+            }
+
+        });
+
+
+        mode.setCustomView(customView);
         return true;
     }
 
@@ -217,9 +259,11 @@ SlidingPaneLayout.PanelSlideListener {
         menu.findItem(R.id.mark_read).setVisible(!firstMessage.isRead());
         menu.findItem(R.id.mark_unread).setVisible(firstMessage.isRead());
 
+        String selectionText = this.getString(R.string.cab_selection, inbox.getSelectedMessages().size());
+        actionSelectionButton.setText(selectionText);
+
         return true;
     }
-
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
@@ -247,8 +291,8 @@ SlidingPaneLayout.PanelSlideListener {
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         Logger.debug("onDestroyActionMode");
-        inbox.clearSelection();
         actionMode = null;
+        inbox.clearSelection();
     }
 
     @Override
