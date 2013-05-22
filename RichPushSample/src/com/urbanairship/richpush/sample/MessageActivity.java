@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.urbanairship.UAirship;
-import com.urbanairship.push.PushManager;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 
@@ -80,9 +79,6 @@ public class MessageActivity extends SherlockFragmentActivity {
     @Override
     protected void onStop() {
         super.onStop();
-
-        InboxNotificationBuilder builder = (InboxNotificationBuilder)PushManager.shared().getNotificationBuilder();
-        builder.updateInboxNotification();
 
         // Activity instrumentation for analytic tracking
         UAirship.shared().getAnalytics().activityStopped(this);
