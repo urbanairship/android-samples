@@ -12,6 +12,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SlidingPaneLayout;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -39,7 +41,8 @@ InboxFragment.OnMessageListener,
 ActionBar.OnNavigationListener,
 ActionMode.Callback,
 RichPushManager.Listener,
-RichPushInbox.Listener {
+RichPushInbox.Listener,
+SlidingPaneLayout.PanelSlideListener {
 
     static final String CHECKED_IDS_KEY = "com.urbanairship.richpush.sample.CHECKED_IDS";
     static final String MESSAGE_ID_KEY = "com.urbanairship.richpush.sample.FIRST_MESSAGE_ID";
@@ -47,19 +50,22 @@ RichPushInbox.Listener {
     private ActionMode actionMode;
     private ArrayAdapter<String> navAdapter;
 
-    private ViewPager messagePager;
+    private CustomViewPager messagePager;
 
     private InboxFragment inbox;
     private RichPushInbox richPushInbox;
 
     private String pendingMessageId;
     private List<RichPushMessage> messages;
+    private CustomSlidingPaneLayout slidingPaneLayout;
+    private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.inbox);
 
+        actionBar = getSupportActionBar();
         configureActionBar();
 
         this.richPushInbox = RichPushManager.shared().getRichPushUser().getInbox();
@@ -70,18 +76,23 @@ RichPushInbox.Listener {
         this.inbox.getListView().setBackgroundColor(Color.BLACK);
 
         // Set up the message view pager if it exists
-        this.messagePager = (ViewPager) this.findViewById(R.id.message_pager);
+        this.messagePager = (CustomViewPager) this.findViewById(R.id.message_pager);
         if (messagePager != null) {
             messagePager.setAdapter(new MessageFragmentAdapter(this.getSupportFragmentManager()));
             this.messagePager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
                 @Override
                 public void onPageSelected(int position) {
                     messages.get(position).markRead();
-
                     // Highlight the current item you are viewing in the inbox
                     inbox.getListView().setItemChecked(position, true);
                 }
             });
+        }
+
+        slidingPaneLayout =  (CustomSlidingPaneLayout) findViewById(R.id.sliding_pane_layout);
+        if (slidingPaneLayout != null) {
+            slidingPaneLayout.setPanelSlideListener(this);
+            slidingPaneLayout.openPane();
         }
 
         // First create, try to show any messages from the intent
@@ -161,7 +172,13 @@ RichPushInbox.Listener {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case android.R.id.home:
-            navigateToMain();
+            if (slidingPaneLayout != null) {
+                if (slidingPaneLayout.isOpen()) {
+                    slidingPaneLayout.closePane();
+                } else {
+                    slidingPaneLayout.openPane();
+                }
+            }
             break;
         case R.id.refresh:
             inbox.setListShownNoAnimation(false);
@@ -170,6 +187,7 @@ RichPushInbox.Listener {
         case R.id.preferences:
             this.startActivity(new Intent(this, PushPreferencesActivity.class));
             break;
+
         }
         return true;
     }
@@ -256,7 +274,6 @@ RichPushInbox.Listener {
      * 'Home' and 'Inbox'
      */
     private void configureActionBar() {
-        ActionBar actionBar = this.getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
@@ -309,6 +326,10 @@ RichPushInbox.Listener {
         // Message is already deleted, skip
         if (richPushInbox.getMessage(messageId) == null) {
             return;
+        }
+
+        if (slidingPaneLayout != null && slidingPaneLayout.isOpen()) {
+            slidingPaneLayout.closePane();
         }
 
         if (messagePager != null) {
@@ -392,5 +413,24 @@ RichPushInbox.Listener {
             })
             .create();
         }
+    }
+
+    @Override
+    public void onPanelClosed(View panel) {
+        if (messagePager != null) {
+            messagePager.enableTouchEvents(true);
+        }
+    }
+
+    @Override
+    public void onPanelOpened(View panel) {
+        if (messagePager != null) {
+            messagePager.enableTouchEvents(false);
+        }
+    }
+
+    @Override
+    public void onPanelSlide(View arg0, float arg1) {
+        //do nothing
     }
 }

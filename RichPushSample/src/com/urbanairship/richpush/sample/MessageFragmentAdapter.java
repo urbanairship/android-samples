@@ -57,5 +57,6 @@ public class MessageFragmentAdapter extends FragmentStatePagerAdapter {
      */
     public void setRichPushMessages(List<RichPushMessage> messages) {
         this.messages = messages;
+        this.notifyDataSetChanged();
     }
 }
