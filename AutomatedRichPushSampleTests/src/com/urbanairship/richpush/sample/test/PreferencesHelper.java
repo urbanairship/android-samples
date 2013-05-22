@@ -101,14 +101,21 @@ public class PreferencesHelper {
      * @param setting The specified preference
      * @return The string value of the preference
      * @throws UiObjectNotFoundException
+     * @throws InterruptedException
      */
-    public String getPreferenceSummary(String setting) throws UiObjectNotFoundException {
+    public String getPreferenceSummary(String setting) throws UiObjectNotFoundException, InterruptedException {
+        String summaryString = "";
         // Scroll to the preference if its not visible in the list
         UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
         UiSelector summary = this.getPreferenceSummarySelector(setting);
         listView.scrollIntoView(summary);
-
-        return new UiObject(summary).getText();
+        UiObject summaryText = new UiObject(summary);
+        // Set max wait time to 180000 or 3 min. in case of long registration time
+        AutomatorUtils.waitForUiObjectsToExist(180000, summaryText);
+        if (summaryText.exists()) {
+            summaryString = summaryText.getText();
+        }
+        return summaryString;
     }
 
     /**

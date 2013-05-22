@@ -1,7 +1,6 @@
 package com.urbanairship.richpush.sample.test;
 
 import com.android.uiautomator.core.UiCollection;
-import com.android.uiautomator.core.UiDevice;
 import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
 import com.android.uiautomator.core.UiSelector;
@@ -63,6 +62,12 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         // Wait for any push registration to take place
         Thread.sleep(REGISTRATION_WAIT_TIME);
 
+        // Verify registration complete by checking for apid
+        appNavigator.navigateToPreferences();
+        String apid = preferences.getPreferenceSummary("APID");
+        assertNotSame(apid, "");
+
+        // Pull down the notification bar and clear notifications
         AutomatorUtils.clearNotifications();
 
         // Verify that we can send a push and open in a webview
@@ -80,7 +85,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", false);
         this.getUiDevice().pressBack();
 
-        // Send a notification
+        // Send a notification that we expect not to receive due to push being disabled
         pushSender.sendPushMessage();
 
         AutomatorUtils.openNotificationArea();
@@ -103,6 +108,43 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         // Wait for any push registration to take place
         Thread.sleep(REGISTRATION_WAIT_TIME);
 
+        // Verify registration complete by checking for apid
+        appNavigator.navigateToPreferences();
+        String apid = preferences.getPreferenceSummary("APID");
+
+        // If apid does not exist, then retry because registration failed
+        // Possible workaround to PHONE_REGISTRATION_ERROR
+        if (apid.equalsIgnoreCase("")) {
+            preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", false);
+            this.getUiDevice().pressBack();
+            appNavigator.navigateToPreferences();
+            preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
+            this.getUiDevice().pressBack();
+
+            // Wait for push registration to take place
+            Thread.sleep(REGISTRATION_WAIT_TIME);
+
+            // Verify registration complete by checking for apid
+            appNavigator.navigateToPreferences();
+            apid = preferences.getPreferenceSummary("APID");
+        }
+        assertNotSame(apid, "");
+
+        // Set alias
+        preferences.setAlias(TEST_ALIAS_STRING);
+        assertEquals("Failed to set alias string", TEST_ALIAS_STRING, preferences.getPreferenceSummary("SET_ALIAS"));
+
+        // Set tag
+        preferences.setTags(TEST_FIRST_TAG_STRING);
+        assertEquals("Failed to display first tag string", TEST_FIRST_TAG_STRING, preferences.getPreferenceSummary("SET_TAGS"));
+        this.getUiDevice().pressBack();
+
+        // Wait any for push registration to take place
+        Thread.sleep(REGISTRATION_WAIT_TIME);
+
+        // Pull down the notification bar and clear notifications
+        AutomatorUtils.clearNotifications();
+
         appNavigator.navigateToPreferences();
 
         // Send Rich Push Message to User Id
@@ -110,33 +152,13 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         pushSender.sendRichPushToUser(richPushId);
         verifyPushNotification(null);
 
-        this.getUiDevice().pressBack();
-        appNavigator.navigateToPreferences();
-
-        preferences.setAlias(TEST_ALIAS_STRING);
-        assertEquals("Failed to set alias string", TEST_ALIAS_STRING, preferences.getPreferenceSummary("SET_ALIAS"));
-        this.getUiDevice().pressBack();
-
-        // Wait a second for any push registration to take place
-        Thread.sleep(REGISTRATION_WAIT_TIME);
-
+        // Send push to alias
         pushSender.sendPushToAlias(TEST_ALIAS_STRING);
         verifyPushNotification(null);
 
-        UiDevice.getInstance().pressBack();
-        appNavigator.navigateToPreferences();
-
-        preferences.setTags(TEST_FIRST_TAG_STRING);
-        assertEquals("Failed to display first tag string", TEST_FIRST_TAG_STRING, preferences.getPreferenceSummary("SET_TAGS"));
-        this.getUiDevice().pressBack();
-
-        // Wait a second for any push registration to take place
-        Thread.sleep(REGISTRATION_WAIT_TIME);
-
+        // Send push to tag
         pushSender.sendPushToTag(TEST_FIRST_TAG_STRING);
         verifyPushNotification(null);
-
-        this.getUiDevice().pressBack();
     }
 
     /**
@@ -154,6 +176,13 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         // Wait for any push registration to take place
         Thread.sleep(REGISTRATION_WAIT_TIME);
 
+        // Verify registration complete by checking for apid
+        appNavigator.navigateToPreferences();
+        String apid = preferences.getPreferenceSummary("APID");
+        assertNotSame(apid, "");
+
+        this.getUiDevice().pressBack();
+
         // Count number of messages
         int originalMessageCount = 0;
         try {
@@ -162,7 +191,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
             // must not exist yet
         }
 
-        // Send push
+        // Send broadcast push
         pushSender.sendPushMessage();
 
         // Wait for it to arrive
