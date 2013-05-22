@@ -7,9 +7,14 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 
+/**
+ * Sliding pane layout that only allows
+ * sliding if the slide gesture originates from a gutter
+ * 
+ */
 public class CustomSlidingPaneLayout extends SlidingPaneLayout {
 
-    private static int GUTTER_SIZE_DP = 32;
+    public static int DEFAULT_GUTTER_SIZE_DP = 32;
 
     float gutter;
     boolean ignoreEvents = false;
@@ -27,7 +32,7 @@ public class CustomSlidingPaneLayout extends SlidingPaneLayout {
         super(context, attrs, defStyle);
 
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        gutter = GUTTER_SIZE_DP * (metrics.densityDpi / 160f);
+        gutter = DEFAULT_GUTTER_SIZE_DP * (metrics.densityDpi / 160f);
     }
 
     @Override

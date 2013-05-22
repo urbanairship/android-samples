@@ -58,14 +58,12 @@ SlidingPaneLayout.PanelSlideListener {
     private String pendingMessageId;
     private List<RichPushMessage> messages;
     private CustomSlidingPaneLayout slidingPaneLayout;
-    private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.inbox);
 
-        actionBar = getSupportActionBar();
         configureActionBar();
 
         this.richPushInbox = RichPushManager.shared().getRichPushUser().getInbox();
@@ -274,7 +272,9 @@ SlidingPaneLayout.PanelSlideListener {
      * 'Home' and 'Inbox'
      */
     private void configureActionBar() {
-        actionBar.setHomeButtonEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
