@@ -468,7 +468,7 @@ SlidingPaneLayout.PanelSlideListener {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return new AlertDialog.Builder(getActivity())
-            .setIcon(R.drawable.ic_launcher)
+            .setIcon(R.drawable.ua_launcher)
             .setTitle(R.string.inbox_refresh_failed_dialog_title)
             .setMessage(R.string.inbox_refresh_failed_dialog_message)
             .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
