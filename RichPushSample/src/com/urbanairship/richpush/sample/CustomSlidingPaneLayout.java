@@ -14,6 +14,7 @@ import android.view.MotionEvent;
  */
 public class CustomSlidingPaneLayout extends SlidingPaneLayout {
 
+    private static int MEDIUM_DENSITY_SCREEN_DPI = 160;
     public static int DEFAULT_GUTTER_SIZE_DP = 32;
 
     float gutter;
@@ -32,7 +33,7 @@ public class CustomSlidingPaneLayout extends SlidingPaneLayout {
         super(context, attrs, defStyle);
 
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        gutter = DEFAULT_GUTTER_SIZE_DP * (metrics.densityDpi / 160f);
+        gutter = DEFAULT_GUTTER_SIZE_DP * (metrics.densityDpi / (float) MEDIUM_DENSITY_SCREEN_DPI);
     }
 
     @Override
