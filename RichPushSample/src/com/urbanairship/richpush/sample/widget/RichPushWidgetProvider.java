@@ -30,7 +30,6 @@ import android.widget.RemoteViews;
 
 import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushManager;
-import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.PushReceiver;
 import com.urbanairship.richpush.sample.R;
 
@@ -81,11 +80,6 @@ public class RichPushWidgetProvider extends AppWidgetProvider {
             });
 
         } else if (action.equals(CLICK_ACTION)) {
-
-            RichPushMessage m = RichPushManager.shared().getRichPushUser().getInbox().getMessage(intent.getStringExtra(EXTRA_MESSAGE_ID));
-            if (m != null) {
-                m.markRead();
-            }
 
             Intent launchIntent = new Intent(PushReceiver.ACTION_WIDGET_MESSAGE_OPEN);
             launchIntent.putExtra(PushReceiver.EXTRA_MESSAGE_ID_KEY, intent.getStringExtra(EXTRA_MESSAGE_ID));
@@ -138,7 +132,7 @@ public class RichPushWidgetProvider extends AppWidgetProvider {
 
             // Update the header to reflect the weather for "today"
 
-            int count = RichPushManager.shared().getRichPushUser().getInbox().getUnreadMessages().size();
+            int count = RichPushManager.shared().getRichPushUser().getInbox().getUnreadCount();
             String formatStr = context.getResources().getString(R.string.header_format_string);
             String header = String.format(formatStr, count,context.getString(R.string.inbox_name));
             rv.setTextViewText(R.id.widget_header_text, header);

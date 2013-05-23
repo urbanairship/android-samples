@@ -4,17 +4,14 @@
 
 package com.urbanairship.richpush.sample;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
 import com.urbanairship.Logger;
-import com.urbanairship.UAirship;
 import com.urbanairship.push.PushManager;
 import com.urbanairship.richpush.RichPushManager;
-import com.urbanairship.richpush.sample.widget.RichPushWidgetProvider;
+import com.urbanairship.richpush.sample.widget.RichPushWidgetUtils;
 
 /**
  * Broadcast receiver to handle all push notifications
@@ -28,12 +25,18 @@ public class PushReceiver extends BroadcastReceiver {
 
     public static final String EXTRA_MESSAGE_ID_KEY = "_uamid";
 
+    /**
+     * Delay to refresh widget to give time to fetch the rich push message
+     */
+    private static final long WIDGET_REFRESH_DELAY_MS = 5000; //5 Seconds
+
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
         // Refresh the widget after a push comes in
         if (PushManager.ACTION_PUSH_RECEIVED.equals(intent.getAction())) {
-            updateInboxWidget();
+            RichPushWidgetUtils.refreshWidget(context, WIDGET_REFRESH_DELAY_MS);
         }
 
         // Only takes action when a notification is opened
@@ -63,16 +66,5 @@ public class PushReceiver extends BroadcastReceiver {
         messageIntent.putExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY, messageId);
         messageIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(messageIntent);
-    }
-
-    private void updateInboxWidget() {
-        Context ctx = UAirship.shared().getApplicationContext();
-
-        Intent refreshIntent = new Intent(ctx, RichPushWidgetProvider.class);
-        refreshIntent.setAction(RichPushWidgetProvider.REFRESH_ACTION);
-        PendingIntent pi = PendingIntent.getBroadcast(ctx, 0, refreshIntent, 0);
-
-        AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
-        am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 9000, pi);
     }
 }

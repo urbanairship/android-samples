@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
+import com.urbanairship.richpush.sample.widget.RichPushWidgetUtils;
 
 /**
  * Dialog Fragment that displays a rich push message
@@ -50,11 +51,16 @@ public class RichPushMessageDialogFragment extends DialogFragment {
             return null;
         }
 
+
         View view = inflater.inflate(R.layout.message_dialog, container, true);
 
         RichPushMessageView messageView = (RichPushMessageView) view.findViewById(R.id.message_browser);
         messageView.loadRichPushMessage(message);
         message.markRead();
+
+        // Update the widget, this dialog can show a message on any activity
+        RichPushWidgetUtils.refreshWidget(this.getActivity());
+
 
         getDialog().setTitle(R.string.rich_push_message_dialog_title);
 
