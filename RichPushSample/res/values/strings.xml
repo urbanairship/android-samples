@@ -31,6 +31,11 @@
     <string name="set_alias_preference_title">Set Alias</string>
     <string name="set_tags_preference_title">Set Tags</string>
     <string name="duplicate_tag_warning">Tag already exists</string>
-
+    <string name="menu_deselect_all">Deselect all</string>
+    <string name="menu_select_all">Select all</string>
+    <string name="cab_selection">%d Selected</string>
+    
+    <string name="your_app_here">Your App Here</string>
+    
 </resources>
 

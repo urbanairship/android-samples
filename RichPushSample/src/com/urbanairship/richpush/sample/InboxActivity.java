@@ -12,8 +12,14 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SlidingPaneLayout;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -39,7 +45,8 @@ InboxFragment.OnMessageListener,
 ActionBar.OnNavigationListener,
 ActionMode.Callback,
 RichPushManager.Listener,
-RichPushInbox.Listener {
+RichPushInbox.Listener,
+SlidingPaneLayout.PanelSlideListener {
 
     static final String CHECKED_IDS_KEY = "com.urbanairship.richpush.sample.CHECKED_IDS";
     static final String MESSAGE_ID_KEY = "com.urbanairship.richpush.sample.FIRST_MESSAGE_ID";
@@ -47,13 +54,16 @@ RichPushInbox.Listener {
     private ActionMode actionMode;
     private ArrayAdapter<String> navAdapter;
 
-    private ViewPager messagePager;
+    private CustomViewPager messagePager;
 
     private InboxFragment inbox;
     private RichPushInbox richPushInbox;
 
     private String pendingMessageId;
     private List<RichPushMessage> messages;
+    private CustomSlidingPaneLayout slidingPaneLayout;
+
+    private Button actionSelectionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,18 +80,28 @@ RichPushInbox.Listener {
         this.inbox.getListView().setBackgroundColor(Color.BLACK);
 
         // Set up the message view pager if it exists
-        this.messagePager = (ViewPager) this.findViewById(R.id.message_pager);
+        this.messagePager = (CustomViewPager) this.findViewById(R.id.message_pager);
         if (messagePager != null) {
             messagePager.setAdapter(new MessageFragmentAdapter(this.getSupportFragmentManager()));
             this.messagePager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
                 @Override
                 public void onPageSelected(int position) {
                     messages.get(position).markRead();
-
                     // Highlight the current item you are viewing in the inbox
                     inbox.getListView().setItemChecked(position, true);
+
+                    // If we are in actionMode, update the menu items
+                    if (actionMode != null) {
+                        actionMode.invalidate();
+                    }
                 }
             });
+        }
+
+        slidingPaneLayout =  (CustomSlidingPaneLayout) findViewById(R.id.sliding_pane_layout);
+        if (slidingPaneLayout != null) {
+            slidingPaneLayout.setPanelSlideListener(this);
+            slidingPaneLayout.openPane();
         }
 
         // First create, try to show any messages from the intent
@@ -144,11 +164,21 @@ RichPushInbox.Listener {
     public void onMessageOpen(RichPushMessage message) {
         message.markRead();
         showMessage(message.getMessageId());
+
+        // If we are in actionMode, update the menu items
+        if (actionMode != null) {
+            actionMode.invalidate();
+        }
     }
 
     @Override
     public void onSelectionChanged() {
         startActionModeIfNecessary();
+
+        // If we are in actionMode, update the menu items
+        if (actionMode != null) {
+            actionMode.invalidate();
+        }
     }
 
     @Override
@@ -161,7 +191,13 @@ RichPushInbox.Listener {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case android.R.id.home:
-            navigateToMain();
+            if (slidingPaneLayout != null) {
+                if (slidingPaneLayout.isOpen()) {
+                    slidingPaneLayout.closePane();
+                } else {
+                    slidingPaneLayout.openPane();
+                }
+            }
             break;
         case R.id.refresh:
             inbox.setListShownNoAnimation(false);
@@ -170,6 +206,7 @@ RichPushInbox.Listener {
         case R.id.preferences:
             this.startActivity(new Intent(this, PushPreferencesActivity.class));
             break;
+
         }
         return true;
     }
@@ -185,25 +222,70 @@ RichPushInbox.Listener {
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        Logger.debug("onPrepareActionMode");
         mode.getMenuInflater().inflate(R.menu.inbox_actions_menu, menu);
+
+        View customView = LayoutInflater.from(this).inflate(R.layout.cab_selection_dropdown, null);
+        actionSelectionButton = (Button) customView.findViewById(R.id.selection_button);
+
+        final PopupMenu popupMenu = new PopupMenu(this, customView);
+        popupMenu.getMenuInflater().inflate(R.menu.selection, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(android.view.MenuItem item) {
+                if (item.getItemId() == R.id.menu_deselect_all) {
+                    inbox.clearSelection();
+                } else {
+                    inbox.selectAll();
+                }
+                return true;
+            }
+        });
+
+        actionSelectionButton.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                android.view.Menu menu = popupMenu.getMenu();
+                menu.findItem(R.id.menu_deselect_all).setVisible(true);
+                menu.findItem(R.id.menu_select_all).setVisible( inbox.getSelectedMessages().size() != messages.size());
+                popupMenu.show();
+            }
+
+        });
+
+
+        mode.setCustomView(customView);
         return true;
     }
 
     @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
         Logger.debug("onPrepareActionMode");
-        String firstMessageId = inbox.getSelectedMessages().get(0);
-        RichPushMessage firstMessage = richPushInbox.getMessage(firstMessageId);
 
-        // Show mark_read or mark_unread action item depending on
-        // the first message read status
-        menu.findItem(R.id.mark_read).setVisible(!firstMessage.isRead());
-        menu.findItem(R.id.mark_unread).setVisible(firstMessage.isRead());
+        boolean selectionContainsRead = false;
+        boolean selectionContainsUnread = false;
 
+        for (String id : inbox.getSelectedMessages()) {
+            RichPushMessage message = richPushInbox.getMessage(id);
+            if (message.isRead()) {
+                selectionContainsRead = true;
+            } else {
+                selectionContainsUnread = true;
+            }
+
+            if (selectionContainsRead && selectionContainsUnread) {
+                break;
+            }
+        }
+
+        // Show them both
+        menu.findItem(R.id.mark_read).setVisible(selectionContainsUnread);
+        menu.findItem(R.id.mark_unread).setVisible(selectionContainsRead);
+
+        String selectionText = this.getString(R.string.cab_selection, inbox.getSelectedMessages().size());
+        actionSelectionButton.setText(selectionText);
         return true;
     }
-
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
@@ -231,8 +313,8 @@ RichPushInbox.Listener {
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         Logger.debug("onDestroyActionMode");
-        inbox.clearSelection();
         actionMode = null;
+        inbox.clearSelection();
     }
 
     @Override
@@ -256,8 +338,9 @@ RichPushInbox.Listener {
      * 'Home' and 'Inbox'
      */
     private void configureActionBar() {
-        ActionBar actionBar = this.getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -309,6 +392,10 @@ RichPushInbox.Listener {
         // Message is already deleted, skip
         if (richPushInbox.getMessage(messageId) == null) {
             return;
+        }
+
+        if (slidingPaneLayout != null && slidingPaneLayout.isOpen()) {
+            slidingPaneLayout.closePane();
         }
 
         if (messagePager != null) {
@@ -392,5 +479,24 @@ RichPushInbox.Listener {
             })
             .create();
         }
+    }
+
+    @Override
+    public void onPanelClosed(View panel) {
+        if (messagePager != null) {
+            messagePager.enableTouchEvents(true);
+        }
+    }
+
+    @Override
+    public void onPanelOpened(View panel) {
+        if (messagePager != null) {
+            messagePager.enableTouchEvents(false);
+        }
+    }
+
+    @Override
+    public void onPanelSlide(View arg0, float arg1) {
+        //do nothing
     }
 }
