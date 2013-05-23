@@ -26,10 +26,12 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     private PushSender pushSender;
     private PreferencesHelper preferences;
     private RichPushSampleNavigator appNavigator;
-
+    // This unique id is used to verify specific push messages created and received for each test.
     private String uniqueAlertId;
+
     /**
-     * Prepare for testing, which includes getting the masterSecret and appKey
+     * Prepare for testing, which includes getting the masterSecret and appKey.
+     * Also generates the uniqueAlertId.
      */
     @Override
     public void setUp() throws Exception {
@@ -205,7 +207,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         assertTrue(messageUnreadIndicator.exists());
         assertFalse(messageReadIndicator.exists());
 
-        // mark as read and check indicator
+        // Mark as read and check indicator
         messageCheckBox.click();
         UiObject markReadAction = new UiObject(new UiSelector().description("Mark Read"));
         markReadAction.click();
@@ -214,7 +216,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         assertTrue(messageReadIndicator.exists());
         assertFalse(messageUnreadIndicator.exists());
 
-        // mark as unread and check indicator
+        // Mark as unread and check indicator
         messageCheckBox.click();
         UiObject markUnreadAction = new UiObject(new UiSelector().description("Mark Unread"));
         markUnreadAction.click();
@@ -223,7 +225,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         assertTrue(messageUnreadIndicator.exists());
         assertFalse(messageReadIndicator.exists());
 
-        // delete message and compare count of messages
+        // Delete message and compare count of messages
         messageCheckBox.click();
         UiObject deleteAction = new UiObject(new UiSelector().description("Delete"));
         deleteAction.click();
@@ -364,6 +366,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
      */
     private boolean waitForNotificationToArrive() throws InterruptedException {
         UiObject notificationTitle = new UiObject(new UiSelector().text(APP_NAME));
+        // Verify the alert notification with the uniqueAlertId
         UiObject notificationAlert = new UiObject(new UiSelector().textContains(uniqueAlertId));
 
         return AutomatorUtils.waitForUiObjectsToExist(NOTIFICATION_WAIT_TIME, notificationTitle, notificationAlert);

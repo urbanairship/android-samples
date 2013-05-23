@@ -203,7 +203,7 @@ public class PreferencesHelper {
         setTagsText.click();
 
         // Wait for keyboard to pop up
-        Thread.sleep(1000);
+        Thread.sleep(3000);
 
         setTagsText.setText(tags);
         UiObject addTagButton = new UiObject(new UiSelector().className("android.widget.ImageButton"));
