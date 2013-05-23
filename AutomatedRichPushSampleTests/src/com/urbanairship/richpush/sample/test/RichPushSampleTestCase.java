@@ -122,7 +122,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         // Verify registration complete by checking for apid
         appNavigator.navigateToPreferences();
         String apid = preferences.getPreferenceSummary("APID");
-        assertNotSame(apid, "");
+        assertNotSame("Failed to display the APID. GCM registration may have failed.", apid, "");
 
         // Set alias
         preferences.setAlias(TEST_ALIAS_STRING);
@@ -364,7 +364,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
      */
     private boolean waitForNotificationToArrive() throws InterruptedException {
         UiObject notificationTitle = new UiObject(new UiSelector().text(APP_NAME));
-        UiObject notificationAlert = new UiObject(new UiSelector().text(uniqueAlertId));
+        UiObject notificationAlert = new UiObject(new UiSelector().textContains(uniqueAlertId));
 
         return AutomatorUtils.waitForUiObjectsToExist(NOTIFICATION_WAIT_TIME, notificationTitle, notificationAlert);
     }
@@ -380,7 +380,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         AutomatorUtils.openNotificationArea();
         waitForNotificationToArrive();
 
-        UiObject notificationAlert = new UiObject(new UiSelector().text(uniqueAlertId));
+        UiObject notificationAlert = new UiObject(new UiSelector().textContains(uniqueAlertId));
 
         assertTrue("No push notifications to open",  notificationAlert.exists());
 

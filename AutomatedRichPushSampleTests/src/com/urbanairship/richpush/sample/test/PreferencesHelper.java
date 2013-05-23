@@ -158,10 +158,10 @@ public class PreferencesHelper {
         setAliasText.click();
 
         // Wait for keyboard to pop up
-        Thread.sleep(1000);
+        Thread.sleep(3000);
 
         // Set the alias
-        AutomatorUtils.waitForUiObjectsToExist(1000, setAliasText);
+        AutomatorUtils.waitForUiObjectsToExist(3000, setAliasText);
         setAliasText.setText(alias);
 
         // save

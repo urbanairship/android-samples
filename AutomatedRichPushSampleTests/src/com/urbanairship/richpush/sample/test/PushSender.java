@@ -43,18 +43,20 @@ public class PushSender {
     /**
      * Builds the message to be sent
      * @param pushString The string to append based on the type of push (user, alias, tag)
+     * @param activity The specified activity to send the push message to
+     * @param sendAttempt The string identifying the first or second attempt to send a message
      * @return The message to be sent
      */
-    private String createMessage(String pushString, String activity) {
+    private String createMessage(String pushString, String activity, String sendAttempt) {
         StringBuilder builder = new StringBuilder();
         builder.append("{ ");
         if (pushString != null) {
             builder.append(pushString);
         }
         if (appName.equalsIgnoreCase("Push Sample")) {
-            builder.append("\"android\": { \"alert\": \"" + uniqueAlertId + "\", \"extra\": {\"a_key\":\"a_value\"} } }");
+            builder.append("\"android\": { \"alert\": \"" + uniqueAlertId + sendAttempt + "\", \"extra\": {\"a_key\":\"a_value\"} } }");
         } else if (appName.equalsIgnoreCase("Rich Push Sample")) {
-            builder.append("\"push\": {\"android\": { \"alert\": \"" + uniqueAlertId + "\", \"extra\": { \"activity\": \"" + activity + "\" } } },");
+            builder.append("\"push\": {\"android\": { \"alert\": \"" + uniqueAlertId + sendAttempt + "\", \"extra\": { \"activity\": \"" + activity + "\" } } },");
             builder.append("\"title\": \"Rich Push Title\",");
             builder.append("\"message\": \"Rich Push Message\",");
             builder.append("\"content-type\": \"text/html\"}");
@@ -126,13 +128,15 @@ public class PushSender {
      * @throws
      */
     private void sendMessage(String urlString, String pushString, String activity) throws Exception {
-        String json = createMessage(pushString, activity);
-        Log.i(appName, json);
+        String json = createMessage(pushString, activity, " 1st attempt");
+        Log.i(appName + " PushSender", "Created message to send" + json);
 
         try {
             sendMessageHelper(urlString, json);
         } catch (Exception ex) {
             Thread.sleep(3000);
+            json = createMessage(pushString, activity, " 2nd attempt");
+            Log.i(appName + " PushSender", "Created message to send" + json);
             Log.e(appName + " PushSender", "Failed to send message, retrying", ex);
             sendMessageHelper(urlString, json);
         }
@@ -172,6 +176,8 @@ public class PushSender {
             if (conn.getResponseCode() != 200) {
                 Log.e(appName + " PushSender", "Sending push failed with: " + conn.getResponseCode() + " " + conn.getResponseMessage() + " Message: " + message);
                 throw new IOException(conn.getResponseMessage());
+            } else {
+                Log.i(appName + " PushSender", "Push sent: " + message);
             }
         } finally {
             if (conn != null) {
