@@ -34,7 +34,7 @@ public class CustomViewPager extends ViewPager {
 
     /**
      * Sets touch to be disabled or enabled
-     * @param isPagingEnabled <code>true</code> to enable touch, <code>false</code> to disable
+     * @param isTouchEnabled <code>true</code> to enable touch, <code>false</code> to disable
      */
     public void enableTouchEvents(boolean isTouchEnabled) {
         this.isTouchEnabled = isTouchEnabled;
