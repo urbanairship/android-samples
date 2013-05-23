@@ -89,6 +89,11 @@ SlidingPaneLayout.PanelSlideListener {
                     messages.get(position).markRead();
                     // Highlight the current item you are viewing in the inbox
                     inbox.getListView().setItemChecked(position, true);
+
+                    // If we are in actionMode, update the menu items
+                    if (actionMode != null) {
+                        actionMode.invalidate();
+                    }
                 }
             });
         }
@@ -159,14 +164,19 @@ SlidingPaneLayout.PanelSlideListener {
     public void onMessageOpen(RichPushMessage message) {
         message.markRead();
         showMessage(message.getMessageId());
+
+        // If we are in actionMode, update the menu items
+        if (actionMode != null) {
+            actionMode.invalidate();
+        }
     }
 
     @Override
     public void onSelectionChanged() {
         startActionModeIfNecessary();
 
+        // If we are in actionMode, update the menu items
         if (actionMode != null) {
-            // Invalidate the action mode to update the selection text
             actionMode.invalidate();
         }
     }
@@ -251,17 +261,29 @@ SlidingPaneLayout.PanelSlideListener {
     @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
         Logger.debug("onPrepareActionMode");
-        String firstMessageId = inbox.getSelectedMessages().get(0);
-        RichPushMessage firstMessage = richPushInbox.getMessage(firstMessageId);
 
-        // Show mark_read or mark_unread action item depending on
-        // the first message read status
-        menu.findItem(R.id.mark_read).setVisible(!firstMessage.isRead());
-        menu.findItem(R.id.mark_unread).setVisible(firstMessage.isRead());
+        boolean selectionContainsRead = false;
+        boolean selectionContainsUnread = false;
+
+        for (String id : inbox.getSelectedMessages()) {
+            RichPushMessage message = richPushInbox.getMessage(id);
+            if (message.isRead()) {
+                selectionContainsRead = true;
+            } else {
+                selectionContainsUnread = true;
+            }
+
+            if (selectionContainsRead && selectionContainsUnread) {
+                break;
+            }
+        }
+
+        // Show them both
+        menu.findItem(R.id.mark_read).setVisible(selectionContainsUnread);
+        menu.findItem(R.id.mark_unread).setVisible(selectionContainsRead);
 
         String selectionText = this.getString(R.string.cab_selection, inbox.getSelectedMessages().size());
         actionSelectionButton.setText(selectionText);
-
         return true;
     }
 
