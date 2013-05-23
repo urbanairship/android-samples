@@ -65,7 +65,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         // Verify registration complete by checking for apid
         appNavigator.navigateToPreferences();
         String apid = preferences.getPreferenceSummary("APID");
-        assertNotSame(apid, "");
+        assertNotSame("Failed to display the APID. GCM registration may have failed.", apid, "");
 
         // Pull down the notification bar and clear notifications
         AutomatorUtils.clearNotifications();
@@ -173,7 +173,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         // Verify registration complete by checking for apid
         appNavigator.navigateToPreferences();
         String apid = preferences.getPreferenceSummary("APID");
-        assertNotSame(apid, "");
+        assertNotSame("Failed to display the APID. GCM registration may have failed.", apid, "");
 
         this.getUiDevice().pressBack();
 

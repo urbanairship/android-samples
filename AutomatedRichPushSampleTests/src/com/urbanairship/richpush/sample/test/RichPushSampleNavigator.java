@@ -16,6 +16,11 @@ public class RichPushSampleNavigator {
      * @throws Exception
      */
     public void navigateToAppHome() throws Exception {
+        UiObject inbox = new UiObject(new UiSelector().text("Inbox"));
+        if (inbox.exists()) {
+            UiDevice.getInstance().pressBack();
+        }
+
         UiObject navigateHomeButton = new UiObject(new UiSelector().description("Navigate home"));
         UiObject navigateUpButton = new UiObject(new UiSelector().description("Navigate up"));
         if (navigateHomeButton.exists()) {
