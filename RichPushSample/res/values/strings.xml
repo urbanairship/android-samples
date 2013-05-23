@@ -34,8 +34,14 @@
     <string name="menu_deselect_all">Deselect all</string>
     <string name="menu_select_all">Select all</string>
     <string name="cab_selection">%d Selected</string>
-    
     <string name="your_app_here">Your App Here</string>
+    
+    <!-- Widget Values -->
+    <string name="empty_view_text">No messages found...</string>
+    <string name="toast_format_string">%1$s!</string>
+    <string name="item_format_string">%1$s</string>
+    <string name="header_format_string">%1$d unread</string>
+	<string name="inbox_name">Rich Push Sample Inbox</string>
     
 </resources>
 
