@@ -16,6 +16,7 @@ import android.support.v4.widget.SlidingPaneLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -58,6 +59,7 @@ SlidingPaneLayout.PanelSlideListener {
 
     private InboxFragment inbox;
     private RichPushInbox richPushInbox;
+    private ActionBar actionBar;
 
     private String pendingMessageId;
     private List<RichPushMessage> messages;
@@ -70,6 +72,7 @@ SlidingPaneLayout.PanelSlideListener {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.inbox);
 
+        actionBar = getSupportActionBar();
         configureActionBar();
 
         this.richPushInbox = RichPushManager.shared().getRichPushUser().getInbox();
@@ -102,6 +105,15 @@ SlidingPaneLayout.PanelSlideListener {
         if (slidingPaneLayout != null) {
             slidingPaneLayout.setPanelSlideListener(this);
             slidingPaneLayout.openPane();
+
+            slidingPaneLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    // If sliding pane layout is slidable, set the actionbar to have an up action
+                    actionBar.setDisplayHomeAsUpEnabled(slidingPaneLayout.isSlideable());
+                    slidingPaneLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            });
         }
 
         // First create, try to show any messages from the intent
@@ -338,9 +350,8 @@ SlidingPaneLayout.PanelSlideListener {
      * 'Home' and 'Inbox'
      */
     private void configureActionBar() {
-        ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -468,7 +479,7 @@ SlidingPaneLayout.PanelSlideListener {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return new AlertDialog.Builder(getActivity())
-            .setIcon(R.drawable.ic_launcher)
+            .setIcon(R.drawable.ua_launcher)
             .setTitle(R.string.inbox_refresh_failed_dialog_title)
             .setMessage(R.string.inbox_refresh_failed_dialog_message)
             .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
