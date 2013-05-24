@@ -10,5 +10,5 @@
   android:minResizeHeight="40dp"
   android:widgetCategory="home_screen|keyguard"
   
-  android:previewImage="@drawable/ua_launcher">
+  android:previewImage="@drawable/widget_preview">
 </appwidget-provider>
