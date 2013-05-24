@@ -13,6 +13,7 @@ import android.widget.RemoteViewsService;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.R;
+import com.urbanairship.richpush.sample.RichPushApplication;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -79,7 +80,7 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // Set the click intent so that we can handle it and show a toast message
         final Intent fillInIntent = new Intent();
         final Bundle extras = new Bundle();
-        extras.putString(RichPushWidgetProvider.EXTRA_MESSAGE_ID, message.getMessageId());
+        extras.putString(RichPushApplication.MESSAGE_ID_RECEIVED_KEY, message.getMessageId());
         fillInIntent.putExtras(extras);
         rv.setOnClickFillInIntent(R.id.widget_item, fillInIntent);
 

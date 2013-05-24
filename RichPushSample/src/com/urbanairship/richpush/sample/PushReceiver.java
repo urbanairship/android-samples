@@ -21,8 +21,6 @@ public class PushReceiver extends BroadcastReceiver {
 
     public static final String ACTIVITY_NAME_KEY = "activity";
 
-    public static final String ACTION_WIDGET_MESSAGE_OPEN = "com.urbanairship.richpush.sample.widget.OPEN";
-
     public static final String EXTRA_MESSAGE_ID_KEY = "_uamid";
 
     /**
@@ -40,8 +38,7 @@ public class PushReceiver extends BroadcastReceiver {
         }
 
         // Only takes action when a notification is opened
-        if (!PushManager.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())
-                && !PushReceiver.ACTION_WIDGET_MESSAGE_OPEN.equals(intent.getAction())) {
+        if (!PushManager.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
             return;
         }
 

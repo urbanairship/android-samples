@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 
@@ -19,7 +20,7 @@ import com.urbanairship.richpush.sample.R;
  * Factory class to create remote views for the widget layouts
  *
  */
-class RemoveViewsFactory {
+class RemoteViewsFactory {
 
 
     /**
@@ -33,18 +34,36 @@ class RemoveViewsFactory {
     static RemoteViews createLayout(Context context, int appWidgetId, Bundle options) {
         boolean isLargeLayout =  options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) >= 100;
 
-        return isLargeLayout ?  RemoveViewsFactory.createLargeLayout(context, appWidgetId) :
-            RemoveViewsFactory.createSmallLayout(context, appWidgetId);
+        return isLargeLayout ?  RemoteViewsFactory.createLargeLayout(context, appWidgetId) :
+            RemoteViewsFactory.createSmallLayout(context, appWidgetId);
+    }
+
+    /**
+     * Creates a layout depending on the current sdk version
+     * 
+     * 
+     * @param context Application context
+     * @param appWidgetId Id of the widget
+     * @param options Widgets options
+     * @return RemoteViews for the layout
+     */
+    static RemoteViews createLayout(Context context, int appWidgetId) {
+        // Only in api >= 11 (Honeycomb) can we support the large layout because we depend on
+        // the remote view service.
+        return (Build.VERSION.SDK_INT >= 11) ?  RemoteViewsFactory.createLargeLayout(context, appWidgetId) :
+            RemoteViewsFactory.createSmallLayout(context, appWidgetId);
     }
 
     /**
      * Creates a large layout for the app widget
      * 
+     * This layout is only supported in SDK > 11 (Honeycomb)
+     * 
      * @param context Application context
      * @param appWidgetId id of the widget
      * @return RemoteViews for the large layout
      */
-    static RemoteViews createLargeLayout(Context context, int appWidgetId) {
+    private static RemoteViews createLargeLayout(Context context, int appWidgetId) {
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
         // Specify the service to provide data for the collection widget.  Note that we need to
@@ -69,11 +88,12 @@ class RemoveViewsFactory {
     /**
      * Creates a small layout for the app widget
      * 
+     * 
      * @param context Application context
      * @param appWidgetId id of the widget
      * @return RemoteViews for the small layout
      */
-    static RemoteViews createSmallLayout(Context context, int appWidgetId) {
+    private static RemoteViews createSmallLayout(Context context, int appWidgetId) {
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout_small);
 
         // Update the header for the current unread message count
@@ -95,8 +115,9 @@ class RemoveViewsFactory {
      * @return Pending inbox activity intent
      */
     private static PendingIntent createInboxActivityPendingIntent(Context context) {
-        Intent inboxIntent = new Intent(context, InboxActivity.class);
-        return PendingIntent.getActivity(context, 0, inboxIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent intent = new Intent(context, InboxActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     /**
@@ -108,9 +129,10 @@ class RemoveViewsFactory {
      * @return Pending broadcast intent
      */
     private static PendingIntent createMessageTemplateIntent(Context context, int appWidgetId) {
-        Intent onClickIntent = new Intent(context, RichPushWidgetProvider.class);
-        onClickIntent.setAction(RichPushWidgetProvider.OPEN_MESSAGE_ACTION);
-        onClickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        return PendingIntent.getBroadcast(context, 0, onClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent intent = new Intent(context, InboxActivity.class);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 }
