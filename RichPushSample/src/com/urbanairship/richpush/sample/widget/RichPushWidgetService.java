@@ -77,9 +77,9 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         rv.setTextViewText(R.id.date_sent, dateFormat.format(message.getSentDate()));
 
-        // Set the click intent so that we can handle it and show a toast message
-        final Intent fillInIntent = new Intent();
-        final Bundle extras = new Bundle();
+        // Add the message id to the intent
+        Intent fillInIntent = new Intent();
+        Bundle extras = new Bundle();
         extras.putString(RichPushApplication.MESSAGE_ID_RECEIVED_KEY, message.getMessageId());
         fillInIntent.putExtras(extras);
         rv.setOnClickFillInIntent(R.id.widget_item, fillInIntent);
