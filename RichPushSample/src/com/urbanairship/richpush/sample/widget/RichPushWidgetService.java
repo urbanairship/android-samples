@@ -1,17 +1,5 @@
 /*
- * Copyright (C) 2011 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2013 Urban Airship and Contributors
  */
 
 package com.urbanairship.richpush.sample.widget;
@@ -27,6 +15,7 @@ import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.R;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 /**
  * This is the service that provides the factory to be bound to the collection service.
@@ -66,12 +55,14 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     @Override
     public RemoteViews getViewAt(int position) {
 
-        if (position > this.getCount()) {
+        List<RichPushMessage> messages = RichPushManager.shared().getRichPushUser().getInbox().getMessages();
+
+        if (position > messages.size()) {
             return null;
         }
 
         // Get the data for this position from the content provider
-        RichPushMessage message = RichPushManager.shared().getRichPushUser().getInbox().getMessages().get(position);
+        RichPushMessage message = messages.get(position);
 
         // Return a proper item
         final String formatStr = context.getResources().getString(R.string.item_format_string);

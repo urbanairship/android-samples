@@ -1,3 +1,7 @@
+/*
+ * Copyright 2013 Urban Airship and Contributors
+ */
+
 package com.urbanairship.richpush.sample;
 
 import android.content.Context;

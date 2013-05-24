@@ -9,6 +9,7 @@
     android:layout_marginRight="@dimen/widget_margin_right">
 
     <LinearLayout
+        android:id="@+id/widget_header"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:background="#232323"

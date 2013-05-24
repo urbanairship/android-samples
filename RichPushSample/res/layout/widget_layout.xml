@@ -10,6 +10,7 @@
     android:layout_marginRight="@dimen/widget_margin_right">
 
     <LinearLayout
+        android:id="@+id/widget_header"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="#232323"
@@ -43,6 +44,7 @@
             android:id="@+id/message_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+        
         <TextView
             android:id="@+id/empty_view"
             android:layout_width="match_parent"
