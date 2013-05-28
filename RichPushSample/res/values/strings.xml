@@ -48,7 +48,7 @@
 	    <item quantity="one">1 New Message</item>
 	    <item quantity="other">%d <b>New</b> Messages</item>    
 	</plurals>
-	<string name="inbox_summary">+%s more</string>
+	<string name="inbox_summary">+%d more</string>
 
 </resources>
 
