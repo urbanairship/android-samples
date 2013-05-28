@@ -81,6 +81,9 @@ ActionBar.OnNavigationListener {
         if (!UAStringUtil.isEmpty(pendingMessageId)) {
             showRichPushMessage(pendingMessageId);
             pendingMessageId = null;
+
+            // Dismiss any notifications if available
+            InboxNotificationBuilder.dismissInboxNotification();
         }
     }
 
