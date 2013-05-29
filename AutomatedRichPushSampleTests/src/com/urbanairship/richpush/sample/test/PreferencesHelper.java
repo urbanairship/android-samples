@@ -10,6 +10,11 @@ import com.android.uiautomator.core.UiSelector;
  *
  */
 public class PreferencesHelper {
+    private static int UI_OBJECTS_WAIT_TIME = 1000;  // 1 second
+    private static int MAX_REGISTRATION_WAIT_TIME = 180000;  // 3 minutes in case of long registration
+    private static int KEYBOARD_WAIT_TIME = 3000;  // 3 seconds
+    private static int SET_ALIAS_TEXT_WAIT_TIME = 3000;  // 3 seconds
+
     private UiSelector getPreferenceSummarySelector(String description) {
         return new UiSelector().description(description)
                 .childSelector(new UiSelector()
@@ -47,9 +52,9 @@ public class PreferencesHelper {
         scrollPreferenceIntoView(setting);
 
         UiObject preference = new UiObject(new UiSelector().description(setting));
-        AutomatorUtils.waitForUiObjectsToExist(1000, preference);
+        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, preference);
         UiObject preferenceCheckBox =  preference.getChild(new UiSelector().className(android.widget.CheckBox.class));
-        AutomatorUtils.waitForUiObjectsToExist(1000, preferenceCheckBox);
+        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, preferenceCheckBox);
         if (preferenceCheckBox.isChecked() != enabled) {
             preferenceCheckBox.click();
         }
@@ -110,8 +115,7 @@ public class PreferencesHelper {
         UiSelector summary = this.getPreferenceSummarySelector(setting);
         listView.scrollIntoView(summary);
         UiObject summaryText = new UiObject(summary);
-        // Set max wait time to 180000 or 3 min. in case of long registration time
-        AutomatorUtils.waitForUiObjectsToExist(180000, summaryText);
+        AutomatorUtils.waitForUiObjectsToExist(MAX_REGISTRATION_WAIT_TIME, summaryText);
         if (summaryText.exists()) {
             summaryString = summaryText.getText();
         }
@@ -138,7 +142,7 @@ public class PreferencesHelper {
 
         setAlias.click();
         UiObject aliasEditText = new UiObject(new UiSelector().text(alias));
-        AutomatorUtils.waitForUiObjectsToExist(1000, aliasEditText);
+        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, aliasEditText);
 
         // Check if an alias already exist
         if (aliasExist) {
@@ -154,14 +158,14 @@ public class PreferencesHelper {
         }
 
         UiObject setAliasText = new UiObject(new UiSelector().className("android.widget.EditText"));
-        AutomatorUtils.waitForUiObjectsToExist(1000, setAliasText);
+        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, setAliasText);
         setAliasText.click();
 
         // Wait for keyboard to pop up
-        Thread.sleep(3000);
+        Thread.sleep(KEYBOARD_WAIT_TIME);
 
         // Set the alias
-        AutomatorUtils.waitForUiObjectsToExist(3000, setAliasText);
+        AutomatorUtils.waitForUiObjectsToExist(SET_ALIAS_TEXT_WAIT_TIME, setAliasText);
         setAliasText.setText(alias);
 
         // save
@@ -185,7 +189,7 @@ public class PreferencesHelper {
 
         // Check if a tag already exist
         UiObject tagsListView = new UiObject(new UiSelector().className("android.widget.ListView"));
-        AutomatorUtils.waitForUiObjectsToExist(1000, tagsListView);
+        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, tagsListView);
 
         if (tagsListView.exists()) {
             UiObject tagLinearLayout = tagsListView.getChild(new UiSelector().className("android.widget.LinearLayout"));
@@ -203,7 +207,7 @@ public class PreferencesHelper {
         setTagsText.click();
 
         // Wait for keyboard to pop up
-        Thread.sleep(3000);
+        Thread.sleep(KEYBOARD_WAIT_TIME);
 
         setTagsText.setText(tags);
         UiObject addTagButton = new UiObject(new UiSelector().className("android.widget.ImageButton"));
@@ -222,7 +226,7 @@ public class PreferencesHelper {
      */
     private void scrollPreferenceIntoView(String setting) throws UiObjectNotFoundException, InterruptedException {
         UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
-        AutomatorUtils.waitForUiObjectsToExist(1000, listView);
+        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, listView);
         listView.scrollIntoView(getPreferenceTitleSelector(setting));
     }
 }

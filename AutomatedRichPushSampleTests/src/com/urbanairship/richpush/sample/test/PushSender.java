@@ -15,13 +15,15 @@ import java.net.URL;
  *
  */
 public class PushSender {
-
     private final String masterSecret;
     private final String appKey;
     private final String appName;
     private final String broadcastUrl;
     private final String pushUrl;
     private final String uniqueAlertId;
+
+    private static int MAX_SEND_MESG_RETRIES = 3;
+    private static int SEND_MESG_RETRY_DELAY = 3000;  // 3 seconds
 
     /**
      * Constructor for PushSender
@@ -44,7 +46,7 @@ public class PushSender {
      * Builds the message to be sent
      * @param pushString The string to append based on the type of push (user, alias, tag)
      * @param activity The specified activity to send the push message to
-     * @param sendAttempt The string identifying the first or second attempt to send a message
+     * @param sendAttempt The string identifying the attempt to send a message
      * @return The message to be sent
      */
     private String createMessage(String pushString, String activity, String sendAttempt) {
@@ -71,6 +73,7 @@ public class PushSender {
      * @throws Exception
      */
     public void sendPushMessage() throws Exception {
+        Log.i(appName + " PushSender", "Broadcast message");
         sendMessage(broadcastUrl, null, "");
     }
 
@@ -80,6 +83,7 @@ public class PushSender {
      * @throws Exception
      */
     public void sendPushMessage(String activity) throws Exception {
+        Log.i(appName + " PushSender", "Broadcast message to activity: " + activity);
         sendMessage(broadcastUrl, null, activity);
     }
 
@@ -89,6 +93,7 @@ public class PushSender {
      * @throws Exception
      */
     public void sendPushToTag(String tag) throws Exception {
+        Log.i(appName + " PushSender", "Send message to tag: " + tag);
         sendMessage(pushUrl, "\"tags\": [\"" + tag + "\"],", "");
     }
 
@@ -98,6 +103,7 @@ public class PushSender {
      * @throws Exception
      */
     public void sendPushToAlias(String alias) throws Exception {
+        Log.i(appName + " PushSender", "Send message to tag: " + alias);
         sendMessage(pushUrl, "\"aliases\": [\"" + alias + "\", \"anotherAlias\"],", "");
     }
 
@@ -107,6 +113,7 @@ public class PushSender {
      * @throws Exception
      */
     public void sendPushToApid(String apid) throws Exception {
+        Log.i(appName + " PushSender", "Send message to apid: " + apid);
         sendMessage(pushUrl, "\"apids\": [\"" + apid + "\"],", "");
     }
 
@@ -116,6 +123,7 @@ public class PushSender {
      * @throws Exception
      */
     public void sendRichPushToUser(String user) throws Exception {
+        Log.i(appName + " PushSender", "Send message to user: " + user);
         sendMessage(pushUrl, "\"users\": [\"" + user + "\"],", "");
     }
 
@@ -128,17 +136,19 @@ public class PushSender {
      * @throws
      */
     private void sendMessage(String urlString, String pushString, String activity) throws Exception {
-        String json = createMessage(pushString, activity, " 1st attempt");
-        Log.i(appName + " PushSender", "Created message to send" + json);
+        int sendMesgRetryCount = 0;
+        while ( sendMesgRetryCount < MAX_SEND_MESG_RETRIES ) {
+            String json = createMessage(pushString, activity, " " + String.valueOf(sendMesgRetryCount));
+            Log.i(appName + " PushSender",  "Created message to send" + json);
 
-        try {
-            sendMessageHelper(urlString, json);
-        } catch (Exception ex) {
-            Thread.sleep(3000);
-            json = createMessage(pushString, activity, " 2nd attempt");
-            Log.i(appName + " PushSender", "Created message to send" + json);
-            Log.e(appName + " PushSender", "Failed to send message, retrying", ex);
-            sendMessageHelper(urlString, json);
+            try {
+                sendMessageHelper(urlString, json);
+                return;
+            } catch (Exception ex) {
+                Log.e(appName + " PushSender", "Failed to send message: " + json, ex);
+                Thread.sleep(SEND_MESG_RETRY_DELAY);
+                sendMesgRetryCount++;
+            }
         }
     }
 

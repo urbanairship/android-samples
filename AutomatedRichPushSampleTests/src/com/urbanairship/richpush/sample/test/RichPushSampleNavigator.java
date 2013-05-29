@@ -11,6 +11,9 @@ import com.android.uiautomator.core.UiSelector;
  */
 public class RichPushSampleNavigator {
 
+    private static int WINDOW_UPDATE_WAIT_TIME = 5000;  // 5 seconds
+    private static int UI_OBJECTS_WAIT_TIME = 1000;  // 1 second
+
     /**
      * Navigate to the application's home screen
      * @throws Exception
@@ -33,7 +36,7 @@ public class RichPushSampleNavigator {
         }
 
         // Wait for activity
-        UiDevice.getInstance().waitForWindowUpdate(null, 5000);
+        UiDevice.getInstance().waitForWindowUpdate(null, WINDOW_UPDATE_WAIT_TIME);
     }
 
     /**
@@ -43,15 +46,15 @@ public class RichPushSampleNavigator {
     public void navigateToInbox() throws Exception {
         navigateToAppHome();
         UiObject spinner = new UiObject(new UiSelector().className("android.widget.Spinner"));
-        AutomatorUtils.waitForUiObjectsToExist(1000, spinner);
+        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, spinner);
         spinner.click();
 
         UiObject inbox = new UiObject(new UiSelector().text("Inbox"));
-        AutomatorUtils.waitForUiObjectsToExist(1000, inbox);
+        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, inbox);
         inbox.click();
 
         // Wait for activity
-        UiDevice.getInstance().waitForWindowUpdate(null, 5000);
+        UiDevice.getInstance().waitForWindowUpdate(null, WINDOW_UPDATE_WAIT_TIME);
     }
 
     /**
@@ -61,10 +64,10 @@ public class RichPushSampleNavigator {
      */
     public void navigateToPreferences() throws UiObjectNotFoundException, InterruptedException {
         UiObject preferenceButton = new UiObject(new UiSelector().description("Preferences"));
-        AutomatorUtils.waitForUiObjectsToExist(1000, preferenceButton);
+        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, preferenceButton);
         preferenceButton.click();
 
         // Wait for activity
-        UiDevice.getInstance().waitForWindowUpdate(null, 5000);
+        UiDevice.getInstance().waitForWindowUpdate(null, WINDOW_UPDATE_WAIT_TIME);
     }
 }

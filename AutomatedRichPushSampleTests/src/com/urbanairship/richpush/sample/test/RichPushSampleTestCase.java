@@ -13,6 +13,9 @@ import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
     private static int REGISTRATION_WAIT_TIME = 60000; // 60 seconds
+    private static int WINDOW_UPDATE_WAIT_TIME = 5000;  // 5 seconds
+    private static int UI_OBJECTS_WAIT_TIME = 1000;  // 1 second
+    private static int RICH_PUSH_DIALOG_WAIT_TIME = 20000;  // 20 seconds
 
     // Time to wait for notifications to appear in milliseconds.
     private static int NOTIFICATION_WAIT_TIME = 90000; // 90 seconds - push to tags is slower than to user
@@ -211,7 +214,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         messageCheckBox.click();
         UiObject markReadAction = new UiObject(new UiSelector().description("Mark Read"));
         markReadAction.click();
-        this.getUiDevice().waitForWindowUpdate(null, 5000);
+        this.getUiDevice().waitForWindowUpdate(null, WINDOW_UPDATE_WAIT_TIME);
 
         assertTrue(messageReadIndicator.exists());
         assertFalse(messageUnreadIndicator.exists());
@@ -220,7 +223,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         messageCheckBox.click();
         UiObject markUnreadAction = new UiObject(new UiSelector().description("Mark Unread"));
         markUnreadAction.click();
-        this.getUiDevice().waitForWindowUpdate(null, 5000);
+        this.getUiDevice().waitForWindowUpdate(null, WINDOW_UPDATE_WAIT_TIME);
 
         assertTrue(messageUnreadIndicator.exists());
         assertFalse(messageReadIndicator.exists());
@@ -229,7 +232,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         messageCheckBox.click();
         UiObject deleteAction = new UiObject(new UiSelector().description("Delete"));
         deleteAction.click();
-        this.getUiDevice().waitForWindowUpdate(null, 5000);
+        this.getUiDevice().waitForWindowUpdate(null, WINDOW_UPDATE_WAIT_TIME);
 
         int lastMessageCount = 0;
         try {
@@ -388,7 +391,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         assertTrue("No push notifications to open",  notificationAlert.exists());
 
         // Wait a second for any messsage retrieval to take place
-        Thread.sleep(1000);
+        Thread.sleep(UI_OBJECTS_WAIT_TIME);
 
         notificationAlert.click();
 
@@ -399,6 +402,6 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         }
 
         UiObject richPushDialog = new UiObject(webViewSelector);
-        assertTrue("Failed to display notification in a webview",  AutomatorUtils.waitForUiObjectsToExist(20000, richPushDialog));
+        assertTrue("Failed to display notification in a webview",  AutomatorUtils.waitForUiObjectsToExist(RICH_PUSH_DIALOG_WAIT_TIME, richPushDialog));
     }
 }
