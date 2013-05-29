@@ -114,6 +114,12 @@ public class RichPushMessageView extends WebView {
     }
 
 
+    /**
+     * Creates a RichPushMessageJavaScript to be added the webview
+     * 
+     * @param messageId Message id of the message to display
+     * @return A new RichPushMessageJavaScript
+     */
     private RichPushMessageJavaScript createRichPushMessageJavaScript(String messageId) {
         Class<? extends RichPushMessageJavaScript> jsInterfaceClass = RichPushManager.getJsInterface();
         if (jsInterfaceClass == null) {
