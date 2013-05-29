@@ -16,6 +16,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     private static int WINDOW_UPDATE_WAIT_TIME = 5000;  // 5 seconds
     private static int UI_OBJECTS_WAIT_TIME = 1000;  // 1 second
     private static int RICH_PUSH_DIALOG_WAIT_TIME = 20000;  // 20 seconds
+    private static int SETTING_PUSH_PREFERENCE_WAIT_TIME = 2000;  // 2 seconds
 
     // Time to wait for notifications to appear in milliseconds.
     private static int NOTIFICATION_WAIT_TIME = 90000; // 90 seconds - push to tags is slower than to user
@@ -112,10 +113,12 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         // Possible workaround to PHONE_REGISTRATION_ERROR on emulator
         preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
         this.getUiDevice().pressBack();
+        Thread.sleep(SETTING_PUSH_PREFERENCE_WAIT_TIME);
 
         appNavigator.navigateToPreferences();
         preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", false);
         this.getUiDevice().pressBack();
+        Thread.sleep(SETTING_PUSH_PREFERENCE_WAIT_TIME);
 
         appNavigator.navigateToPreferences();
         preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
