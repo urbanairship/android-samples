@@ -73,11 +73,11 @@ public class RichPushMessageView extends WebView {
 
         if (Build.VERSION.SDK_INT >= 11) {
             removeJavascriptInterface(RichPushManager.getJsIdentifier());
-        }
 
-        RichPushMessageJavaScript jsInterface = createRichPushMessageJavaScript(message.getMessageId());
-        if (jsInterface != null) {
-            addJavascriptInterface(jsInterface, RichPushManager.getJsIdentifier());
+            RichPushMessageJavaScript jsInterface = createRichPushMessageJavaScript(message.getMessageId());
+            if (jsInterface != null) {
+                addJavascriptInterface(jsInterface, RichPushManager.getJsIdentifier());
+            }
         }
 
         loadUrl(message.getMessageBodyUrl());
