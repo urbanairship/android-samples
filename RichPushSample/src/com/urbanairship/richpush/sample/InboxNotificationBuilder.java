@@ -88,7 +88,7 @@ public class InboxNotificationBuilder extends BasicPushNotificationBuilder {
 
         // Add any extra messages to the notification style
         int extraMessages =  Math.min(EXTRA_MESSAGES_TO_SHOW, inboxUnreadCount);
-        for (int i = 0; i < extraMessages; i ++) {
+        for (int i = 0; i < extraMessages; i++) {
             style.addLine(unreadMessages.get(i).getTitle());
         }
 
