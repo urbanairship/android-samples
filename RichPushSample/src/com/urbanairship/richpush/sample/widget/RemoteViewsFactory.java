@@ -57,7 +57,7 @@ class RemoteViewsFactory {
     /**
      * Creates a large layout for the app widget
      * 
-     * This layout is only supported in SDK > 11 (Honeycomb)
+     * This layout is only supported in SDK >= 11 (Honeycomb)
      * 
      * @param context Application context
      * @param appWidgetId id of the widget
@@ -124,7 +124,7 @@ class RemoteViewsFactory {
      * Creates a pending broadcast intent as a template
      * for each message in the app widget
      * 
-     * @param context Applicaiton context
+     * @param context Application context
      * @param appWidgetId Id of the widget
      * @return Pending broadcast intent
      */
