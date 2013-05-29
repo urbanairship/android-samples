@@ -4,6 +4,8 @@
 
 package com.urbanairship.richpush.sample;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -27,10 +29,12 @@ import java.lang.reflect.InvocationTargetException;
 
 /**
  * A web view that displays a rich push message
+ * 
+ * Only available in API 5 and higher (Eclair)
  *
  */
+@TargetApi(5)
 public class RichPushMessageView extends WebView {
-
 
     public RichPushMessageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -65,6 +69,7 @@ public class RichPushMessageView extends WebView {
      * Loads the web view with the rich push message
      * @param message
      */
+    @SuppressLint("NewApi")
     public void loadRichPushMessage(RichPushMessage message) {
         if (message == null) {
             Logger.warn("Unable to load null message into RichPushMessageView");
@@ -73,12 +78,13 @@ public class RichPushMessageView extends WebView {
 
         if (Build.VERSION.SDK_INT >= 11) {
             removeJavascriptInterface(RichPushManager.getJsIdentifier());
-
-            RichPushMessageJavaScript jsInterface = createRichPushMessageJavaScript(message.getMessageId());
-            if (jsInterface != null) {
-                addJavascriptInterface(jsInterface, RichPushManager.getJsIdentifier());
-            }
         }
+
+        RichPushMessageJavaScript jsInterface = createRichPushMessageJavaScript(message.getMessageId());
+        if (jsInterface != null) {
+            addJavascriptInterface(jsInterface, RichPushManager.getJsIdentifier());
+        }
+
 
         loadUrl(message.getMessageBodyUrl());
     }
@@ -86,15 +92,21 @@ public class RichPushMessageView extends WebView {
     /**
      * Configures the web view to display a rich push message
      */
+    @SuppressLint({ "NewApi", "SetJavaScriptEnabled" })
     protected void configureWebView() {
         WebSettings settings = getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setDomStorageEnabled(true);
-        settings.setAppCacheEnabled(true);
+
+        if (Build.VERSION.SDK_INT >= 7) {
+            settings.setAppCacheEnabled(true);
+            settings.setAppCachePath(UAirship.shared().getApplicationContext().getCacheDir().getAbsolutePath());
+            settings.setAppCacheMaxSize(1024*1024*8);
+            settings.setDomStorageEnabled(true);
+        }
+
         settings.setAllowFileAccess(true);
-        settings.setAppCacheMaxSize(1024*1024*8);
-        settings.setAppCachePath(UAirship.shared().getApplicationContext().getCacheDir().getAbsolutePath());
+        settings.setJavaScriptEnabled(true);
         settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+
 
         setWebChromeClient(new WebChromeClient());
 
@@ -112,7 +124,6 @@ public class RichPushMessageView extends WebView {
 
         });
     }
-
 
     /**
      * Creates a RichPushMessageJavaScript to be added the webview
