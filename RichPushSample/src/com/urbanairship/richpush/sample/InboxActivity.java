@@ -9,6 +9,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
@@ -243,37 +244,42 @@ SlidingPaneLayout.PanelSlideListener {
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         mode.getMenuInflater().inflate(R.menu.inbox_actions_menu, menu);
 
-        View customView = LayoutInflater.from(this).inflate(R.layout.cab_selection_dropdown, null);
-        actionSelectionButton = (Button) customView.findViewById(R.id.selection_button);
+        // Add a pop up menu to the action bar to select/deselect all
+        // Pop up menu was requires api >= 11
+        if (Build.VERSION.SDK_INT >= 11) {
+            View customView = LayoutInflater.from(this).inflate(R.layout.cab_selection_dropdown, null);
+            actionSelectionButton = (Button) customView.findViewById(R.id.selection_button);
 
-        final PopupMenu popupMenu = new PopupMenu(this, customView);
-        popupMenu.getMenuInflater().inflate(R.menu.selection, popupMenu.getMenu());
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(android.view.MenuItem item) {
-                if (item.getItemId() == R.id.menu_deselect_all) {
-                    inbox.clearSelection();
-                } else {
-                    inbox.selectAll();
+            final PopupMenu popupMenu = new PopupMenu(this, customView);
+            popupMenu.getMenuInflater().inflate(R.menu.selection, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(android.view.MenuItem item) {
+                    if (item.getItemId() == R.id.menu_deselect_all) {
+                        inbox.clearSelection();
+                    } else {
+                        inbox.selectAll();
+                    }
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
 
-        actionSelectionButton.setOnClickListener(new OnClickListener() {
+            actionSelectionButton.setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View arg0) {
-                android.view.Menu menu = popupMenu.getMenu();
-                menu.findItem(R.id.menu_deselect_all).setVisible(true);
-                menu.findItem(R.id.menu_select_all).setVisible( inbox.getSelectedMessages().size() != messages.size());
-                popupMenu.show();
-            }
+                @Override
+                public void onClick(View arg0) {
+                    android.view.Menu menu = popupMenu.getMenu();
+                    menu.findItem(R.id.menu_deselect_all).setVisible(true);
+                    menu.findItem(R.id.menu_select_all).setVisible( inbox.getSelectedMessages().size() != messages.size());
+                    popupMenu.show();
+                }
 
-        });
+            });
 
 
-        mode.setCustomView(customView);
+            mode.setCustomView(customView);
+        }
+
         return true;
     }
 
