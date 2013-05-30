@@ -245,7 +245,7 @@ SlidingPaneLayout.PanelSlideListener {
         mode.getMenuInflater().inflate(R.menu.inbox_actions_menu, menu);
 
         // Add a pop up menu to the action bar to select/deselect all
-        // Pop up menu was requires api >= 11
+        // Pop up menu requires api >= 11
         if (Build.VERSION.SDK_INT >= 11) {
             View customView = LayoutInflater.from(this).inflate(R.layout.cab_selection_dropdown, null);
             actionSelectionButton = (Button) customView.findViewById(R.id.selection_button);
