@@ -30,8 +30,6 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     private PushSender pushSender;
     private PreferencesHelper preferences;
     private RichPushSampleNavigator appNavigator;
-    // This unique id is used to verify specific push messages created and received for each test.
-    private String uniqueAlertId;
 
     /**
      * Prepare for testing, which includes getting the masterSecret and appKey.
@@ -42,9 +40,8 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         // Create a push sender with the master secret and app key from the params
         String masterSecret = getParams().getString("MASTER_SECRET");
         String appKey = getParams().getString("APP_KEY");
-        uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
 
-        pushSender = new PushSender(masterSecret, appKey, APP_NAME, RICH_PUSH_BROADCAST_URL, RICH_PUSH_URL, uniqueAlertId);
+        pushSender = new PushSender(masterSecret, appKey, APP_NAME, RICH_PUSH_BROADCAST_URL, RICH_PUSH_URL);
         preferences = new PreferencesHelper();
         appNavigator = new RichPushSampleNavigator();
 
@@ -77,12 +74,14 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         AutomatorUtils.clearNotifications();
 
         // Verify that we can send a push and open in a webview
-        pushSender.sendPushMessage();
-        verifyPushNotification(null);
+        String uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
+        pushSender.sendPushMessage(uniqueAlertId);
+        verifyPushNotification(null, uniqueAlertId);
 
         // Send push to main activity
-        pushSender.sendPushMessage("home");
-        verifyPushNotification("Rich push message dialog");
+        uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
+        pushSender.sendPushMessage("home", uniqueAlertId);
+        verifyPushNotification("Rich push message dialog", uniqueAlertId);
 
         this.getUiDevice().pressBack();
 
@@ -92,10 +91,11 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         this.getUiDevice().pressBack();
 
         // Send a notification that we expect not to receive due to push being disabled
-        pushSender.sendPushMessage();
+        uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
+        pushSender.sendPushMessage(uniqueAlertId);
 
         AutomatorUtils.openNotificationArea();
-        assertFalse("Received push notification when push is disabled", waitForNotificationToArrive());
+        assertFalse("Received push notification when push is disabled", waitForNotificationToArrive(uniqueAlertId));
 
         this.getUiDevice().pressBack();
     }
@@ -150,17 +150,20 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         appNavigator.navigateToPreferences();
 
         // Send Rich Push Message to User Id
+        String uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
         String richPushId = preferences.getPreferenceSummary("USER_ID");
-        pushSender.sendRichPushToUser(richPushId);
-        verifyPushNotification(null);
+        pushSender.sendRichPushToUser(richPushId, uniqueAlertId);
+        verifyPushNotification(null, uniqueAlertId);
 
         // Send push to alias
-        pushSender.sendPushToAlias(TEST_ALIAS_STRING);
-        verifyPushNotification(null);
+        uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
+        pushSender.sendPushToAlias(TEST_ALIAS_STRING, uniqueAlertId);
+        verifyPushNotification(null, uniqueAlertId);
 
         // Send push to tag
-        pushSender.sendPushToTag(TEST_FIRST_TAG_STRING);
-        verifyPushNotification(null);
+        uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
+        pushSender.sendPushToTag(TEST_FIRST_TAG_STRING, uniqueAlertId);
+        verifyPushNotification(null, uniqueAlertId);
     }
 
     /**
@@ -194,11 +197,12 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         }
 
         // Send broadcast push
-        pushSender.sendPushMessage();
+        String uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
+        pushSender.sendPushMessage(uniqueAlertId);
 
         // Wait for it to arrive
         AutomatorUtils.openNotificationArea();
-        waitForNotificationToArrive();
+        waitForNotificationToArrive(uniqueAlertId);
         this.getUiDevice().pressBack();
 
         // Check that we have one more message
@@ -367,10 +371,11 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
     /**
      * Wait for the notification alert to arrive by polling the notification area
+     * @param uniqueAlertId The string used to identify push messages
      * @return <code>true</code> if a notification exists, otherwise <code>false</code>
      * @throws InterruptedException
      */
-    private boolean waitForNotificationToArrive() throws InterruptedException {
+    private boolean waitForNotificationToArrive(String uniqueAlertId) throws InterruptedException {
         UiObject notificationTitle = new UiObject(new UiSelector().text(APP_NAME));
         // Verify the alert notification with the uniqueAlertId
         UiObject notificationAlert = new UiObject(new UiSelector().textContains(uniqueAlertId));
@@ -382,12 +387,13 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
      * Verify the notification alert is received.
      * Assert if the notification alert does not exist or the notification failed to display in a webview.
      * @param description The content description string
+     * @param uniqueAlertId The string used to identify push messages
      * @throws InterruptedException
      * @throws UiObjectNotFoundException
      */
-    private void verifyPushNotification(String description) throws InterruptedException, UiObjectNotFoundException {
+    private void verifyPushNotification(String description, String uniqueAlertId) throws InterruptedException, UiObjectNotFoundException {
         AutomatorUtils.openNotificationArea();
-        waitForNotificationToArrive();
+        waitForNotificationToArrive(uniqueAlertId);
 
         UiObject notificationAlert = new UiObject(new UiSelector().textContains(uniqueAlertId));
 
