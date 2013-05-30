@@ -13,6 +13,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.urbanairship.Logger;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
+import com.urbanairship.widget.RichPushMessageView;
 
 /**
  * Fragment that displays a rich push message in a RichPushMessageView

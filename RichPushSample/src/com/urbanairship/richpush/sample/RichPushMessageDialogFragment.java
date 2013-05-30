@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.widget.RichPushWidgetUtils;
+import com.urbanairship.widget.RichPushMessageView;
 
 /**
  * Dialog Fragment that displays a rich push message
