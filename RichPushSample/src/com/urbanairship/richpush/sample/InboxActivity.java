@@ -154,6 +154,9 @@ SlidingPaneLayout.PanelSlideListener {
         showPendingMessageId();
 
         startActionModeIfNecessary();
+
+        // Dismiss any notifications if available
+        InboxNotificationBuilder.dismissInboxNotification();
     }
 
     @Override

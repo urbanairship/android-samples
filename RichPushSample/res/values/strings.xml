@@ -42,6 +42,13 @@
     <string name="item_format_string">%1$s</string>
     <string name="header_format_string">%1$d unread</string>
 	<string name="inbox_name">Rich Push Sample Inbox</string>
-    
+	
+	<!-- Inbox Notification -->
+	<plurals name="inbox_notification_title">
+	    <item quantity="one">1 New Message</item>
+	    <item quantity="other">%d <b>New</b> Messages</item>    
+	</plurals>
+	<string name="inbox_summary">+%d more</string>
+
 </resources>
 
