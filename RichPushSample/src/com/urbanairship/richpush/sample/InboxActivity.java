@@ -307,8 +307,12 @@ SlidingPaneLayout.PanelSlideListener {
         menu.findItem(R.id.mark_read).setVisible(selectionContainsUnread);
         menu.findItem(R.id.mark_unread).setVisible(selectionContainsRead);
 
-        String selectionText = this.getString(R.string.cab_selection, inbox.getSelectedMessages().size());
-        actionSelectionButton.setText(selectionText);
+        // If we have an action selection button update the text
+        if (actionSelectionButton != null) {
+            String selectionText = this.getString(R.string.cab_selection, inbox.getSelectedMessages().size());
+            actionSelectionButton.setText(selectionText);
+        }
+
         return true;
     }
 
