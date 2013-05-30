@@ -51,7 +51,7 @@
         android:theme="@style/Theme.Sherlock"
         android:debuggable="true">
         
-        <!-- The widget provider -->
+        <!-- OPTIONAL (for the inbox widget) -->
         <receiver android:name=".widget.RichPushWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
