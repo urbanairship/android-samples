@@ -59,8 +59,8 @@ public class PushSender {
             builder.append("\"android\": { \"alert\": \"" + uniqueAlertId + sendAttempt + "\", \"extra\": {\"a_key\":\"a_value\"} } }");
         } else if (appName.equalsIgnoreCase("Rich Push Sample")) {
             builder.append("\"push\": {\"android\": { \"alert\": \"" + uniqueAlertId + sendAttempt + "\", \"extra\": { \"activity\": \"" + activity + "\" } } },");
-            builder.append("\"title\": \"Rich Push \"" + uniqueAlertId + sendAttempt +  ",");
-            builder.append("\"message\": \"Rich Push Message \"" + uniqueAlertId + sendAttempt + ",");
+            builder.append("\"title\": \"Rich Push " + uniqueAlertId + sendAttempt +  "\",");
+            builder.append("\"message\": \"Rich Push Message " + uniqueAlertId + sendAttempt + "\",");
             builder.append("\"content-type\": \"text/html\"}");
         }
 
