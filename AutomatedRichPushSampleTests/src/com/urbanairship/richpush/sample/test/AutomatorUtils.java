@@ -8,11 +8,16 @@ import com.android.uiautomator.core.UiObjectNotFoundException;
 import com.android.uiautomator.core.UiScrollable;
 import com.android.uiautomator.core.UiSelector;
 
+import java.util.UUID;
+
 /**
  * Utility class for automation
  *
  */
 public class AutomatorUtils {
+    private static int WAIT_FOR_UI_OBJECTS_DELAY = 1000;  // 1 second
+    private static int ALL_APPS_BUTTON_WAIT_TIME = 5000;   // 5 seconds
+
     /**
      * Open the notification area
      */
@@ -45,7 +50,7 @@ public class AutomatorUtils {
             if (allExist) {
                 return true;
             } else {
-                Thread.sleep(1000);
+                Thread.sleep(WAIT_FOR_UI_OBJECTS_DELAY);
             }
         }
 
@@ -58,8 +63,9 @@ public class AutomatorUtils {
      * @param packageName The package name of the app to open
      * @return <code>true</code> if app was opened, otherwise <code>false</code>
      * @throws UiObjectNotFoundException
+     * @throws InterruptedException
      */
-    public static boolean openApp(String appName, String packageName) throws UiObjectNotFoundException {
+    public static boolean openApp(String appName, String packageName) throws UiObjectNotFoundException, InterruptedException {
         UiDevice device = UiDevice.getInstance();
 
         try {
@@ -90,7 +96,7 @@ public class AutomatorUtils {
         // content-description property has the value "Apps".  We can
         // use this property to create a UiSelector to find the button.
         UiObject allAppsButton = new UiObject(new UiSelector().description("Apps"));
-
+        waitForUiObjectsToExist(ALL_APPS_BUTTON_WAIT_TIME, allAppsButton);
         // Simulate a click to bring up the All Apps screen.
         allAppsButton.clickAndWaitForNewWindow();
 
@@ -128,8 +134,6 @@ public class AutomatorUtils {
         return pushSampleValidation.exists();
     }
 
-
-
     /**
      * Clears all the notifications in the notification area
      * @throws UiObjectNotFoundException
@@ -148,5 +152,13 @@ public class AutomatorUtils {
         } else {
             device.pressBack();
         }
+    }
+
+    /**
+     * Generates a unique alert id for the test
+     * @return A unique alert id in string format
+     */
+    public static String generateUniqueAlertId() {
+        return UUID.randomUUID().toString();
     }
 }

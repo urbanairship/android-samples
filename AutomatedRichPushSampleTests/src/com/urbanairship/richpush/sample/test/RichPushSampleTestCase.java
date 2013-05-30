@@ -1,7 +1,6 @@
 package com.urbanairship.richpush.sample.test;
 
 import com.android.uiautomator.core.UiCollection;
-import com.android.uiautomator.core.UiDevice;
 import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
 import com.android.uiautomator.core.UiSelector;
@@ -13,30 +12,41 @@ import com.android.uiautomator.testrunner.UiAutomatorTestCase;
  */
 public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
+    private static int REGISTRATION_WAIT_TIME = 60000; // 60 seconds
+    private static int WINDOW_UPDATE_WAIT_TIME = 5000;  // 5 seconds
+    private static int UI_OBJECTS_WAIT_TIME = 1000;  // 1 second
+    private static int RICH_PUSH_DIALOG_WAIT_TIME = 20000;  // 20 seconds
+    private static int SETTING_PUSH_PREFERENCE_WAIT_TIME = 2000;  // 2 seconds
+
     // Time to wait for notifications to appear in milliseconds.
-    private static int NOTIFICATION_WAIT_TIME = 60000; // 60 seconds - push to tags is slower than to user
-    private static final String TEST_ALIAS_STRING = "TEST_ALIAS";
-    private static final String TEST_FIRST_TAG_STRING = "TEST_FIRST_TAG";
+    private static int NOTIFICATION_WAIT_TIME = 90000; // 90 seconds - push to tags is slower than to user
+    private static final String APP_NAME = "Rich Push Sample";
+    private static final String PACKAGE_NAME = "com.urbanairship.richpush.sample";
+    private static final String TEST_ALIAS_STRING = "TEST_RICH_PUSH_SAMPLE_ALIAS";
+    private static final String TEST_FIRST_TAG_STRING = "TEST_RICH_PUSH_SAMPLE_FIRST_TAG";
+    private static final String RICH_PUSH_BROADCAST_URL = "https://go.urbanairship.com/api/airmail/send/broadcast/";
+    private static final String RICH_PUSH_URL = "https://go.urbanairship.com/api/airmail/send/";
 
     private PushSender pushSender;
     private PreferencesHelper preferences;
     private RichPushSampleNavigator appNavigator;
 
     /**
-     * Prepare for testing, which includes getting the masterSecret and appKey
+     * Prepare for testing, which includes getting the masterSecret and appKey.
+     * Also generates the uniqueAlertId.
      */
     @Override
     public void setUp() throws Exception {
         // Create a push sender with the master secret and app key from the params
         String masterSecret = getParams().getString("MASTER_SECRET");
         String appKey = getParams().getString("APP_KEY");
-        pushSender = new PushSender(masterSecret, appKey);
 
+        pushSender = new PushSender(masterSecret, appKey, APP_NAME, RICH_PUSH_BROADCAST_URL, RICH_PUSH_URL);
         preferences = new PreferencesHelper();
         appNavigator = new RichPushSampleNavigator();
 
         // Open application
-        assertTrue("Failed to open Rich Push Sample", AutomatorUtils.openApp("Rich Push Sample", "com.urbanairship.richpush.sample"));
+        assertTrue("Failed to open Rich Push Sample", AutomatorUtils.openApp(APP_NAME, PACKAGE_NAME));
 
         // Navigate to home
         appNavigator.navigateToAppHome();
@@ -52,18 +62,26 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
         this.getUiDevice().pressBack();
 
-        // Wait a second for any push registration to take place
-        Thread.sleep(5000);
+        // Wait for any push registration to take place
+        Thread.sleep(REGISTRATION_WAIT_TIME);
 
+        // Verify registration complete by checking for apid
+        appNavigator.navigateToPreferences();
+        String apid = preferences.getPreferenceSummary("APID");
+        assertNotSame("Failed to display the APID. GCM registration may have failed.", apid, "");
+
+        // Pull down the notification bar and clear notifications
         AutomatorUtils.clearNotifications();
 
         // Verify that we can send a push and open in a webview
-        pushSender.sendRichPushMessage();
-        verifyPushNotification(null);
+        String uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
+        pushSender.sendPushMessage(uniqueAlertId);
+        verifyPushNotification(null, uniqueAlertId);
 
         // Send push to main activity
-        pushSender.sendRichPushMessage("home");
-        verifyPushNotification("Rich push message dialog");
+        uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
+        pushSender.sendPushMessage("home", uniqueAlertId);
+        verifyPushNotification("Rich push message dialog", uniqueAlertId);
 
         this.getUiDevice().pressBack();
 
@@ -72,11 +90,12 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", false);
         this.getUiDevice().pressBack();
 
-        // Send a notification
-        pushSender.sendRichPushMessage();
+        // Send a notification that we expect not to receive due to push being disabled
+        uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
+        pushSender.sendPushMessage(uniqueAlertId);
 
         AutomatorUtils.openNotificationArea();
-        assertFalse("Received push notification when push is disabled", waitForNotificationToArrive());
+        assertFalse("Received push notification when push is disabled", waitForNotificationToArrive(uniqueAlertId));
 
         this.getUiDevice().pressBack();
     }
@@ -89,42 +108,62 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     public void testAliasAndTags() throws Exception {
         // The rest depend on having push enabled
         appNavigator.navigateToPreferences();
+
+        // Enable push, disable push, then enable push
+        // Possible workaround to PHONE_REGISTRATION_ERROR on emulator
         preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
         this.getUiDevice().pressBack();
+        Thread.sleep(SETTING_PUSH_PREFERENCE_WAIT_TIME);
+
+        appNavigator.navigateToPreferences();
+        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", false);
+        this.getUiDevice().pressBack();
+        Thread.sleep(SETTING_PUSH_PREFERENCE_WAIT_TIME);
+
+        appNavigator.navigateToPreferences();
+        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
+        this.getUiDevice().pressBack();
+
+        // Wait for any push registration to take place
+        Thread.sleep(REGISTRATION_WAIT_TIME);
+
+        // Verify registration complete by checking for apid
+        appNavigator.navigateToPreferences();
+        String apid = preferences.getPreferenceSummary("APID");
+        assertNotSame("Failed to display the APID. GCM registration may have failed.", apid, "");
+
+        // Set alias
+        preferences.setAlias(TEST_ALIAS_STRING);
+        assertEquals("Failed to set alias string", TEST_ALIAS_STRING, preferences.getPreferenceSummary("SET_ALIAS"));
+
+        // Set tag
+        preferences.setTags(TEST_FIRST_TAG_STRING);
+        assertEquals("Failed to display first tag string", TEST_FIRST_TAG_STRING, preferences.getPreferenceSummary("SET_TAGS"));
+        this.getUiDevice().pressBack();
+
+        // Wait any for push registration to take place
+        Thread.sleep(REGISTRATION_WAIT_TIME);
+
+        // Pull down the notification bar and clear notifications
+        AutomatorUtils.clearNotifications();
 
         appNavigator.navigateToPreferences();
 
         // Send Rich Push Message to User Id
+        String uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
         String richPushId = preferences.getPreferenceSummary("USER_ID");
-        pushSender.sendRichPushToUser(richPushId);
-        verifyPushNotification(null);
+        pushSender.sendRichPushToUser(richPushId, uniqueAlertId);
+        verifyPushNotification(null, uniqueAlertId);
 
+        // Send push to alias
+        uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
+        pushSender.sendPushToAlias(TEST_ALIAS_STRING, uniqueAlertId);
+        verifyPushNotification(null, uniqueAlertId);
 
-        this.getUiDevice().pressBack();
-        appNavigator.navigateToPreferences();
-
-        preferences.setAlias(TEST_ALIAS_STRING);
-        assertEquals("Failed to set alias string", TEST_ALIAS_STRING, preferences.getPreferenceSummary("SET_ALIAS"));
-
-        // Wait a second for any push registration to take place
-        Thread.sleep(1000);
-
-        pushSender.sendRichPushToAlias(TEST_ALIAS_STRING);
-        verifyPushNotification(null);
-
-        UiDevice.getInstance().pressBack();
-        appNavigator.navigateToPreferences();
-
-        preferences.setTags(TEST_FIRST_TAG_STRING);
-        assertEquals("Failed to display first tag string", TEST_FIRST_TAG_STRING, preferences.getPreferenceSummary("SET_TAGS"));
-
-        // Wait a second for any push registration to take place
-        Thread.sleep(1000);
-
-        pushSender.sendRichPushToTag(TEST_FIRST_TAG_STRING);
-        verifyPushNotification(null);
-
-        this.getUiDevice().pressBack();
+        // Send push to tag
+        uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
+        pushSender.sendPushToTag(TEST_FIRST_TAG_STRING, uniqueAlertId);
+        verifyPushNotification(null, uniqueAlertId);
     }
 
     /**
@@ -139,8 +178,15 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
         this.getUiDevice().pressBack();
 
-        // Wait a second for any push registration to take place
-        Thread.sleep(5000);
+        // Wait for any push registration to take place
+        Thread.sleep(REGISTRATION_WAIT_TIME);
+
+        // Verify registration complete by checking for apid
+        appNavigator.navigateToPreferences();
+        String apid = preferences.getPreferenceSummary("APID");
+        assertNotSame("Failed to display the APID. GCM registration may have failed.", apid, "");
+
+        this.getUiDevice().pressBack();
 
         // Count number of messages
         int originalMessageCount = 0;
@@ -150,12 +196,13 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
             // must not exist yet
         }
 
-        // Send push
-        pushSender.sendRichPushMessage();
+        // Send broadcast push
+        String uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
+        pushSender.sendPushMessage(uniqueAlertId);
 
         // Wait for it to arrive
         AutomatorUtils.openNotificationArea();
-        waitForNotificationToArrive();
+        waitForNotificationToArrive(uniqueAlertId);
         this.getUiDevice().pressBack();
 
         // Check that we have one more message
@@ -170,29 +217,29 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         assertTrue(messageUnreadIndicator.exists());
         assertFalse(messageReadIndicator.exists());
 
-        // mark as read and check indicator
+        // Mark as read and check indicator
         messageCheckBox.click();
         UiObject markReadAction = new UiObject(new UiSelector().description("Mark Read"));
         markReadAction.click();
-        this.getUiDevice().waitForWindowUpdate(null, 5000);
+        this.getUiDevice().waitForWindowUpdate(null, WINDOW_UPDATE_WAIT_TIME);
 
         assertTrue(messageReadIndicator.exists());
         assertFalse(messageUnreadIndicator.exists());
 
-        // mark as unread and check indicator
+        // Mark as unread and check indicator
         messageCheckBox.click();
         UiObject markUnreadAction = new UiObject(new UiSelector().description("Mark Unread"));
         markUnreadAction.click();
-        this.getUiDevice().waitForWindowUpdate(null, 5000);
+        this.getUiDevice().waitForWindowUpdate(null, WINDOW_UPDATE_WAIT_TIME);
 
         assertTrue(messageUnreadIndicator.exists());
         assertFalse(messageReadIndicator.exists());
 
-        // delete message and compare count of messages
+        // Delete message and compare count of messages
         messageCheckBox.click();
         UiObject deleteAction = new UiObject(new UiSelector().description("Delete"));
         deleteAction.click();
-        this.getUiDevice().waitForWindowUpdate(null, 5000);
+        this.getUiDevice().waitForWindowUpdate(null, WINDOW_UPDATE_WAIT_TIME);
 
         int lastMessageCount = 0;
         try {
@@ -324,12 +371,14 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
     /**
      * Wait for the notification alert to arrive by polling the notification area
+     * @param uniqueAlertId The string used to identify push messages
      * @return <code>true</code> if a notification exists, otherwise <code>false</code>
      * @throws InterruptedException
      */
-    private boolean waitForNotificationToArrive() throws InterruptedException {
-        UiObject notificationTitle = new UiObject(new UiSelector().text("Rich Push Sample"));
-        UiObject notificationAlert = new UiObject(new UiSelector().text("Rich Push Alert"));
+    private boolean waitForNotificationToArrive(String uniqueAlertId) throws InterruptedException {
+        UiObject notificationTitle = new UiObject(new UiSelector().text(APP_NAME));
+        // Verify the alert notification with the uniqueAlertId
+        UiObject notificationAlert = new UiObject(new UiSelector().textContains(uniqueAlertId));
 
         return AutomatorUtils.waitForUiObjectsToExist(NOTIFICATION_WAIT_TIME, notificationTitle, notificationAlert);
     }
@@ -338,20 +387,20 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
      * Verify the notification alert is received.
      * Assert if the notification alert does not exist or the notification failed to display in a webview.
      * @param description The content description string
+     * @param uniqueAlertId The string used to identify push messages
      * @throws InterruptedException
      * @throws UiObjectNotFoundException
      */
-
-    private void verifyPushNotification(String description) throws InterruptedException, UiObjectNotFoundException {
+    private void verifyPushNotification(String description, String uniqueAlertId) throws InterruptedException, UiObjectNotFoundException {
         AutomatorUtils.openNotificationArea();
-        waitForNotificationToArrive();
+        waitForNotificationToArrive(uniqueAlertId);
 
-        UiObject notificationAlert = new UiObject(new UiSelector().text("Rich Push Alert"));
+        UiObject notificationAlert = new UiObject(new UiSelector().textContains(uniqueAlertId));
 
         assertTrue("No push notifications to open",  notificationAlert.exists());
 
         // Wait a second for any messsage retrieval to take place
-        Thread.sleep(1000);
+        Thread.sleep(UI_OBJECTS_WAIT_TIME);
 
         notificationAlert.click();
 
@@ -362,6 +411,6 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         }
 
         UiObject richPushDialog = new UiObject(webViewSelector);
-        assertTrue("Failed to display notification in a webview",  AutomatorUtils.waitForUiObjectsToExist(20000, richPushDialog));
+        assertTrue("Failed to display notification in a webview",  AutomatorUtils.waitForUiObjectsToExist(RICH_PUSH_DIALOG_WAIT_TIME, richPushDialog));
     }
 }
