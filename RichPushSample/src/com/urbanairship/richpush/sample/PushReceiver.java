@@ -11,6 +11,7 @@ import android.content.Intent;
 import com.urbanairship.Logger;
 import com.urbanairship.push.PushManager;
 import com.urbanairship.richpush.RichPushManager;
+import com.urbanairship.richpush.sample.widget.RichPushWidgetUtils;
 
 /**
  * Broadcast receiver to handle all push notifications
@@ -20,8 +21,21 @@ public class PushReceiver extends BroadcastReceiver {
 
     public static final String ACTIVITY_NAME_KEY = "activity";
 
+    public static final String EXTRA_MESSAGE_ID_KEY = "_uamid";
+
+    /**
+     * Delay to refresh widget to give time to fetch the rich push message
+     */
+    private static final long WIDGET_REFRESH_DELAY_MS = 5000; //5 Seconds
+
+
     @Override
     public void onReceive(Context context, Intent intent) {
+
+        // Refresh the widget after a push comes in
+        if (PushManager.ACTION_PUSH_RECEIVED.equals(intent.getAction())) {
+            RichPushWidgetUtils.refreshWidget(context, WIDGET_REFRESH_DELAY_MS);
+        }
 
         // Only takes action when a notification is opened
         if (!PushManager.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
@@ -33,7 +47,7 @@ public class PushReceiver extends BroadcastReceiver {
             return;
         }
 
-        String messageId = intent.getStringExtra("_uamid");
+        String messageId = intent.getStringExtra(EXTRA_MESSAGE_ID_KEY);
         Logger.debug("Notified of a notification opened with id " + messageId);
 
         Intent messageIntent = null;

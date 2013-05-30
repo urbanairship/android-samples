@@ -13,6 +13,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
+import com.urbanairship.richpush.sample.widget.RichPushWidgetUtils;
 
 import java.util.List;
 
@@ -51,21 +52,23 @@ public class MessageActivity extends SherlockFragmentActivity {
         this.messagePager.setAdapter(messageAdapter);
 
         // Get the first item to show
-        int firstItem = RichPushMessageUtils.getMessagePosition(messageId, messages);
+        int position = 0;
+        RichPushMessage firstMessage = RichPushManager.shared().getRichPushUser().getInbox().getMessage(messageId);
+        if (firstMessage == null) {
+            position = messages.indexOf(firstMessage);
+            if (position == -1) {
+                position = 0;
+            }
+        }
 
         // Mark it as read
-        messages.get(firstItem).markRead();
+        messages.get(position).markRead();
 
         // Sets the current item to the position of the current message
-        this.messagePager.setCurrentItem(firstItem);
-
-        //action_bar_home_as_up_indicator
+        this.messagePager.setCurrentItem(position);
 
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.getSupportActionBar().setHomeButtonEnabled(true);
-        //this.getSupportActionBar().setLogo(R.drawable.abs__ic_ab_back_holo_dark);
-
-
     }
 
     @Override
@@ -74,6 +77,14 @@ public class MessageActivity extends SherlockFragmentActivity {
 
         // Activity instrumentation for analytic tracking
         UAirship.shared().getAnalytics().activityStarted(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Refresh any widgets
+        RichPushWidgetUtils.refreshWidget(this);
     }
 
     @Override

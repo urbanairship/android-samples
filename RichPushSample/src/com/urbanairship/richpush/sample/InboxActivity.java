@@ -32,6 +32,7 @@ import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
+import com.urbanairship.richpush.sample.widget.RichPushWidgetUtils;
 import com.urbanairship.util.UAStringUtil;
 
 import java.util.HashSet;
@@ -153,6 +154,9 @@ SlidingPaneLayout.PanelSlideListener {
         showPendingMessageId();
 
         startActionModeIfNecessary();
+
+        // Dismiss any notifications if available
+        InboxNotificationBuilder.dismissInboxNotification();
     }
 
     @Override
@@ -162,6 +166,9 @@ SlidingPaneLayout.PanelSlideListener {
         // Remove listener for message changes
         RichPushManager.shared().removeListener(this);
         richPushInbox.removeListener(this);
+
+        RichPushWidgetUtils.refreshWidget(this);
+
     }
 
     @Override
@@ -400,8 +407,10 @@ SlidingPaneLayout.PanelSlideListener {
      * @param messageId the specified message id
      */
     private void showMessage(String messageId) {
+        RichPushMessage message = richPushInbox.getMessage(messageId);
+
         // Message is already deleted, skip
-        if (richPushInbox.getMessage(messageId) == null) {
+        if (message == null) {
             return;
         }
 
@@ -409,8 +418,10 @@ SlidingPaneLayout.PanelSlideListener {
             slidingPaneLayout.closePane();
         }
 
+        message.markRead();
+
         if (messagePager != null) {
-            this.messagePager.setCurrentItem(RichPushMessageUtils.getMessagePosition(messageId, messages));
+            this.messagePager.setCurrentItem(messages.indexOf(message));
         } else {
             Intent intent = new Intent(this, MessageActivity.class);
             intent.putExtra(MessageActivity.EXTRA_MESSAGE_ID_KEY, messageId);

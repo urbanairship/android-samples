@@ -50,10 +50,24 @@
         android:name="com.urbanairship.richpush.sample.RichPushApplication"
         android:theme="@style/Theme.Sherlock"
         android:debuggable="true">
+        
+        <!-- OPTIONAL (for the inbox widget) -->
+        <receiver android:name=".widget.RichPushWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <!-- This specifies the widget provider info -->
+            <meta-data android:name="android.appwidget.provider"
+                    android:resource="@xml/widgetinfo" />
+        </receiver>
+
+        <!-- The service serving the RemoteViews to the collection widget -->
+        <service android:name=".widget.RichPushWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            android:exported="false" />
 
         <activity android:name=".MainActivity"
-                  android:label="@string/app_name"
-        >
+                  android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -85,7 +99,7 @@
         <!-- This is required for persisting preferences related to push and location -->
         <provider android:name="com.urbanairship.UrbanAirshipProvider"
             android:authorities="com.urbanairship.richpush.sample.urbanairship.provider"
-            android:exported="false"
+            android:exported="true"
             android:multiprocess="true" />
         
         <!-- REQUIRED for Rich Push -->
