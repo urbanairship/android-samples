@@ -18,3 +18,4 @@ proguard/
 *.swo
 *.swp
 *.iml
+AndroidAutomatorUtils.jar

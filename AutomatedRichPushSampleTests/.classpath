@@ -3,8 +3,11 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
-	<classpathentry kind="lib" path="/Users/helencrowell/Development/adt-bundle-mac-x86_64/sdk/platforms/android-17/android.jar"/>
-	<classpathentry kind="lib" path="/Users/helencrowell/Development/adt-bundle-mac-x86_64/sdk/platforms/android-17/uiautomator.jar"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="var" path="ANDROID_HOME/platforms/android-17/uiautomator.jar"/>
+	<classpathentry kind="var" path="ANDROID_HOME"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="src" path="/AndroidAutomatorUtils"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
