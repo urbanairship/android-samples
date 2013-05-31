@@ -54,7 +54,7 @@ public class MessageActivity extends SherlockFragmentActivity {
         // Get the first item to show
         int position = 0;
         RichPushMessage firstMessage = RichPushManager.shared().getRichPushUser().getInbox().getMessage(messageId);
-        if (firstMessage == null) {
+        if (firstMessage != null) {
             position = messages.indexOf(firstMessage);
             if (position == -1) {
                 position = 0;
