@@ -4,6 +4,7 @@ import com.android.uiautomator.core.UiDevice;
 import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
 import com.android.uiautomator.core.UiSelector;
+import com.urbanairship.automatorutils.AutomatorUtils;
 
 /**
  * Helper class to navigate through the app

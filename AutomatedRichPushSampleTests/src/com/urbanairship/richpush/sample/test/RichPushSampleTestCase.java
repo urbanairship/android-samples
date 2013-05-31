@@ -5,6 +5,9 @@ import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
 import com.android.uiautomator.core.UiSelector;
 import com.android.uiautomator.testrunner.UiAutomatorTestCase;
+import com.urbanairship.automatorutils.AutomatorUtils;
+import com.urbanairship.automatorutils.PreferencesHelper;
+import com.urbanairship.automatorutils.PushSender;
 
 /**
  * Automated testing of the Rich Push Sample application
