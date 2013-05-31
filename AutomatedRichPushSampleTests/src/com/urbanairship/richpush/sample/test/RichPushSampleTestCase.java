@@ -139,9 +139,9 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         preferences.setAlias(TEST_ALIAS_STRING);
         assertEquals("Failed to set alias string", TEST_ALIAS_STRING, preferences.getPreferenceSummary("SET_ALIAS"));
 
-        // Set tag
-        preferences.setTags(TEST_FIRST_TAG_STRING);
-        assertEquals("Failed to display first tag string", TEST_FIRST_TAG_STRING, preferences.getPreferenceSummary("SET_TAGS"));
+        // Add tag
+        preferences.addTags(TEST_FIRST_TAG_STRING);
+        assertEquals("Failed to display first tag string", TEST_FIRST_TAG_STRING, preferences.getPreferenceSummary("ADD_TAGS"));
         this.getUiDevice().pressBack();
 
         // Wait any for push registration to take place

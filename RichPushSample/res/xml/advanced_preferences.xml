@@ -16,10 +16,10 @@
 	        android:persistent="false"
 	        android:title="@string/set_alias_preference_title" />
 
-	    <com.urbanairship.richpush.sample.SetTagsPreference
+	    <com.urbanairship.richpush.sample.AddTagsPreference
 	        android:persistent="false"
 	        android:dialogLayout="@layout/tags_dialog_layout"
-	        android:title="@string/set_tags_preference_title" />
+	        android:title="@string/add_tags_preference_title" />
 
     </PreferenceCategory>
     
