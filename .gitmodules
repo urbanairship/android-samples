@@ -1,3 +1,6 @@
 [submodule "ActionBarSherlock"]
 	path = ActionBarSherlock
 	url = git@github.com:urbanairship/ActionBarSherlock.git
+[submodule "android-automator-utils"]
+	path = android-automator-utils
+	url = git@github.com:urbanairship/android-automator-utils.git
