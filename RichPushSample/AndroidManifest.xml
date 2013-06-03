@@ -92,7 +92,6 @@
         </receiver>
         
         <service android:name="com.urbanairship.push.PushService" android:label="Push Notification Service"/>
-        <service android:name="com.urbanairship.push.PushWorkerService" android:label="Push Notification Worker Service"/>
         <service android:name="com.urbanairship.analytics.EventService" android:label="Event Service"/>
         
 
