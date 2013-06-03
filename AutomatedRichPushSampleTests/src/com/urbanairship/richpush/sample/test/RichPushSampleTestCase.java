@@ -27,7 +27,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     private static int NOTIFICATION_WAIT_TIME = 90000; // 90 seconds - push to tags is slower than to user
     private static final String APP_NAME = "Rich Push Sample";
     private static final String PACKAGE_NAME = "com.urbanairship.richpush.sample";
-    private static final String TEST_ALIAS_STRING = "TEST_RICH_PUSH_SAMPLE_ALIAS";
+    private static final String TEST_ALIAS_STRING = AutomatorUtils.generateUniqueAlertId();
     private static final String TEST_FIRST_TAG_STRING = "TEST_RICH_PUSH_SAMPLE_FIRST_TAG";
 
     private RichPushSender pushSender;
