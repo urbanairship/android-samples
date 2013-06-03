@@ -34,14 +34,14 @@ import java.util.Set;
  * DialogPreference to set the tags
  *
  */
-public class SetTagsPreference extends DialogPreference  {
+public class AddTagsPreference extends DialogPreference  {
 
     private ListView listView;
     private List<String> tags = new ArrayList<String>();
     private Set<String>  currentTags;
     private TagsAdapter adapter;
 
-    public SetTagsPreference(Context context, AttributeSet attrs) {
+    public AddTagsPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         currentTags = PushManager.shared().getTags();
@@ -86,7 +86,7 @@ public class SetTagsPreference extends DialogPreference  {
     @Override
     public View onCreateView(ViewGroup parent) {
         View view = super.onCreateView(parent);
-        view.setContentDescription("SET_TAGS");
+        view.setContentDescription("ADD_TAGS");
         return view;
     }
 
