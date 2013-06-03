@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="custom_rules">
     
-    <property name="utils.dir" value="../android-automator-utils/AndroidAutomatorUtils/" />
+    <property name="utils.dir" value="./android-automator-utils/AndroidAutomatorUtils/" />
     
     <property name="build.dir" value="./bin/" />
     <property name="src.dir" value="./src/" />
