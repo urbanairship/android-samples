@@ -390,15 +390,12 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
      */
     private void verifyPushNotification(String description, String uniqueAlertId) throws InterruptedException, UiObjectNotFoundException {
         AutomatorUtils.openNotificationArea();
-        waitForNotificationToArrive(uniqueAlertId);
-
-        UiObject notificationAlert = new UiObject(new UiSelector().textContains(uniqueAlertId));
-
-        assertTrue("No push notifications to open",  notificationAlert.exists());
+        assertTrue("No push notifications to open",  waitForNotificationToArrive(uniqueAlertId));
 
         // Wait a second for any messsage retrieval to take place
         Thread.sleep(UI_OBJECTS_WAIT_TIME);
 
+        UiObject notificationAlert = new UiObject(new UiSelector().textContains(uniqueAlertId));
         notificationAlert.click();
 
         // Make sure we have a dialog fragment and web view in main activity
