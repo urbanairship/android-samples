@@ -7,7 +7,9 @@ import com.android.uiautomator.core.UiSelector;
 import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 import com.urbanairship.automatorutils.AutomatorUtils;
 import com.urbanairship.automatorutils.PreferencesHelper;
-import com.urbanairship.automatorutils.PushSender;
+import com.urbanairship.automatorutils.RichPushSender;
+
+import java.util.HashMap;
 
 /**
  * Automated testing of the Rich Push Sample application
@@ -25,12 +27,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     private static int NOTIFICATION_WAIT_TIME = 90000; // 90 seconds - push to tags is slower than to user
     private static final String APP_NAME = "Rich Push Sample";
     private static final String PACKAGE_NAME = "com.urbanairship.richpush.sample";
-    private static final String TEST_ALIAS_STRING = "TEST_RICH_PUSH_SAMPLE_ALIAS";
+    private static final String TEST_ALIAS_STRING = AutomatorUtils.generateUniqueAlertId();
     private static final String TEST_FIRST_TAG_STRING = "TEST_RICH_PUSH_SAMPLE_FIRST_TAG";
-    private static final String RICH_PUSH_BROADCAST_URL = "https://go.urbanairship.com/api/airmail/send/broadcast/";
-    private static final String RICH_PUSH_URL = "https://go.urbanairship.com/api/airmail/send/";
 
-    private PushSender pushSender;
+    private RichPushSender pushSender;
     private PreferencesHelper preferences;
     private RichPushSampleNavigator appNavigator;
 
@@ -44,7 +44,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         String masterSecret = getParams().getString("MASTER_SECRET");
         String appKey = getParams().getString("APP_KEY");
 
-        pushSender = new PushSender(masterSecret, appKey, APP_NAME, RICH_PUSH_BROADCAST_URL, RICH_PUSH_URL);
+        pushSender = new RichPushSender(masterSecret, appKey);
         preferences = new PreferencesHelper();
         appNavigator = new RichPushSampleNavigator();
 
@@ -77,13 +77,13 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         AutomatorUtils.clearNotifications();
 
         // Verify that we can send a push and open in a webview
-        String uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
-        pushSender.sendPushMessage(uniqueAlertId);
+        String uniqueAlertId = pushSender.sendPushMessage();
         verifyPushNotification(null, uniqueAlertId);
 
         // Send push to main activity
-        uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
-        pushSender.sendPushMessage("home", uniqueAlertId);
+        HashMap<String, String> extras = new HashMap<String, String>();
+        extras.put("activity", "home");
+        uniqueAlertId = pushSender.sendPushMessage(extras);
         verifyPushNotification("Rich push message dialog", uniqueAlertId);
 
         this.getUiDevice().pressBack();
@@ -94,8 +94,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         this.getUiDevice().pressBack();
 
         // Send a notification that we expect not to receive due to push being disabled
-        uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
-        pushSender.sendPushMessage(uniqueAlertId);
+        uniqueAlertId = pushSender.sendPushMessage();
 
         AutomatorUtils.openNotificationArea();
         assertFalse("Received push notification when push is disabled", waitForNotificationToArrive(uniqueAlertId));
@@ -153,19 +152,16 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         appNavigator.navigateToPreferences();
 
         // Send Rich Push Message to User Id
-        String uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
         String richPushId = preferences.getPreferenceSummary("USER_ID");
-        pushSender.sendRichPushToUser(richPushId, uniqueAlertId);
+        String uniqueAlertId = pushSender.sendRichPushToUser(richPushId);
         verifyPushNotification(null, uniqueAlertId);
 
         // Send push to alias
-        uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
-        pushSender.sendPushToAlias(TEST_ALIAS_STRING, uniqueAlertId);
+        uniqueAlertId = pushSender.sendPushToAlias(TEST_ALIAS_STRING);
         verifyPushNotification(null, uniqueAlertId);
 
         // Send push to tag
-        uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
-        pushSender.sendPushToTag(TEST_FIRST_TAG_STRING, uniqueAlertId);
+        uniqueAlertId = pushSender.sendPushToTag(TEST_FIRST_TAG_STRING);
         verifyPushNotification(null, uniqueAlertId);
     }
 
@@ -200,8 +196,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         }
 
         // Send broadcast push
-        String uniqueAlertId = AutomatorUtils.generateUniqueAlertId();
-        pushSender.sendPushMessage(uniqueAlertId);
+        String uniqueAlertId = pushSender.sendPushMessage();
 
         // Wait for it to arrive
         AutomatorUtils.openNotificationArea();
@@ -379,11 +374,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
      * @throws InterruptedException
      */
     private boolean waitForNotificationToArrive(String uniqueAlertId) throws InterruptedException {
-        UiObject notificationTitle = new UiObject(new UiSelector().text(APP_NAME));
         // Verify the alert notification with the uniqueAlertId
         UiObject notificationAlert = new UiObject(new UiSelector().textContains(uniqueAlertId));
 
-        return AutomatorUtils.waitForUiObjectsToExist(NOTIFICATION_WAIT_TIME, notificationTitle, notificationAlert);
+        return AutomatorUtils.waitForUiObjectsToExist(NOTIFICATION_WAIT_TIME, notificationAlert);
     }
 
     /**
@@ -396,15 +390,12 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
      */
     private void verifyPushNotification(String description, String uniqueAlertId) throws InterruptedException, UiObjectNotFoundException {
         AutomatorUtils.openNotificationArea();
-        waitForNotificationToArrive(uniqueAlertId);
-
-        UiObject notificationAlert = new UiObject(new UiSelector().textContains(uniqueAlertId));
-
-        assertTrue("No push notifications to open",  notificationAlert.exists());
+        assertTrue("No push notifications to open",  waitForNotificationToArrive(uniqueAlertId));
 
         // Wait a second for any messsage retrieval to take place
         Thread.sleep(UI_OBJECTS_WAIT_TIME);
 
+        UiObject notificationAlert = new UiObject(new UiSelector().textContains(uniqueAlertId));
         notificationAlert.click();
 
         // Make sure we have a dialog fragment and web view in main activity
