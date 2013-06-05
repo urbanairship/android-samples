@@ -16,7 +16,7 @@ Because of the UI involved, RichPushSample requires a few dependencies.  Be sure
 - `Android Support v4 Library Revision 13`_
 
 .. _ActionBarSherlock: http://actionbarsherlock.com/
-.. _`Android Support Library`: http://developer.android.com/tools/extras/support-library.html 
+.. _`Android Support v4 Library Revision 13`: http://developer.android.com/tools/extras/support-library.html 
 
 Installation
 ------------
