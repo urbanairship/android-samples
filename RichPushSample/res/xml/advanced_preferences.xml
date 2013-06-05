@@ -12,11 +12,11 @@
 	        android:persistent="false"
 	        android:title="@string/user_id_preference_title" />
 	        
-	    <com.urbanairship.richpush.sample.SetAliasPreference
+	    <com.urbanairship.richpush.sample.preference.SetAliasPreference
 	        android:persistent="false"
 	        android:title="@string/set_alias_preference_title" />
 
-	    <com.urbanairship.richpush.sample.AddTagsPreference
+	    <com.urbanairship.richpush.sample.preference.AddTagsPreference
 	        android:persistent="false"
 	        android:dialogLayout="@layout/tags_dialog_layout"
 	        android:title="@string/add_tags_preference_title" />

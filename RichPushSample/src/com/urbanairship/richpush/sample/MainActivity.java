@@ -15,6 +15,9 @@ import com.actionbarsherlock.view.MenuItem;
 import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushUser;
+import com.urbanairship.richpush.sample.inbox.InboxActivity;
+import com.urbanairship.richpush.sample.inbox.RichPushMessageDialogFragment;
+import com.urbanairship.richpush.sample.preference.PushPreferencesActivity;
 import com.urbanairship.util.UAStringUtil;
 
 /**

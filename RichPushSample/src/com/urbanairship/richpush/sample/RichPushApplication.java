@@ -29,7 +29,7 @@ public class RichPushApplication extends Application {
 
         // If running on Jelly Bean or higher, then use the inbox style notification builder
         if (Build.VERSION.SDK_INT >= 16) {
-            PushManager.shared().setNotificationBuilder(new InboxNotificationBuilder());
+            PushManager.shared().setNotificationBuilder(new RichNotificationBuilder());
         }
     }
 }

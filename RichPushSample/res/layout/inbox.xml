@@ -4,7 +4,7 @@
     android:layout_height="fill_parent" >
 
     <fragment
-        class="com.urbanairship.richpush.sample.RichPushSampleInboxFragment"
+        class="com.urbanairship.richpush.sample.inbox.RichPushSampleInboxFragment"
         android:id="@+id/inbox"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />

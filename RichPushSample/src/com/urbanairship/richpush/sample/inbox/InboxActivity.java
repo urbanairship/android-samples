@@ -2,7 +2,7 @@
  * Copyright 2013 Urban Airship and Contributors
  */
 
-package com.urbanairship.richpush.sample;
+package com.urbanairship.richpush.sample.inbox;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -33,6 +33,18 @@ import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
+import com.urbanairship.richpush.sample.RichNotificationBuilder;
+import com.urbanairship.richpush.sample.MainActivity;
+import com.urbanairship.richpush.sample.R;
+import com.urbanairship.richpush.sample.RichPushApplication;
+import com.urbanairship.richpush.sample.R.drawable;
+import com.urbanairship.richpush.sample.R.id;
+import com.urbanairship.richpush.sample.R.layout;
+import com.urbanairship.richpush.sample.R.menu;
+import com.urbanairship.richpush.sample.R.string;
+import com.urbanairship.richpush.sample.preference.PushPreferencesActivity;
+import com.urbanairship.richpush.sample.view.CustomSlidingPaneLayout;
+import com.urbanairship.richpush.sample.view.CustomViewPager;
 import com.urbanairship.richpush.sample.widget.RichPushWidgetUtils;
 import com.urbanairship.util.UAStringUtil;
 
@@ -157,7 +169,7 @@ SlidingPaneLayout.PanelSlideListener {
         startActionModeIfNecessary();
 
         // Dismiss any notifications if available
-        InboxNotificationBuilder.dismissInboxNotification();
+        RichNotificationBuilder.dismissInboxNotification();
     }
 
     @Override

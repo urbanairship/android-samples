@@ -29,7 +29,7 @@ import java.util.Map;
  * fall back to the default behavior.
  * 
  */
-public class InboxNotificationBuilder extends BasicPushNotificationBuilder {
+public class RichNotificationBuilder extends BasicPushNotificationBuilder {
 
     private static final int EXTRA_MESSAGES_TO_SHOW = 2;
     private static final int INBOX_NOTIFICATION_ID = 9000000;

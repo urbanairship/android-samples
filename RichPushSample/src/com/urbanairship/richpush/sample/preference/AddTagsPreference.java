@@ -2,7 +2,7 @@
  * Copyright 2013 Urban Airship and Contributors
  */
 
-package com.urbanairship.richpush.sample;
+package com.urbanairship.richpush.sample.preference;
 
 import android.content.Context;
 import android.preference.DialogPreference;
@@ -22,6 +22,10 @@ import android.widget.Toast;
 import com.urbanairship.UAirship;
 import com.urbanairship.push.PushManager;
 import com.urbanairship.richpush.RichPushManager;
+import com.urbanairship.richpush.sample.R;
+import com.urbanairship.richpush.sample.R.id;
+import com.urbanairship.richpush.sample.R.layout;
+import com.urbanairship.richpush.sample.R.string;
 import com.urbanairship.util.UAStringUtil;
 
 import java.util.ArrayList;

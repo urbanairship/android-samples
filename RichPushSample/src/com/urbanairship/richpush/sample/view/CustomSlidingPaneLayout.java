@@ -2,7 +2,7 @@
  * Copyright 2013 Urban Airship and Contributors
  */
 
-package com.urbanairship.richpush.sample;
+package com.urbanairship.richpush.sample.view;
 
 import android.content.Context;
 import android.support.v4.view.MotionEventCompat;
