@@ -4,6 +4,7 @@
 
 package com.urbanairship.richpush.sample.widget;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -20,6 +21,7 @@ import com.urbanairship.richpush.sample.inbox.InboxActivity;
  * Factory class to create remote views for the widget layouts
  *
  */
+@SuppressLint("NewApi")
 class RemoteViewsFactory {
 
 
@@ -70,7 +72,7 @@ class RemoteViewsFactory {
         // embed the appWidgetId via the data otherwise it will be ignored.
         Intent intent = new Intent(context, RichPushWidgetService.class);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        remoteViews.setRemoteAdapter(R.id.message_list, intent);
+        remoteViews.setRemoteAdapter(appWidgetId, R.id.message_list, intent);
 
         // Set the empty view to be displayed if the collection is empty.  It must be a sibling
         // view of the collection view.

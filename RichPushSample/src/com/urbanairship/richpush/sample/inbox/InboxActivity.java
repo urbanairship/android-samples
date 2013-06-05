@@ -4,6 +4,7 @@
 
 package com.urbanairship.richpush.sample.inbox;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -125,7 +126,7 @@ SlidingPaneLayout.PanelSlideListener {
                 public void onGlobalLayout() {
                     // If sliding pane layout is slidable, set the actionbar to have an up action
                     actionBar.setDisplayHomeAsUpEnabled(slidingPaneLayout.isSlideable());
-                    slidingPaneLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    slidingPaneLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 }
             });
         }
@@ -251,8 +252,9 @@ SlidingPaneLayout.PanelSlideListener {
         }
         return true;
     }
-
+    
     @Override
+    @SuppressLint("NewApi")
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         mode.getMenuInflater().inflate(R.menu.inbox_actions_menu, menu);
 
