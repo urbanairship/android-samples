@@ -15,7 +15,7 @@ location.properties
 deploy/build.properties
 deploy/releases/
 proguard/
-ActionBarSherlock/
 *.swo
 *.swp
 *.iml
+AndroidAutomatorUtils.jar

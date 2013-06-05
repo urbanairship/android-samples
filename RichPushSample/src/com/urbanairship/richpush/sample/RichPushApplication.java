@@ -1,10 +1,11 @@
 /*
- * Copyright 2012 Urban Airship and Contributors
+ * Copyright 2013 Urban Airship and Contributors
  */
 
 package com.urbanairship.richpush.sample;
 
 import android.app.Application;
+import android.os.Build;
 
 import com.urbanairship.UAirship;
 import com.urbanairship.push.PushManager;
@@ -25,5 +26,10 @@ public class RichPushApplication extends Application {
         UAirship.takeOff(this);
         PushManager.shared().setIntentReceiver(PushReceiver.class);
         RichPushManager.setJavascriptInterface(RichPushMessageJavaScript.class, "urbanairship");
+
+        // If running on Jelly Bean or higher, then use the inbox style notification builder
+        if (Build.VERSION.SDK_INT >= 16) {
+            PushManager.shared().setNotificationBuilder(new RichNotificationBuilder());
+        }
     }
 }
