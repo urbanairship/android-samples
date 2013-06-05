@@ -11,9 +11,9 @@ Dependencies
 
 Because of the UI involved, RichPushSample requires a few dependencies.  Be sure to install these first before working with the app.
 
-- Urban Airship Android Library (2.1.1+)
+- Urban Airship Android Library (3.0)
 - ActionBarSherlock_ (4.2.0+) 
-- `Android Support Library`_
+- `Android Support v4 Library Revision 13`_
 
 .. _ActionBarSherlock: http://actionbarsherlock.com/
 .. _`Android Support Library`: http://developer.android.com/tools/extras/support-library.html 
@@ -33,7 +33,11 @@ ActionBarSherlock is used in this case as an Android library project:
 
   - Navigate to RichPushSample -> Properties -> Android
   - ActionBarSherlock should show up in the "Library" section with a green checkmark
- 
+
+If you have updated to ADT 22, you may need to include the Android Private Libraries:
+  - Right-click on RichPushSample project -> Properties > Java Build Path > Order and Export and check the Android Private Libraries
+
+
 Further Reading
 ---------------
 
