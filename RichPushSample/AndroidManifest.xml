@@ -74,9 +74,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".InboxActivity" />
-        <activity android:name=".PushPreferencesActivity" />
-        <activity android:name=".MessageActivity" />
+        <activity android:name="com.urbanairship.richpush.sample.inbox.InboxActivity" />
+        <activity android:name="com.urbanairship.richpush.sample.preference.PushPreferencesActivity" />
+        <activity android:name="com.urbanairship.richpush.sample.inbox.MessageActivity" />
         
         <!-- REQUIRED for Urban Airship GCM-->
         <receiver android:name="com.urbanairship.CoreReceiver" />

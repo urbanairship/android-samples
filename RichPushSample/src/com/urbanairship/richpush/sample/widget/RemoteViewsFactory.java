@@ -13,8 +13,8 @@ import android.os.Bundle;
 import android.widget.RemoteViews;
 
 import com.urbanairship.richpush.RichPushManager;
-import com.urbanairship.richpush.sample.InboxActivity;
 import com.urbanairship.richpush.sample.R;
+import com.urbanairship.richpush.sample.inbox.InboxActivity;
 
 /**
  * Factory class to create remote views for the widget layouts

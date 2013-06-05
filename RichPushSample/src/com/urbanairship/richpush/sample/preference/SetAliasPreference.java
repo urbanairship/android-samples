@@ -2,7 +2,7 @@
  * Copyright 2013 Urban Airship and Contributors
  */
 
-package com.urbanairship.richpush.sample;
+package com.urbanairship.richpush.sample.preference;
 
 import android.content.Context;
 import android.preference.DialogPreference;

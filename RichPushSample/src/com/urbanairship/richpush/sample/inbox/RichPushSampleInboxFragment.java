@@ -2,7 +2,7 @@
  * Copyright 2013 Urban Airship and Contributors
  */
 
-package com.urbanairship.richpush.sample;
+package com.urbanairship.richpush.sample.inbox;
 
 import android.graphics.Color;
 import android.view.View;
@@ -11,7 +11,11 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.urbanairship.richpush.RichPushMessage;
-import com.urbanairship.richpush.sample.RichPushMessageAdapter.ViewBinder;
+import com.urbanairship.richpush.sample.R;
+import com.urbanairship.richpush.sample.R.id;
+import com.urbanairship.richpush.sample.R.layout;
+import com.urbanairship.richpush.sample.R.string;
+import com.urbanairship.richpush.sample.inbox.RichPushMessageAdapter.ViewBinder;
 
 import java.text.SimpleDateFormat;
 

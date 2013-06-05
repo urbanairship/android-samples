@@ -11,6 +11,7 @@ import android.content.Intent;
 import com.urbanairship.Logger;
 import com.urbanairship.push.PushManager;
 import com.urbanairship.richpush.RichPushManager;
+import com.urbanairship.richpush.sample.inbox.InboxActivity;
 import com.urbanairship.richpush.sample.widget.RichPushWidgetUtils;
 
 /**

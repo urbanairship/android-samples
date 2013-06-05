@@ -2,7 +2,7 @@
  * Copyright 2013 Urban Airship and Contributors
  */
 
-package com.urbanairship.richpush.sample;
+package com.urbanairship.richpush.sample.inbox;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.urbanairship.richpush.RichPushMessage;
+import com.urbanairship.richpush.sample.inbox.RichPushMessageAdapter.ViewBinder;
 
 import java.util.ArrayList;
 import java.util.List;

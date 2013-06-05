@@ -2,7 +2,7 @@
  * Copyright 2013 Urban Airship and Contributors
  */
 
-package com.urbanairship.richpush.sample;
+package com.urbanairship.richpush.sample.inbox;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

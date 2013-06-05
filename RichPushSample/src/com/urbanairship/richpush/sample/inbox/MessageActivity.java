@@ -2,7 +2,7 @@
  * Copyright 2013 Urban Airship and Contributors
  */
 
-package com.urbanairship.richpush.sample;
+package com.urbanairship.richpush.sample.inbox;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,9 @@ import com.actionbarsherlock.view.MenuItem;
 import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
+import com.urbanairship.richpush.sample.R;
+import com.urbanairship.richpush.sample.R.id;
+import com.urbanairship.richpush.sample.R.layout;
 import com.urbanairship.richpush.sample.widget.RichPushWidgetUtils;
 
 import java.util.List;

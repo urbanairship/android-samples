@@ -2,7 +2,7 @@
  * Copyright 2013 Urban Airship and Contributors
  */
 
-package com.urbanairship.richpush.sample;
+package com.urbanairship.richpush.sample.preference;
 
 import android.os.Bundle;
 
@@ -12,6 +12,8 @@ import com.actionbarsherlock.view.MenuItem;
 import com.urbanairship.AirshipConfigOptions;
 import com.urbanairship.UAirship;
 import com.urbanairship.preference.UAPreferenceAdapter;
+import com.urbanairship.richpush.sample.R;
+import com.urbanairship.richpush.sample.R.xml;
 
 // ActionBarSherlock does not support the new PreferenceFragment, so we fall back to using
 // deprecated methods. See https://github.com/JakeWharton/ActionBarSherlock/issues/411
