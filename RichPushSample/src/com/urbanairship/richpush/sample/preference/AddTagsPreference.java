@@ -19,17 +19,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.urbanairship.UAirship;
 import com.urbanairship.push.PushManager;
-import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.sample.R;
-import com.urbanairship.richpush.sample.R.id;
-import com.urbanairship.richpush.sample.R.layout;
-import com.urbanairship.richpush.sample.R.string;
 import com.urbanairship.util.UAStringUtil;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -131,11 +125,6 @@ public class AddTagsPreference extends DialogPreference  {
         currentTags.addAll(tags);
 
         PushManager.shared().setTags(currentTags);
-
-        if (UAirship.shared().getAirshipConfigOptions().richPushEnabled) {
-            RichPushManager.shared().getRichPushUser().setTags(new HashSet<String>(currentTags));
-            RichPushManager.shared().updateUser();
-        }
     }
 
     private void showDuplicateItemToast() {
