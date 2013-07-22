@@ -11,11 +11,12 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.RingtoneManager;
 import android.text.Html;
 
 import com.urbanairship.UAirship;
 import com.urbanairship.push.BasicPushNotificationBuilder;
+import com.urbanairship.push.PushManager;
+import com.urbanairship.push.PushPreferences;
 import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
@@ -76,11 +77,11 @@ public class RichNotificationBuilder extends BasicPushNotificationBuilder {
 
         InboxStyle style = new Notification.InboxStyle(
                 new Notification.Builder(context)
+                .setDefaults(getNotificationDefaults())
                 .setContentTitle(title)
                 .setContentText(incomingAlert)
                 .setLargeIcon(largeIcon)
                 .setSmallIcon(R.drawable.ua_notification_icon)
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setNumber(totalUnreadCount));
 
         // Add the incoming alert as the first line in bold
@@ -108,5 +109,29 @@ public class RichNotificationBuilder extends BasicPushNotificationBuilder {
                 getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
         manager.cancel(INBOX_NOTIFICATION_ID);
+    }
+
+    /**
+     * Gets the notification defaults based on
+     * the PushPreferences for quiet time, vibration enabled,
+     * and sound enabled.
+     *
+     * @return Notification defaults
+     */
+    private int getNotificationDefaults() {
+        PushPreferences prefs = PushManager.shared().getPreferences();
+        int defaults = Notification.DEFAULT_LIGHTS;
+
+        if (!prefs.isInQuietTime()) {
+            if (prefs.isVibrateEnabled()) {
+                defaults |= Notification.DEFAULT_VIBRATE;
+            }
+
+            if (prefs.isSoundEnabled()) {
+                defaults |= Notification.DEFAULT_SOUND;
+            }
+        }
+
+        return defaults;
     }
 }
