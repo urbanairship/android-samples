@@ -11,9 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.urbanairship.UAirship;
 import com.urbanairship.push.PushManager;
-import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.util.UAStringUtil;
 
 /**
@@ -58,16 +56,8 @@ public class SetAliasPreference extends DialogPreference {
     }
 
     private void setAlias(String alias) {
-        alias = UAStringUtil.isEmpty(alias) ? null : alias;
-
-        PushManager.shared().setAlias(alias);
-
-        if (UAirship.shared().getAirshipConfigOptions().richPushEnabled) {
-            RichPushManager.shared().getRichPushUser().setAlias(alias);
-            RichPushManager.shared().updateUser();
-        }
-
-        currentAlias = alias;
+        currentAlias = UAStringUtil.isEmpty(alias) ? null : alias;
+        PushManager.shared().setAlias(currentAlias);
     }
 
     @Override
