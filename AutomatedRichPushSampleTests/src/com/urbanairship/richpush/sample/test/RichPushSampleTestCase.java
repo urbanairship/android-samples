@@ -8,6 +8,7 @@ import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 import com.urbanairship.automatorutils.AutomatorUtils;
 import com.urbanairship.automatorutils.PreferencesHelper;
 import com.urbanairship.automatorutils.RichPushSender;
+import com.urbanairship.automatorutils.RichPushSenderApiV3;
 
 import java.util.HashMap;
 
@@ -31,6 +32,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     private static final String TEST_FIRST_TAG_STRING = "TEST_RICH_PUSH_SAMPLE_FIRST_TAG";
 
     private RichPushSender pushSender;
+    private RichPushSenderApiV3 pushSenderV3;
     private PreferencesHelper preferences;
     private RichPushSampleNavigator appNavigator;
 
@@ -45,6 +47,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         String appKey = getParams().getString("APP_KEY");
 
         pushSender = new RichPushSender(masterSecret, appKey);
+        pushSenderV3 = new RichPushSenderApiV3(masterSecret, appKey);
         preferences = new PreferencesHelper();
         appNavigator = new RichPushSampleNavigator();
 
@@ -76,17 +79,22 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         // Pull down the notification bar and clear notifications
         AutomatorUtils.clearNotifications();
 
-        // Verify that we can send a push and open in a webview
+        // Verify that we can send a broadcast push and open in a webview
         String uniqueAlertId = pushSender.sendPushMessage();
         verifyPushNotification(null, uniqueAlertId);
 
-        // Send push to main activity
+        // Send a broadcast push to main activity
         HashMap<String, String> extras = new HashMap<String, String>();
         extras.put("activity", "home");
         uniqueAlertId = pushSender.sendPushMessage(extras);
         verifyPushNotification("Rich push message dialog", uniqueAlertId);
 
         this.getUiDevice().pressBack();
+
+        // Send Rich Push Message to User Id (using API v1/v2)
+        String richPushId = preferences.getPreferenceSummary("USER_ID");
+        uniqueAlertId = pushSender.sendRichPushToUser(richPushId);
+        verifyPushNotification(null, uniqueAlertId);
 
         // Disable push to verify we don't receive push notifications
         appNavigator.navigateToPreferences();
@@ -103,11 +111,62 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     }
 
     /**
-     * Test the setting of an alias and a tag. Test the sending and receiving
+     * Test the sending and receiving of a rich push message with API v3
+     * @throws Exception
+     */
+    public void testRichPushNotificationApiV3() throws Exception {
+        // Make sure push is enabled
+        appNavigator.navigateToPreferences();
+        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
+        this.getUiDevice().pressBack();
+
+        // Wait for any push registration to take place
+        Thread.sleep(REGISTRATION_WAIT_TIME);
+
+        // Verify registration complete by checking for apid
+        appNavigator.navigateToPreferences();
+        String apid = preferences.getPreferenceSummary("APID");
+        assertNotSame("Failed to display the APID. GCM registration may have failed.", apid, "");
+
+        // Pull down the notification bar and clear notifications
+        AutomatorUtils.clearNotifications();
+
+        // Verify that we can send a broadcast push and open in a webview
+        String uniqueAlertId = pushSenderV3.sendPushMessage();
+        verifyPushNotification(null, uniqueAlertId);
+
+        // Push to APID
+        uniqueAlertId = pushSenderV3.sendPushToApid(apid);
+        verifyPushNotification(null, uniqueAlertId);
+
+        // Send a broadcast push to main activity
+        HashMap<String, String> extras = new HashMap<String, String>();
+        extras.put("activity", "home");
+        uniqueAlertId = pushSenderV3.sendPushMessage(extras);
+        verifyPushNotification("Rich push message dialog", uniqueAlertId);
+
+        this.getUiDevice().pressBack();
+
+        // Disable push to verify we don't receive push notifications
+        appNavigator.navigateToPreferences();
+        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", false);
+        this.getUiDevice().pressBack();
+
+        // Send a notification that we expect not to receive due to push being disabled
+        uniqueAlertId = pushSenderV3.sendPushMessage();
+
+        AutomatorUtils.openNotificationArea();
+        assertFalse("Received push notification when push is disabled", waitForNotificationToArrive(uniqueAlertId));
+
+        this.getUiDevice().pressBack();
+    }
+
+    /**
+     * Test the setting of an alias and a tag with API v3. Test the sending and receiving
      * push messages to a user, alias and tag.
      * @throws Exception
      */
-    public void testAliasAndTags() throws Exception {
+    public void testAliasAndTagsApiV3() throws Exception {
         // The rest depend on having push enabled
         appNavigator.navigateToPreferences();
 
@@ -151,17 +210,12 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
         appNavigator.navigateToPreferences();
 
-        // Send Rich Push Message to User Id
-        String richPushId = preferences.getPreferenceSummary("USER_ID");
-        String uniqueAlertId = pushSender.sendRichPushToUser(richPushId);
-        verifyPushNotification(null, uniqueAlertId);
-
         // Send push to alias
-        uniqueAlertId = pushSender.sendPushToAlias(TEST_ALIAS_STRING);
+        String uniqueAlertId = pushSenderV3.sendPushToAlias(TEST_ALIAS_STRING);
         verifyPushNotification(null, uniqueAlertId);
 
         // Send push to tag
-        uniqueAlertId = pushSender.sendPushToTag(TEST_FIRST_TAG_STRING);
+        uniqueAlertId = pushSenderV3.sendPushToTag(TEST_FIRST_TAG_STRING);
         verifyPushNotification(null, uniqueAlertId);
     }
 
