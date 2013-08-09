@@ -79,25 +79,38 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         // Pull down the notification bar and clear notifications
         AutomatorUtils.clearNotifications();
 
-        // Verify that we can send a broadcast push and open in a webview
+        // APIv1/v2: Verify that we can send a broadcast push and open in a webview
         String uniqueAlertId = pushSender.sendPushMessage();
         verifyPushNotification(null, uniqueAlertId);
 
-        // Send a broadcast push to main activity
+        // APIv1/v2: Send a broadcast push to main activity
         HashMap<String, String> extras = new HashMap<String, String>();
         extras.put("activity", "home");
         uniqueAlertId = pushSender.sendPushMessage(extras);
         verifyPushNotification("Rich push message dialog", uniqueAlertId);
 
         this.getUiDevice().pressBack();
+        appNavigator.navigateToPreferences();
 
-        // Send Rich Push Message to User Id (using API v1/v2)
+        // APIv1/v2: Send Rich Push Message to User Id
         String richPushId = preferences.getPreferenceSummary("USER_ID");
         uniqueAlertId = pushSender.sendRichPushToUser(richPushId);
         verifyPushNotification(null, uniqueAlertId);
 
-        // Disable push to verify we don't receive push notifications
+        this.getUiDevice().pressBack();
+
+        // APIv3: Broadcast push and open in a webview
+        uniqueAlertId = pushSenderV3.sendPushMessage();
+        verifyPushNotification(null, uniqueAlertId);
+
+        // APIv3: Push to APID
+        uniqueAlertId = pushSenderV3.sendPushToApid(apid);
+        verifyPushNotification(null, uniqueAlertId);
+
+        this.getUiDevice().pressBack();
         appNavigator.navigateToPreferences();
+
+        // APIv1/v2: Disable push to verify we don't receive push notifications
         preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", false);
         this.getUiDevice().pressBack();
 
@@ -106,63 +119,10 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
         AutomatorUtils.openNotificationArea();
         assertFalse("Received push notification when push is disabled", waitForNotificationToArrive(uniqueAlertId));
-
-        this.getUiDevice().pressBack();
     }
 
     /**
-     * Test the sending and receiving of a rich push message with API v3
-     * @throws Exception
-     */
-    public void testRichPushNotificationApiV3() throws Exception {
-        // Make sure push is enabled
-        appNavigator.navigateToPreferences();
-        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
-        this.getUiDevice().pressBack();
-
-        // Wait for any push registration to take place
-        Thread.sleep(REGISTRATION_WAIT_TIME);
-
-        // Verify registration complete by checking for apid
-        appNavigator.navigateToPreferences();
-        String apid = preferences.getPreferenceSummary("APID");
-        assertNotSame("Failed to display the APID. GCM registration may have failed.", apid, "");
-
-        // Pull down the notification bar and clear notifications
-        AutomatorUtils.clearNotifications();
-
-        // Verify that we can send a broadcast push and open in a webview
-        String uniqueAlertId = pushSenderV3.sendPushMessage();
-        verifyPushNotification(null, uniqueAlertId);
-
-        // Push to APID
-        uniqueAlertId = pushSenderV3.sendPushToApid(apid);
-        verifyPushNotification(null, uniqueAlertId);
-
-        // Send a broadcast push to main activity
-        HashMap<String, String> extras = new HashMap<String, String>();
-        extras.put("activity", "home");
-        uniqueAlertId = pushSenderV3.sendPushMessage(extras);
-        verifyPushNotification("Rich push message dialog", uniqueAlertId);
-
-        this.getUiDevice().pressBack();
-
-        // Disable push to verify we don't receive push notifications
-        appNavigator.navigateToPreferences();
-        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", false);
-        this.getUiDevice().pressBack();
-
-        // Send a notification that we expect not to receive due to push being disabled
-        uniqueAlertId = pushSenderV3.sendPushMessage();
-
-        AutomatorUtils.openNotificationArea();
-        assertFalse("Received push notification when push is disabled", waitForNotificationToArrive(uniqueAlertId));
-
-        this.getUiDevice().pressBack();
-    }
-
-    /**
-     * Test the setting of an alias and a tag with API v3. Test the sending and receiving
+     * Test the setting of an alias and a tag with APIv3. Test the sending and receiving
      * push messages to a user, alias and tag.
      * @throws Exception
      */
