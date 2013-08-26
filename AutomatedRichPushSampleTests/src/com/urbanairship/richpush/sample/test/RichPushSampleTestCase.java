@@ -81,13 +81,13 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
         // APIv1/v2: Verify that we can send a broadcast push and open in a webview
         String uniqueAlertId = pushSender.sendPushMessage();
-        verifyPushNotification(null, uniqueAlertId);
+        verifyRichPushNotification(null, uniqueAlertId, "API v1 broadcast to webview failed");
 
         // APIv1/v2: Send a broadcast push to main activity
         HashMap<String, String> extras = new HashMap<String, String>();
         extras.put("activity", "home");
         uniqueAlertId = pushSender.sendPushMessage(extras);
-        verifyPushNotification("Rich push message dialog", uniqueAlertId);
+        verifyRichPushNotification("Rich push message dialog", uniqueAlertId, "API v1 broadcast failed to open in main activity");
 
         this.getUiDevice().pressBack();
         appNavigator.navigateToPreferences();
@@ -95,17 +95,17 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         // APIv1/v2: Send Rich Push Message to User Id
         String richPushId = preferences.getPreferenceSummary("USER_ID");
         uniqueAlertId = pushSender.sendRichPushToUser(richPushId);
-        verifyPushNotification(null, uniqueAlertId);
+        verifyRichPushNotification(null, uniqueAlertId, "API v1 unicast to user ID failed");
 
         this.getUiDevice().pressBack();
 
         // APIv3: Broadcast push and open in a webview
         uniqueAlertId = pushSenderV3.sendPushMessage();
-        verifyPushNotification(null, uniqueAlertId);
+        verifyRichPushNotification(null, uniqueAlertId, "API v3 broadcast push failed");
 
         // APIv3: Push to APID
         uniqueAlertId = pushSenderV3.sendPushToApid(apid);
-        verifyPushNotification(null, uniqueAlertId);
+        verifyRichPushNotification(null, uniqueAlertId, "API v3 unicast push failed");
 
         this.getUiDevice().pressBack();
         appNavigator.navigateToPreferences();
@@ -172,11 +172,11 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
         // Send push to alias
         String uniqueAlertId = pushSenderV3.sendPushToAlias(TEST_ALIAS_STRING);
-        verifyPushNotification(null, uniqueAlertId);
+        verifyRichPushNotification(null, uniqueAlertId, "API v3 alias push failed");
 
         // Send push to tag
         uniqueAlertId = pushSenderV3.sendPushToTag(TEST_FIRST_TAG_STRING);
-        verifyPushNotification(null, uniqueAlertId);
+        verifyRichPushNotification(null, uniqueAlertId, "API v3 tag push failed");
     }
 
     /**
@@ -395,16 +395,17 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     }
 
     /**
-     * Verify the notification alert is received.
+     * Verify the rich notification alert is received and can be opened directly to a message.
      * Assert if the notification alert does not exist or the notification failed to display in a webview.
      * @param description The content description string
      * @param uniqueAlertId The string used to identify push messages
+     * @param failureMessage A string to include in the failure message
      * @throws InterruptedException
      * @throws UiObjectNotFoundException
      */
-    private void verifyPushNotification(String description, String uniqueAlertId) throws InterruptedException, UiObjectNotFoundException {
+    private void verifyRichPushNotification(String description, String uniqueAlertId, String failureMessage) throws InterruptedException, UiObjectNotFoundException {
         AutomatorUtils.openNotificationArea();
-        assertTrue("No push notifications to open",  waitForNotificationToArrive(uniqueAlertId));
+        assertTrue(failureMessage + ": No push notifications to open",  waitForNotificationToArrive(uniqueAlertId));
 
         // Wait a second for any messsage retrieval to take place
         Thread.sleep(UI_OBJECTS_WAIT_TIME);
@@ -419,6 +420,6 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         }
 
         UiObject richPushDialog = new UiObject(webViewSelector);
-        assertTrue("Failed to display notification in a webview",  AutomatorUtils.waitForUiObjectsToExist(RICH_PUSH_DIALOG_WAIT_TIME, richPushDialog));
+        assertTrue(failureMessage + ": Failed to display notification in a webview",  AutomatorUtils.waitForUiObjectsToExist(RICH_PUSH_DIALOG_WAIT_TIME, richPushDialog));
     }
 }
