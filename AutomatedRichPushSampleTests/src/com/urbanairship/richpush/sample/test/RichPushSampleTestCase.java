@@ -20,8 +20,8 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
     private static int REGISTRATION_WAIT_TIME = 60000; // 60 seconds
     private static int WINDOW_UPDATE_WAIT_TIME = 5000;  // 5 seconds
-    private static int UI_OBJECTS_WAIT_TIME = 1000;  // 1 second
-    private static int RICH_PUSH_DIALOG_WAIT_TIME = 30000;  // 30 seconds
+    private static int MESSAGE_RETRIEVAL_WAIT_TIME = 5000;  // 5 seconds
+    private static int RICH_PUSH_DIALOG_WAIT_TIME = 20000;  // 20 seconds
     private static int SETTING_PUSH_PREFERENCE_WAIT_TIME = 2000;  // 2 seconds
 
     // Time to wait for notifications to appear in milliseconds.
@@ -407,8 +407,8 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         AutomatorUtils.openNotificationArea();
         assertTrue(failureMessage + ": No push notifications to open",  waitForNotificationToArrive(uniqueAlertId));
 
-        // Wait a second for any messsage retrieval to take place
-        Thread.sleep(UI_OBJECTS_WAIT_TIME);
+        // Wait for any messsage retrieval to take place
+        Thread.sleep(MESSAGE_RETRIEVAL_WAIT_TIME);
 
         UiObject notificationAlert = new UiObject(new UiSelector().textContains(uniqueAlertId));
         notificationAlert.click();
