@@ -328,7 +328,8 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     }
 
     /**
-     * This final test disables push, deleting the APID and unregisters from GCM
+     * This final test disables push, deleting the APID and unregisters from GCM.
+     * This test begins with 'testZ' to ensure it will be the last test to be executed.
      * @throws Exception
      */
     public void testZCleanup () throws Exception {
