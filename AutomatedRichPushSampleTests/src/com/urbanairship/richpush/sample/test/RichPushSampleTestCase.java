@@ -19,6 +19,7 @@ import java.util.HashMap;
 public class RichPushSampleTestCase extends UiAutomatorTestCase {
 
     private static int REGISTRATION_WAIT_TIME = 60000; // 60 seconds
+    private static int UNREGISTER_WAIT_TIME = 10000; // 10 seconds
     private static int WINDOW_UPDATE_WAIT_TIME = 5000;  // 5 seconds
     private static int MESSAGE_RETRIEVAL_WAIT_TIME = 5000;  // 5 seconds
     private static int RICH_PUSH_DIALOG_WAIT_TIME = 20000;  // 20 seconds
@@ -29,7 +30,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     private static final String APP_NAME = "Rich Push Sample";
     private static final String PACKAGE_NAME = "com.urbanairship.richpush.sample";
     private static final String TEST_ALIAS_STRING = AutomatorUtils.generateUniqueAlertId();
-    private static final String TEST_FIRST_TAG_STRING = "TEST_RICH_PUSH_SAMPLE_FIRST_TAG";
+    private static final String TEST_TAG_STRING = "TEST_RICH_PUSH_SAMPLE_TAG";
 
     private RichPushSender pushSender;
     private RichPushSenderApiV3 pushSenderV3;
@@ -158,8 +159,8 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         assertEquals("Failed to set alias string", TEST_ALIAS_STRING, preferences.getPreferenceSummary("SET_ALIAS"));
 
         // Add tag
-        preferences.addTags(TEST_FIRST_TAG_STRING);
-        assertEquals("Failed to display first tag string", TEST_FIRST_TAG_STRING, preferences.getPreferenceSummary("ADD_TAGS"));
+        preferences.addTags(TEST_TAG_STRING);
+        assertEquals("Failed to display tag string", TEST_TAG_STRING, preferences.getPreferenceSummary("ADD_TAGS"));
         this.getUiDevice().pressBack();
 
         // Wait any for push registration to take place
@@ -175,7 +176,7 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         verifyRichPushNotification(null, uniqueAlertId, "API v3 alias push failed");
 
         // Send push to tag
-        uniqueAlertId = pushSenderV3.sendPushToTag(TEST_FIRST_TAG_STRING);
+        uniqueAlertId = pushSenderV3.sendPushToTag(TEST_TAG_STRING);
         verifyRichPushNotification(null, uniqueAlertId, "API v3 tag push failed");
     }
 
@@ -324,6 +325,25 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
         // Make sure the rest of the location preference views are disabled
         assertFalse(preferences.isPreferenceViewEnabled("LOCATION_FOREGROUND_ENABLE"));
         assertFalse(preferences.isPreferenceViewEnabled("LOCATION_BACKGROUND_ENABLE"));
+    }
+
+    /**
+     * This final test disables push, deleting the APID and unregisters from GCM
+     * @throws Exception
+     */
+    public void testZCleanup () throws Exception {
+        // Disable push
+        appNavigator.navigateToPreferences();
+        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", false);
+        this.getUiDevice().pressBack();
+
+        // Wait for any GCM unregistration to take place
+        Thread.sleep(UNREGISTER_WAIT_TIME);
+
+        // Verify unregistration complete by checking apid
+        appNavigator.navigateToPreferences();
+        String apid = preferences.getPreferenceSummary("APID");
+        assertEquals("Failed to delete APID. GCM unregistration failed.", apid, "");
     }
 
     // Helpers
