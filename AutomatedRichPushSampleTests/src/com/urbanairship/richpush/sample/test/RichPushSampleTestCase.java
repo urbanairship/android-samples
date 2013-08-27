@@ -21,11 +21,11 @@ public class RichPushSampleTestCase extends UiAutomatorTestCase {
     private static int REGISTRATION_WAIT_TIME = 60000; // 60 seconds
     private static int WINDOW_UPDATE_WAIT_TIME = 5000;  // 5 seconds
     private static int UI_OBJECTS_WAIT_TIME = 1000;  // 1 second
-    private static int RICH_PUSH_DIALOG_WAIT_TIME = 20000;  // 20 seconds
+    private static int RICH_PUSH_DIALOG_WAIT_TIME = 30000;  // 30 seconds
     private static int SETTING_PUSH_PREFERENCE_WAIT_TIME = 2000;  // 2 seconds
 
     // Time to wait for notifications to appear in milliseconds.
-    private static int NOTIFICATION_WAIT_TIME = 90000; // 90 seconds - push to tags is slower than to user
+    private static int NOTIFICATION_WAIT_TIME = 120000; // 120 seconds - push to tags is slower than to user
     private static final String APP_NAME = "Rich Push Sample";
     private static final String PACKAGE_NAME = "com.urbanairship.richpush.sample";
     private static final String TEST_ALIAS_STRING = AutomatorUtils.generateUniqueAlertId();
