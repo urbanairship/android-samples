@@ -11,7 +11,6 @@ import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.urbanairship.richpush.RichPushMessage;
-import com.urbanairship.richpush.sample.inbox.RichPushMessageAdapter.ViewBinder;
 
 import java.util.ArrayList;
 import java.util.List;

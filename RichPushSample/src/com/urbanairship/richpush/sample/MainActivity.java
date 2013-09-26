@@ -38,8 +38,6 @@ ActionBar.OnNavigationListener {
     ArrayAdapter<String> navAdapter;
     RichPushUser user;
 
-    String pendingMessageId = null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,16 +45,11 @@ ActionBar.OnNavigationListener {
         this.configureActionBar();
 
         this.user = RichPushManager.shared().getRichPushUser();
-
-        // If we have a message id and its the first create, set the pending message id if available
-        if (savedInstanceState == null) {
-            pendingMessageId = getIntent().getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
-        }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        pendingMessageId = intent.getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
+        setIntent(intent);
     }
 
     @Override
@@ -81,9 +74,10 @@ ActionBar.OnNavigationListener {
         setNavigationToMainActivity();
 
         // Show a message dialog if the pending message id is not null
+        String pendingMessageId = getIntent().getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
         if (!UAStringUtil.isEmpty(pendingMessageId)) {
+            getIntent().removeExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
             showRichPushMessage(pendingMessageId);
-            pendingMessageId = null;
         }
     }
 
