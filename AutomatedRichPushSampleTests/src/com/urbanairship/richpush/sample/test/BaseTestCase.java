@@ -17,7 +17,7 @@ import com.urbanairship.automatorutils.RichPushSenderApiV3;
  */
 public class BaseTestCase extends UiAutomatorTestCase {
 
-    static int REGISTRATION_WAIT_TIME = 30000; // 60 seconds
+    static int REGISTRATION_WAIT_TIME = 30000; // 30 seconds
     static int WINDOW_UPDATE_WAIT_TIME = 5000;  // 5 seconds
     static int MESSAGE_RETRIEVAL_WAIT_TIME = 5000;  // 5 seconds
     static int RICH_PUSH_DIALOG_WAIT_TIME = 20000;  // 20 seconds
@@ -55,6 +55,9 @@ public class BaseTestCase extends UiAutomatorTestCase {
         navigateToAppHome();
     }
 
+    /**
+     * Cleanup - delete APID and unregister from GCM
+     */
     @Override
     public void tearDown() throws Exception {
         // Disable push
