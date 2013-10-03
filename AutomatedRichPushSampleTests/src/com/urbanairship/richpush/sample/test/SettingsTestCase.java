@@ -102,5 +102,6 @@ public class SettingsTestCase extends BaseTestCase {
         String uniqueAlertId = pushSenderV3.sendPushMessage();
         AutomatorUtils.openNotificationArea();
         assertFalse("Received push notification when push is disabled", waitForNotificationToArrive(uniqueAlertId));
+        navigateBack();
     }
 }
