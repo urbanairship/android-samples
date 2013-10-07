@@ -8,8 +8,7 @@ import com.urbanairship.automatorutils.AutomatorUtils;
 import java.util.List;
 
 /**
- * Automated testing of the Rich Push Sample application
- *
+ * Tests the Inbox functionality
  */
 public class InboxTestCase extends BaseTestCase {
 
@@ -41,7 +40,7 @@ public class InboxTestCase extends BaseTestCase {
 
         // Delete any previous messages
         for (String message : inboxClient.getMessageIds()) {
-            inboxClient.deleteMessag(message);
+            inboxClient.deleteMessage(message);
         }
 
         AutomatorUtils.openNotificationArea();
@@ -134,7 +133,7 @@ public class InboxTestCase extends BaseTestCase {
         assertEquals(getInboxCount(), messageIds.size());
 
         // Delete one from the server
-        inboxClient.deleteMessag(messageIds.remove(0));
+        inboxClient.deleteMessage(messageIds.remove(0));
 
         // Verify it deleted in the inbox
         refreshInbox();

@@ -3,8 +3,7 @@ package com.urbanairship.richpush.sample.test;
 import com.urbanairship.automatorutils.AutomatorUtils;
 
 /**
- * Automated testing of the Rich Push Sample application
- *
+ * Test the Rich Push sample applications preferences
  */
 public class SettingsTestCase extends BaseTestCase {
     /**

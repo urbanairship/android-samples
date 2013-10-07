@@ -15,6 +15,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Client to perform Rich Push API requests
+ */
 public class RichPushInboxClient {
 
     private final Header credentialHeader;
@@ -22,13 +25,24 @@ public class RichPushInboxClient {
     private static final String MESSAGES_URL = "https://device-api.urbanairship.com/api/user/%s/messages";
     private static final String MESSAGE_URL = "https://device-api.urbanairship.com/api/user/%s/messages/message/%s/";
 
-    public RichPushInboxClient(String user, String password, String userId) {
-        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(user, password);
+    /**
+     * Constructor for RichPushInboxClient
+     * @param user The user name for the inbox
+     * @param password The password for the inbox
+     * @param userId The user id for the inbox
+     */
+    public RichPushInboxClient(String userName, String password, String userId) {
+        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(userName, password);
         credentialHeader = BasicScheme.authenticate(credentials, "UTF-8", false);
 
         this.userId = userId;
     }
 
+    /**
+     * Gets the entire list of message ids
+     * @return A list of message ids
+     * @throws Exception
+     */
     public List<String> getMessageIds() throws Exception {
         List<String> messageIds = new ArrayList<String>();
 
@@ -45,7 +59,12 @@ public class RichPushInboxClient {
         return messageIds;
     }
 
-    public void deleteMessag(String messageId) throws Exception {
+    /**
+     * Deletes a message from the inbox
+     * @param messageId The id of the message to delete
+     * @throws Exception
+     */
+    public void deleteMessage(String messageId) throws Exception {
         URL url = new URL(String.format(MESSAGE_URL, userId, messageId));
 
         HttpURLConnection conn = null;
@@ -65,6 +84,12 @@ public class RichPushInboxClient {
         }
     }
 
+    /**
+     * Performs a message list request
+     * @return The response as a JSONObject, or null if the request failed.
+     * @throws IOException
+     * @throws JSONException
+     */
     private JSONObject getMessageListRequest() throws IOException, JSONException {
         URL url = new URL(String.format(MESSAGES_URL, userId));
 

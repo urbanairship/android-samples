@@ -12,7 +12,7 @@ import com.urbanairship.automatorutils.RichPushSender;
 import com.urbanairship.automatorutils.RichPushSenderApiV3;
 
 /**
- * Automated testing of the Rich Push Sample application
+ * Base test case for automated testing of the Rich Push Sample application
  *
  */
 public class BaseTestCase extends UiAutomatorTestCase {
