@@ -34,15 +34,10 @@ import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
-import com.urbanairship.richpush.sample.RichNotificationBuilder;
 import com.urbanairship.richpush.sample.MainActivity;
 import com.urbanairship.richpush.sample.R;
+import com.urbanairship.richpush.sample.RichNotificationBuilder;
 import com.urbanairship.richpush.sample.RichPushApplication;
-import com.urbanairship.richpush.sample.R.drawable;
-import com.urbanairship.richpush.sample.R.id;
-import com.urbanairship.richpush.sample.R.layout;
-import com.urbanairship.richpush.sample.R.menu;
-import com.urbanairship.richpush.sample.R.string;
 import com.urbanairship.richpush.sample.preference.PushPreferencesActivity;
 import com.urbanairship.richpush.sample.view.CustomSlidingPaneLayout;
 import com.urbanairship.richpush.sample.view.CustomViewPager;
@@ -76,7 +71,6 @@ SlidingPaneLayout.PanelSlideListener {
     private RichPushInbox richPushInbox;
     private ActionBar actionBar;
 
-    private String pendingMessageId;
     private List<RichPushMessage> messages;
     private CustomSlidingPaneLayout slidingPaneLayout;
 
@@ -130,16 +124,11 @@ SlidingPaneLayout.PanelSlideListener {
                 }
             });
         }
-
-        // First create, try to show any messages from the intent
-        if (savedInstanceState == null) {
-            this.setPendingMessageIdFromIntent(getIntent());
-        }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        this.setPendingMessageIdFromIntent(intent);
+        this.setIntent(intent);
     }
 
     @Override
@@ -252,7 +241,7 @@ SlidingPaneLayout.PanelSlideListener {
         }
         return true;
     }
-    
+
     @Override
     @SuppressLint("NewApi")
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -401,27 +390,16 @@ SlidingPaneLayout.PanelSlideListener {
     }
 
     /**
-     * Sets the pending message by looking for an id in the intent's extra
-     * with key <code>RichPushApplication.MESSAGE_ID_RECEIVED_KEY</code>
-     * 
-     * @param intent Intent to look for a rich push message id
-     */
-    private void setPendingMessageIdFromIntent(Intent intent) {
-        pendingMessageId = intent.getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
-
-        if (!UAStringUtil.isEmpty(pendingMessageId)) {
-            Logger.debug("Received message id " + pendingMessageId);
-        }
-    }
-
-    /**
      * Tries to show a message if the pendingMessageId is set.
      * Clears the pendingMessageId after.
      */
     private void showPendingMessageId() {
+        String pendingMessageId = getIntent().
+                getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
+
         if (!UAStringUtil.isEmpty(pendingMessageId)) {
+            getIntent().removeExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
             showMessage(pendingMessageId);
-            pendingMessageId = null;
         }
     }
 
