@@ -14,8 +14,6 @@ import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.R;
-import com.urbanairship.richpush.sample.R.id;
-import com.urbanairship.richpush.sample.R.layout;
 import com.urbanairship.richpush.sample.widget.RichPushWidgetUtils;
 
 import java.util.List;
