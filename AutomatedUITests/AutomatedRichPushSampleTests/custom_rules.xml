@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="custom_rules">
+    
+    <property name="utils.dir" value="./android-automator-utils/AndroidAutomatorUtils/" />
+    
+    <property name="build.dir" value="./bin/" />
+    <property name="src.dir" value="./src/" />
+    <property name="libs.dir" value="./libs/" />
+
+    
+    <path id="classpath">
+        <fileset dir="${build.dir}" includes="*.jar"/>
+        <fileset dir="${libs.dir}" includes="*.jar"/>
+        <fileset dir="${sdk.dir}/platforms/android-17/" includes="*.jar"/>
+    </path>
+    
+     <!-- Converts this project's .class files into .dex files -->
+    <target name="-dex" depends="compile, -post-compile">
+        <dex executable="${dx}"
+                output="${intermediate.dex.file}"
+                nolocals="@{nolocals}"
+                verbose="${verbose}">
+            <path path="${out.classes.absolute.dir}"/>
+            <path path="${libs.dir}"/>
+        </dex>
+    </target>
+
+    <target name="automator-util-lib">
+        <ant dir="${utils.dir}" target="build" inheritAll="false" useNativeBasedir="true" />
+        <mkdir dir="${libs.dir}" />
+        <copy file="${utils.dir}bin/AndroidAutomatorUtils.jar" todir="${libs.dir}" />
+    </target>
+
+    <target name="-pre-compile" depends="automator-util-lib">
+        <echo>pre-compiling</echo>
+        <mkdir dir="${build.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${build.dir}/classes" debug="true" includeantruntime="false">
+            <classpath refid="classpath" />
+        </javac>
+    </target>
+    
+</project>
