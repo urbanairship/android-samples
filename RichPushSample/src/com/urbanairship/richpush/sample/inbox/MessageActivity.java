@@ -7,9 +7,9 @@ package com.urbanairship.richpush.sample.inbox;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
@@ -22,7 +22,7 @@ import java.util.List;
  * Manages the message view pager and display messages
  *
  */
-public class MessageActivity extends SherlockFragmentActivity {
+public class MessageActivity extends ActionBarActivity {
 
     public static final String EXTRA_MESSAGE_ID_KEY = "com.urbanairship.richpush.sample.EXTRA_MESSAGE_ID_KEY";
 

@@ -15,7 +15,12 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SlidingPaneLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver;
@@ -24,11 +29,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.urbanairship.Logger;
 import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushInbox;
@@ -51,7 +51,7 @@ import java.util.List;
  * Activity that manages the inbox.
  * On a tablet it also manages the message view pager.
  */
-public class InboxActivity extends SherlockFragmentActivity implements
+public class InboxActivity extends ActionBarActivity implements
 InboxFragment.OnMessageListener,
 ActionBar.OnNavigationListener,
 ActionMode.Callback,
@@ -205,7 +205,7 @@ SlidingPaneLayout.PanelSlideListener {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.inbox_menu, menu);
+        getMenuInflater().inflate(R.menu.inbox_menu, menu);
         return true;
     }
 
@@ -332,8 +332,6 @@ SlidingPaneLayout.PanelSlideListener {
         case R.id.delete:
             richPushInbox.deleteMessages(new HashSet<String>(inbox.getSelectedMessages()));
             break;
-        case R.id.abs__action_mode_close_button:
-            break;
         default:
             return false;
         }
@@ -345,8 +343,10 @@ SlidingPaneLayout.PanelSlideListener {
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         Logger.debug("onDestroyActionMode");
-        actionMode = null;
-        inbox.clearSelection();
+        if (actionMode != null) {
+            actionMode = null;
+            inbox.clearSelection();
+        }
     }
 
     @Override
@@ -376,7 +376,7 @@ SlidingPaneLayout.PanelSlideListener {
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-        this.navAdapter = new ArrayAdapter<String>(this, R.layout.sherlock_spinner_dropdown_item,
+        this.navAdapter = new ArrayAdapter<String>(this, android.support.v7.appcompat.R.layout.support_simple_spinner_dropdown_item,
                 RichPushApplication.navList);
         actionBar.setListNavigationCallbacks(this.navAdapter, this);
     }
@@ -441,7 +441,7 @@ SlidingPaneLayout.PanelSlideListener {
             actionMode.finish();
             return;
         } else if (actionMode == null && !checkedIds.isEmpty()) {
-            actionMode = this.startActionMode(this);
+            actionMode = this.startSupportActionMode(this);
         }
     }
 

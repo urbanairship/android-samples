@@ -4,21 +4,18 @@
 
 package com.urbanairship.richpush.sample.preference;
 
+import android.app.ActionBar;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.urbanairship.AirshipConfigOptions;
 import com.urbanairship.UAirship;
 import com.urbanairship.preference.UAPreferenceAdapter;
 import com.urbanairship.richpush.sample.R;
-import com.urbanairship.richpush.sample.R.xml;
 
-// ActionBarSherlock does not support the new PreferenceFragment, so we fall back to using
-// deprecated methods. See https://github.com/JakeWharton/ActionBarSherlock/issues/411
-@SuppressWarnings("deprecation")
-public class PushPreferencesActivity extends SherlockPreferenceActivity {
+public class PushPreferencesActivity extends PreferenceActivity {
 
     private UAPreferenceAdapter preferenceAdapter;
 
@@ -26,11 +23,16 @@ public class PushPreferencesActivity extends SherlockPreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Set the actionBar to have up navigation
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayOptions(
-                    ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
+        // Set the actionBar to have up navigation if HoneyComb or higher.
+        // PreferenceFragment or PreferenceActivity is not available in the support
+        // library.  ActionBarSherlock provides a PreferenceActivity if you absolutely
+        // need an action bar in the preferences on older devices.
+        if (Build.VERSION.SDK_INT >= 11) {
+            ActionBar actionBar = getActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayOptions(
+                        ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
+            }
         }
 
 

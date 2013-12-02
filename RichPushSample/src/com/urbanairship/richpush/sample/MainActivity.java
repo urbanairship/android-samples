@@ -6,12 +6,12 @@ package com.urbanairship.richpush.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushUser;
@@ -19,6 +19,7 @@ import com.urbanairship.richpush.sample.inbox.InboxActivity;
 import com.urbanairship.richpush.sample.inbox.RichPushMessageDialogFragment;
 import com.urbanairship.richpush.sample.preference.PushPreferencesActivity;
 import com.urbanairship.util.UAStringUtil;
+
 
 /**
  * An empty activity used for the home.
@@ -28,7 +29,7 @@ import com.urbanairship.util.UAStringUtil;
  * the message in a dialog fragment.
  *
  */
-public class MainActivity extends SherlockFragmentActivity implements
+public class MainActivity extends ActionBarActivity implements
 ActionBar.OnNavigationListener {
     protected static final String TAG = "MainActivity";
 
@@ -83,7 +84,7 @@ ActionBar.OnNavigationListener {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.getSupportMenuInflater().inflate(R.menu.main_menu, menu);
+        this.getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
@@ -131,7 +132,7 @@ ActionBar.OnNavigationListener {
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-        this.navAdapter = new ArrayAdapter<String>(this, R.layout.sherlock_spinner_dropdown_item,
+        this.navAdapter = new ArrayAdapter<String>(this, android.support.v7.appcompat.R.layout.support_simple_spinner_dropdown_item,
                 RichPushApplication.navList);
         actionBar.setListNavigationCallbacks(this.navAdapter, this);
     }

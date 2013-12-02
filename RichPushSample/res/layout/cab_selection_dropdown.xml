@@ -5,7 +5,7 @@
     
    <Button 
 	    android:id="@+id/selection_button"
-	    style="@style/Widget.Sherlock.Spinner.DropDown.ActionBar"
+	    style="@style/Widget.AppCompat.Spinner.DropDown.ActionBar"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content" />
 

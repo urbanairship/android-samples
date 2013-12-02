@@ -5,11 +5,11 @@
 package com.urbanairship.richpush.sample.inbox;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.urbanairship.Logger;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
@@ -18,7 +18,7 @@ import com.urbanairship.widget.RichPushMessageView;
 /**
  * Fragment that displays a rich push message in a RichPushMessageView
  */
-public class MessageFragment extends SherlockFragment {
+public class MessageFragment extends Fragment {
 
     private static final String MESSAGE_ID_KEY = "com.urbanairship.richpush.URL_KEY";
     private RichPushMessageView browser;

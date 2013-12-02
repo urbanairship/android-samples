@@ -6,10 +6,10 @@ package com.urbanairship.richpush.sample.inbox;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
 
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.urbanairship.richpush.RichPushMessage;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.List;
  * A list fragment that shows rich push messages.
  *
  */
-public abstract class InboxFragment extends SherlockListFragment {
+public abstract class InboxFragment extends ListFragment {
     public static final String EMPTY_COLUMN_NAME = "";
     public static final String ROW_LAYOUT_ID_KEY = "row_layout_id";
     public static final String EMPTY_LIST_STRING_KEY = "empty_list_string";

@@ -11,7 +11,7 @@
         android:id="@+id/widget_header"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        style="@style/Widget.Sherlock.ActionBar"
+        style="@style/Widget.AppCompat.ActionBar"
         android:orientation="horizontal">
         
         <ImageView
