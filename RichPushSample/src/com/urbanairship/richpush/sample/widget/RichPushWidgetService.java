@@ -4,8 +4,11 @@
 
 package com.urbanairship.richpush.sample.widget;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -21,6 +24,7 @@ import java.util.List;
 /**
  * This is the service that provides the factory to be bound to the collection service.
  */
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class RichPushWidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -31,6 +35,7 @@ public class RichPushWidgetService extends RemoteViewsService {
 /**
  * This is the factory that will provide data to the collection widget.
  */
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private Context context;
 
@@ -54,6 +59,7 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     }
 
     @Override
+    @SuppressLint("NewApi")
     public RemoteViews getViewAt(int position) {
 
         List<RichPushMessage> messages = RichPushManager.shared().getRichPushUser().getInbox().getMessages();

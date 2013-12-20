@@ -4,6 +4,7 @@
 
 package com.urbanairship.richpush.sample.preference;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ public class PushPreferencesActivity extends PreferenceActivity {
     private UAPreferenceAdapter preferenceAdapter;
 
     @Override
+    @SuppressLint("NewApi")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -34,6 +36,8 @@ public class PushPreferencesActivity extends PreferenceActivity {
                         ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
             }
         }
+
+
 
 
         AirshipConfigOptions options = UAirship.shared().getAirshipConfigOptions();

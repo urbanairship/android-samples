@@ -5,14 +5,14 @@
     android:padding="6dp" 
     android:contentDescription="Inbox message">
 
-    <LinearLayout
+    <View
         android:id="@+id/unread_indicator"
         android:layout_width="6dp"
         android:layout_height="?android:attr/listPreferredItemHeight"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:focusable="false"
-        android:focusableInTouchMode="false" />
+        android:focusableInTouchMode="false"/>
     
     <CheckBox
         android:id="@+id/message_checkbox"
