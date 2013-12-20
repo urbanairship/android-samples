@@ -4,6 +4,7 @@
 
 package com.urbanairship.richpush.sample.widget;
 
+import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
@@ -45,11 +46,12 @@ public class RichPushWidgetProvider extends AppWidgetProvider {
         super.onReceive(context, intent);
     }
 
+    @SuppressLint("NewApi")
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // Update each of the widgets with the remote adapter
         for (int id : appWidgetIds) {
-            RemoteViews layout = null;
+            RemoteViews layout;
 
             // API 16 and above supports reconfigurable layouts
             if (Build.VERSION.SDK_INT >= 16) {
@@ -78,6 +80,7 @@ public class RichPushWidgetProvider extends AppWidgetProvider {
      * Adds a runnable to update the widgets in the worker queue
      * @param context used for creating layouts
      */
+    @SuppressLint("NewApi")
     private void scheduleUpdate(final Context context) {
         workerQueue.removeMessages(0);
         workerQueue.post(new Runnable() {

@@ -4,6 +4,7 @@
 
 package com.urbanairship.richpush.sample;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.Notification.InboxStyle;
 import android.app.NotificationManager;
@@ -11,6 +12,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.text.Html;
 
 import com.urbanairship.UAirship;
@@ -30,6 +32,7 @@ import java.util.Map;
  * fall back to the default behavior.
  * 
  */
+@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class RichNotificationBuilder extends BasicPushNotificationBuilder {
 
     private static final int EXTRA_MESSAGES_TO_SHOW = 2;

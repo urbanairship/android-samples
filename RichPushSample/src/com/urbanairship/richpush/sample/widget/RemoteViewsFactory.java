@@ -46,7 +46,6 @@ class RemoteViewsFactory {
      * 
      * @param context Application context
      * @param appWidgetId Id of the widget
-     * @param options Widgets options
      * @return RemoteViews for the layout
      */
     static RemoteViews createLayout(Context context, int appWidgetId) {
@@ -100,8 +99,7 @@ class RemoteViewsFactory {
 
         // Update the header for the current unread message count
         int count = RichPushManager.shared().getRichPushUser().getInbox().getUnreadCount();
-        String inboxName = context.getString(R.string.inbox_name);
-        String header = context.getString(R.string.header_format_string, count, inboxName);
+        String header = context.getString(R.string.header_format_string, count);
 
         remoteViews.setTextViewText(R.id.widget_header_text, header);
 
