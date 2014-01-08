@@ -14,7 +14,14 @@ repositories {
 }
 
 dependencies {
+    // Include any jars in the libs directory
     compile fileTree(dir: 'libs', include: '*.jar')
+
+    // Compile the UrbanAirship library from source
+    // if its available.  Used for library development only.
+    if (project.hasProperty('librarySourceProject')) {
+        compile project(librarySourceProject)
+    }
 }
 
 android {
