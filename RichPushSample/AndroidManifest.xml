@@ -5,7 +5,7 @@
       android:versionName="1.0">
 
     <!-- minSdkVersion sets runtime compatibility ("will run on API level 7") -->
-    <!-- targetSdkVersion should be set to the latest version tested, to disable compatibility modes 
+    <!-- targetSdkVersion should be set to the latest version tested, to disable compatibility modes
             ("was tested with API level 15 features") -->
     <uses-sdk android:minSdkVersion="7"
               android:targetSdkVersion="17"/>
@@ -22,9 +22,9 @@
     <permission android:name="com.urbanairship.richpush.sample.permission.C2D_MESSAGE" android:protectionLevel="signature" />
     <uses-permission android:name="com.urbanairship.richpush.sample.permission.C2D_MESSAGE" />
     <!-- The two elements above ensure that only this application can receive the messages and registration result -->
-    
+
     <!--  END Urban Airship Required Permissions -->
-    
+
     <!-- OPTIONAL Urban Airship Settings -->
     <!-- REQUIRED FOR LOCATION -->
     <!-- Use ACCESS_COARSE_LOCATION if GPS access is not necessary -->
@@ -35,22 +35,13 @@
     <!--  <uses-permission android:name="android.permission.BROADCAST_STICKY" /> -->
 
     <!-- END OPTIONAL Urban Airship Settings -->
-    
-    
-    <!-- REQUIRED FOR LOCATION -->
-    <!-- Use ACCESS_COARSE_LOCATION if GPS access is not necessary -->
-    <!-- uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /-->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!--  REQUIRED for wifi wake functionality -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application android:label="@string/app_name"
         android:icon="@drawable/ua_launcher"
         android:name="com.urbanairship.richpush.sample.RichPushApplication"
         android:theme="@style/Theme.AppCompat"
         android:debuggable="true">
-        
+
         <!-- OPTIONAL (for the inbox widget) -->
         <receiver android:name=".widget.RichPushWidgetProvider">
             <intent-filter>
@@ -77,36 +68,36 @@
         <activity android:name="com.urbanairship.richpush.sample.inbox.InboxActivity" />
         <activity android:name="com.urbanairship.richpush.sample.preference.PushPreferencesActivity" />
         <activity android:name="com.urbanairship.richpush.sample.inbox.MessageActivity" />
-        
+
         <!-- REQUIRED for Urban Airship GCM-->
         <receiver android:name="com.urbanairship.CoreReceiver" />
-        
-        <receiver android:name="com.urbanairship.push.GCMPushReceiver" android:permission="com.google.android.c2dm.permission.SEND">        
+
+        <receiver android:name="com.urbanairship.push.GCMPushReceiver" android:permission="com.google.android.c2dm.permission.SEND">
           <intent-filter>
               <action android:name="com.google.android.c2dm.intent.RECEIVE" />
               <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-              
+
               <!-- MODIFICATION REQUIRED - Use your package name as the category -->
               <category android:name="com.urbanairship.richpush.sample" />
           </intent-filter>
         </receiver>
-        
+
         <service android:name="com.urbanairship.push.PushService" android:label="Push Notification Service"/>
         <service android:name="com.urbanairship.analytics.EventService" android:label="Event Service"/>
-        
+
 
         <!-- This is required for persisting preferences related to push and location -->
         <provider android:name="com.urbanairship.UrbanAirshipProvider"
             android:authorities="com.urbanairship.richpush.sample.urbanairship.provider"
             android:exported="true"
             android:multiprocess="true" />
-        
+
         <!-- REQUIRED for Rich Push -->
         <service android:name="com.urbanairship.richpush.RichPushUpdateService"/>
-        
+
         <!-- END OF REQUIRED ITEMS -->
-        
-        
+
+
         <!-- OPTIONAL (for segments support) -->
         <service android:name="com.urbanairship.location.LocationService" android:label="Segments Service"/>
 
@@ -118,6 +109,6 @@
                 <action android:name="com.urbanairship.push.PushManager.ACTION_NOTIFICATION_OPENED" />
             </intent-filter>
         </receiver>
-        
+
     </application>
-</manifest> 
+</manifest>
