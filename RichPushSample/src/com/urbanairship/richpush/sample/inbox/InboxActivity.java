@@ -464,11 +464,6 @@ SlidingPaneLayout.PanelSlideListener {
     }
 
     @Override
-    public void onRetrieveMessage(boolean success, String messageId) {
-        // no-op
-    }
-
-    @Override
     public void onUpdateInbox() {
         updateRichPushMessages();
     }
