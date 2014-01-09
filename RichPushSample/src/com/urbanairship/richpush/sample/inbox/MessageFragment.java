@@ -4,6 +4,8 @@
 
 package com.urbanairship.richpush.sample.inbox;
 
+import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -54,6 +56,26 @@ public class MessageFragment extends Fragment {
             browser.loadRichPushMessage(message);
         } else {
             Logger.info("Couldn't retrieve message for ID: " + messageId);
+        }
+    }
+
+    @SuppressLint("NewApi")
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (Build.VERSION.SDK_INT >= 11) {
+            browser.onPause();
+        }
+    }
+
+    @SuppressLint("NewApi")
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (Build.VERSION.SDK_INT >= 11) {
+            browser.onResume();
         }
     }
 }
