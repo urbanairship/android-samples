@@ -20,6 +20,11 @@
     <uses-permission android:name="com.urbanairship.push.sample.permission.C2D_MESSAGE" />
     <!-- The two elements above ensure that only this application can receive the messages and registration result -->
 
+    <!-- MODIFICATION REQUIRED - Replace "com.urbanairship.push.sample" with your package name -->
+    <permission android:name="com.urbanairship.push.sample.permission.UA_DATA" android:protectionLevel="signature" />
+    <uses-permission android:name="com.urbanairship.push.sample.permission.UA_DATA" />
+    <!-- The two elements above ensure that only this application has access to the Urban Airship provider -->
+
 	<!--  END Urban Airship Required Permissions -->
 
     <!-- OPTIONAL Urban Airship Settings -->
@@ -34,12 +39,12 @@
     <!-- END OPTIONAL Urban Airship Settings -->
 
     <application android:label="@string/app_name"
-    	android:icon="@drawable/icon"
-    	android:name="com.urbanairship.push.sample.MyApplication"
-        android:debuggable="true"
-    	android:allowClearUserData="true"
-    	android:enabled="true">
-
+                 android:icon="@drawable/icon"
+                 android:name="com.urbanairship.push.sample.MyApplication"
+                 android:debuggable="true"
+                 android:allowClearUserData="true"
+                 android:enabled="true">
+        
         <activity android:name="com.urbanairship.push.sample.MainActivity"
                   android:label="@string/app_name"
                   android:launchMode="singleTask">
@@ -76,10 +81,12 @@
         <service android:name="com.urbanairship.analytics.EventService" android:label="Event Service"/>
 
         <!-- This is required for persisting preferences related to push and location -->
+        <!-- MODIFICATION REQUIRED - Replace "com.urbanairship.push.sample" with your package name -->
         <provider android:name="com.urbanairship.UrbanAirshipProvider"
-            android:authorities="com.urbanairship.push.sample.urbanairship.provider"
-            android:exported="false"
-            android:multiprocess="true" />
+                  android:authorities="com.urbanairship.push.sample.urbanairship.provider"
+                  android:permission="com.urbanairship.push.sample.permission.UA_DATA"
+                  android:exported="true"
+                  android:multiprocess="true" />
         <!-- END OF REQUIRED ITEMS -->
 
 
