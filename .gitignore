@@ -1,6 +1,6 @@
 *.DS_Store
 *.orig
-*/bin/*
+bin/
 *.class
 */jar/*
 urbanairship-lib-*.jar
