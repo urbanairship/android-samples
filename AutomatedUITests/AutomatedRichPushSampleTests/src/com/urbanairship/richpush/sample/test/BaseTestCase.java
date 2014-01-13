@@ -230,7 +230,10 @@ public class BaseTestCase extends UiAutomatorTestCase {
      * @throws InterruptedException
      */
     void navigateToPreferences() throws UiObjectNotFoundException, InterruptedException {
-        UiObject preferenceButton = new UiObject(new UiSelector().description("Preferences"));
+        UiObject moreOptionsButton = new UiObject(new UiSelector().description("More options"));
+        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, moreOptionsButton);
+        moreOptionsButton.click();
+        UiObject preferenceButton = new UiObject(new UiSelector().text("Preferences"));
         AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, preferenceButton);
         preferenceButton.click();
 
