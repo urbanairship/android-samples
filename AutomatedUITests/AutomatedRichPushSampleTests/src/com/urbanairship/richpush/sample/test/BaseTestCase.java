@@ -175,10 +175,21 @@ public class BaseTestCase extends UiAutomatorTestCase {
      * @throws InterruptedException
      */
     boolean waitForNotificationToArrive(String uniqueAlertId) throws InterruptedException {
+        return waitForNotificationToArrive(uniqueAlertId, NOTIFICATION_WAIT_TIME);
+    }
+
+    /**
+     * Wait for the notification alert to arrive by polling the notification area
+     * @param uniqueAlertId The string used to identify push messages
+     * @param waitTime Time to wait for the notification to arrive
+     * @return <code>true</code> if a notification exists, otherwise <code>false</code>
+     * @throws InterruptedException
+     */
+    boolean waitForNotificationToArrive(String uniqueAlertId, int waitTime) throws InterruptedException {
         // Verify the alert notification with the uniqueAlertId
         UiObject notificationAlert = new UiObject(new UiSelector().textContains(uniqueAlertId));
 
-        return AutomatorUtils.waitForUiObjectsToExist(NOTIFICATION_WAIT_TIME, notificationAlert);
+        return AutomatorUtils.waitForUiObjectsToExist(waitTime, notificationAlert);
     }
 
     /**
