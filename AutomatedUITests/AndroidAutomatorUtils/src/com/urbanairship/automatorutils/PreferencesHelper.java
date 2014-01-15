@@ -16,7 +16,7 @@ import com.android.uiautomator.core.UiSelector;
 public class PreferencesHelper {
 
     private static int KEYBOARD_WAIT_TIME = 3000;  // 3 seconds
-    private static int UI_OBJECTS_WAIT_TIME = 1000;  // 1 second
+    private static int UI_OBJECTS_WAIT_TIME = 2000;  // 2 seconds
     private static int SET_ALIAS_TEXT_WAIT_TIME = 3000;  // 3 seconds
 
     private UiSelector getPreferenceSummarySelector(String description) {

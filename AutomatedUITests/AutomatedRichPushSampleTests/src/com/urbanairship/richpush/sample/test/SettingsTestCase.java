@@ -6,6 +6,7 @@ import com.urbanairship.automatorutils.AutomatorUtils;
  * Test the Rich Push sample applications preferences
  */
 public class SettingsTestCase extends BaseTestCase {
+    private static final int DISABLED_PUSH_WAIT_TIME = 30000; // 30 seconds
     /**
      * Test the setting of all push and location preferences
      * @throws Exception
@@ -100,7 +101,8 @@ public class SettingsTestCase extends BaseTestCase {
 
         String uniqueAlertId = pushSenderV3.sendPushMessage();
         AutomatorUtils.openNotificationArea();
-        assertFalse("Received push notification when push is disabled", waitForNotificationToArrive(uniqueAlertId));
+        assertFalse("Received push notification when push is disabled",
+                waitForNotificationToArrive(uniqueAlertId, DISABLED_PUSH_WAIT_TIME));
         navigateBack();
     }
 }

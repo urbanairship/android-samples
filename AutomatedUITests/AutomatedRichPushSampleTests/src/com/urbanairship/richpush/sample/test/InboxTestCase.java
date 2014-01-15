@@ -143,8 +143,11 @@ public class InboxTestCase extends BaseTestCase {
 
     // Helpers
 
-    void refreshInbox() throws UiObjectNotFoundException {
-        new UiObject(new UiSelector().description("Refresh")).click();
+    void refreshInbox() throws UiObjectNotFoundException, InterruptedException {
+        UiObject moreOptionsButton = new UiObject(new UiSelector().description("More options"));
+        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, moreOptionsButton);
+        moreOptionsButton.click();
+        new UiObject(new UiSelector().text("Refresh")).click();
         getUiDevice().waitForWindowUpdate(PACKAGE_NAME, 5000);
     }
 
