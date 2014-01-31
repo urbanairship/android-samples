@@ -4,9 +4,9 @@
     <PreferenceCategory 
         android:title="@string/advanced_preference_category_title" >
         
-	    <com.urbanairship.preference.ApidPreference
+	    <com.urbanairship.preference.ChannelIdPreference
 	        android:persistent="false"
-	        android:title="@string/apid_preference_title" />    
+	        android:title="@string/channel_id_preference_title" />
 
 	    <com.urbanairship.preference.UserIdPreference
 	        android:persistent="false"

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Urban Airship and Contributors
+ * Copyright 2014 Urban Airship and Contributors
  */
 
 package com.urbanairship.richpush.sample.preference;
@@ -37,15 +37,10 @@ public class PushPreferencesActivity extends PreferenceActivity {
             }
         }
 
-
-
-
         AirshipConfigOptions options = UAirship.shared().getAirshipConfigOptions();
 
-        // Only add the push preferences if the pushServiceEnabled is true
-        if (options.pushServiceEnabled) {
-            this.addPreferencesFromResource(R.xml.push_preferences);
-        }
+        // Display the push preferences
+        this.addPreferencesFromResource(R.xml.push_preferences);
 
         // Only add the location preferences if the locationServiceEnabled is true
         if (options.locationOptions.locationServiceEnabled) {
@@ -53,9 +48,7 @@ public class PushPreferencesActivity extends PreferenceActivity {
         }
 
         // Display the advanced settings
-        if (options.pushServiceEnabled) {
-            this.addPreferencesFromResource(R.xml.advanced_preferences);
-        }
+        this.addPreferencesFromResource(R.xml.advanced_preferences);
 
         // Creates the UAPreferenceAdapter with the entire preference screen
         preferenceAdapter = new UAPreferenceAdapter(getPreferenceScreen());

@@ -9,8 +9,6 @@ transport = gcm
 gcmSender = Your GCM sender ID is your Google API project number (required for GCM)
 inProduction = false
 
-richPushEnabled = true
-
 # LogLevel is "VERBOSE", "DEBUG", "INFO", "WARN", "ERROR" or "ASSERT"
 developmentLogLevel = DEBUG
 productionLogLevel = ERROR

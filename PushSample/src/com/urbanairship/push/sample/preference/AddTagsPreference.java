@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Urban Airship and Contributors
+ * Copyright 2014 Urban Airship and Contributors
  */
 
 package com.urbanairship.push.sample.preference;

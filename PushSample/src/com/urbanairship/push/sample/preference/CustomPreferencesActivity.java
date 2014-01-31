@@ -1,5 +1,5 @@
 /*
-Copyright 2009-2011 Urban Airship Inc. All rights reserved.
+Copyright 2009-2014 Urban Airship Inc. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -42,8 +42,6 @@ import com.urbanairship.location.UALocationManager;
 import com.urbanairship.push.PushManager;
 import com.urbanairship.push.PushPreferences;
 import com.urbanairship.push.sample.R;
-import com.urbanairship.push.sample.R.id;
-import com.urbanairship.push.sample.R.layout;
 
 import java.util.Calendar;
 import java.util.Date;

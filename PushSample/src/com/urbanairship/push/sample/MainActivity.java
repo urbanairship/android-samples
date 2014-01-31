@@ -1,5 +1,5 @@
 /*
-Copyright 2009-2011 Urban Airship Inc. All rights reserved.
+Copyright 2009-2014 Urban Airship Inc. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -50,7 +50,7 @@ public class MainActivity extends InstrumentedActivity {
     Button locationButton;
 
     IntentFilter boundServiceFilter;
-    IntentFilter apidUpdateFilter;
+    IntentFilter channelIdUpdateFilter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,8 +93,8 @@ public class MainActivity extends InstrumentedActivity {
         boundServiceFilter.addAction(UALocationManager.getLocationIntentAction(UALocationManager.ACTION_SUFFIX_LOCATION_SERVICE_BOUND));
         boundServiceFilter.addAction(UALocationManager.getLocationIntentAction(UALocationManager.ACTION_SUFFIX_LOCATION_SERVICE_UNBOUND));
 
-        apidUpdateFilter = new IntentFilter();
-        apidUpdateFilter.addAction(UAirship.getPackageName()+IntentReceiver.APID_UPDATED_ACTION_SUFFIX);
+        channelIdUpdateFilter = new IntentFilter();
+        channelIdUpdateFilter.addAction(UAirship.getPackageName() + IntentReceiver.CHANNEL_ID_UPDATED_ACTION_SUFFIX);
     }
 
     @Override
@@ -108,8 +108,8 @@ public class MainActivity extends InstrumentedActivity {
         handleLocationButton();
 
         registerReceiver(boundServiceReceiver, boundServiceFilter);
-        registerReceiver(apidUpdateReceiver, apidUpdateFilter);
-        updateApidField();
+        registerReceiver(channelIdUpdateReceiver, channelIdUpdateFilter);
+        updateChannelIdField();
     }
 
     private void handleLocationButton() {
@@ -127,7 +127,7 @@ public class MainActivity extends InstrumentedActivity {
         super.onPause();
         try {
             unregisterReceiver(boundServiceReceiver);
-            unregisterReceiver(apidUpdateReceiver);
+            unregisterReceiver(channelIdUpdateReceiver);
         } catch (IllegalArgumentException e) {
             Logger.error(e.getMessage());
         }
@@ -144,23 +144,23 @@ public class MainActivity extends InstrumentedActivity {
         }
     };
 
-    private BroadcastReceiver apidUpdateReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver channelIdUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            updateApidField();
+            updateChannelIdField();
         }
     };
 
-    private void updateApidField() {
-        String apidString = PushManager.shared().getAPID();
-        if (!PushManager.shared().getPreferences().isPushEnabled() || apidString == null) {
-            apidString = "";
+    private void updateChannelIdField() {
+        String channelIdString = PushManager.shared().getChannelId();
+        if (!PushManager.shared().getPreferences().isPushEnabled() || channelIdString == null) {
+            channelIdString = "";
         }
 
-        // fill in apid text
-        EditText apidTextField = (EditText)findViewById(R.id.apidText);
-        if (!apidString.equals(apidTextField.getText())) {
-            apidTextField.setText(apidString);
+        // fill in channel ID text
+        EditText channelIdTextField = (EditText)findViewById(R.id.channelIdText);
+        if (!channelIdString.equals(channelIdTextField.getText())) {
+            channelIdTextField.setText(channelIdString);
         }
     }
 }

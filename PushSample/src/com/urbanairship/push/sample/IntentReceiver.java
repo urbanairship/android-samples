@@ -1,5 +1,5 @@
 /*
-Copyright 2009-2011 Urban Airship Inc. All rights reserved.
+Copyright 2009-2014 Urban Airship Inc. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -42,7 +42,7 @@ public class IntentReceiver extends BroadcastReceiver {
 
     private static final String logTag = "PushSample";
 
-    public static String APID_UPDATED_ACTION_SUFFIX = ".apid.updated";
+    public static String CHANNEL_ID_UPDATED_ACTION_SUFFIX = ".channelid.updated";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -71,12 +71,11 @@ public class IntentReceiver extends BroadcastReceiver {
 
             UAirship.shared().getApplicationContext().startActivity(launch);
 
-        } else if (action.equals(PushManager.ACTION_REGISTRATION_FINISHED)) {
-            Log.i(logTag, "Registration complete. APID:" + intent.getStringExtra(PushManager.EXTRA_APID)
-                    + ". Valid: " + intent.getBooleanExtra(PushManager.EXTRA_REGISTRATION_VALID, false));
+        } else if (action.equals(PushManager.ACTION_REGISTRATION_SUCCEEDED)) {
+            Log.i(logTag, "Registration complete. Channel Id:" + intent.getStringExtra(PushManager.EXTRA_CHANNEL) + ".");
 
             // Notify any app-specific listeners
-            Intent launch = new Intent(UAirship.getPackageName() + APID_UPDATED_ACTION_SUFFIX);
+            Intent launch = new Intent(UAirship.getPackageName() + CHANNEL_ID_UPDATED_ACTION_SUFFIX);
             UAirship.shared().getApplicationContext().sendBroadcast(launch);
 
         } else if (action.equals(GCMMessageHandler.ACTION_GCM_DELETED_MESSAGES)) {
