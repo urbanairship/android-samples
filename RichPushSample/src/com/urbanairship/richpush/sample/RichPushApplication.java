@@ -10,7 +10,7 @@ import android.os.Build;
 import com.urbanairship.UAirship;
 import com.urbanairship.push.PushManager;
 import com.urbanairship.richpush.RichPushManager;
-import com.urbanairship.richpush.RichPushMessageJavaScript;
+import com.urbanairship.richpush.RichPushMessageJavaScriptInterface;
 
 public class RichPushApplication extends Application {
 
@@ -25,7 +25,7 @@ public class RichPushApplication extends Application {
     public void onCreate() {
         UAirship.takeOff(this);
         PushManager.shared().setIntentReceiver(PushReceiver.class);
-        RichPushManager.setJavascriptInterface(RichPushMessageJavaScript.class, "urbanairship");
+        RichPushManager.setJavascriptInterface(RichPushMessageJavaScriptInterface.class);
 
         // If running on Jelly Bean or higher, then use the inbox style notification builder
         if (Build.VERSION.SDK_INT >= 16) {
