@@ -15,7 +15,8 @@ import android.view.ViewGroup;
 import com.urbanairship.Logger;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
-import com.urbanairship.widget.RichPushMessageView;
+import com.urbanairship.richpush.sample.R;
+import com.urbanairship.widget.RichPushMessageWebView;
 
 /**
  * Fragment that displays a rich push message in a RichPushMessageView
@@ -23,7 +24,7 @@ import com.urbanairship.widget.RichPushMessageView;
 public class MessageFragment extends Fragment {
 
     private static final String MESSAGE_ID_KEY = "com.urbanairship.richpush.URL_KEY";
-    private RichPushMessageView browser;
+    private RichPushMessageWebView browser;
 
     /**
      * Creates a new MessageFragment
@@ -40,8 +41,8 @@ public class MessageFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        browser = new RichPushMessageView(container.getContext());
-        browser.setLayoutParams(container.getLayoutParams());
+        View view = inflater.inflate(R.layout.message_fragment, null);
+        browser = (RichPushMessageWebView) view.findViewById(R.id.browser);
         return browser;
     }
 
