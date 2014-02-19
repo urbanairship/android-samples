@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Urban Airship and Contributors
+ * Copyright 2013 Urban Airship and Contributors
  */
 
 package com.urbanairship.richpush.sample.inbox;
