@@ -62,7 +62,7 @@
         <!-- Optional: This is an example of one of the many ways to handle deep
        linking in the application.  To use with your application, update the data
        scheme to be unique for the application and modify ParseDeepLinkActivity.parseDeepLink
-       method to match your applications deep link parsing -->
+       method to match your application's deep link parsing -->
         <activity android:name=".ParseDeepLinkActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

@@ -31,7 +31,7 @@ public class PushReceiver extends BroadcastReceiver {
      */
     private static final long WIDGET_REFRESH_DELAY_MS = 5000; //5 Seconds
 
-    // A set of actions that launch activities with a push is opened.  Update
+    // A set of actions that launch activities when a push is opened.  Update
     // with any custom actions that also start activities when a push is opened.
     private static String[] ACTIVITY_ACTIONS = new String[] {
             DeepLinkAction.DEFAULT_REGISTRY_NAME,

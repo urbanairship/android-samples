@@ -48,7 +48,7 @@ public class IntentReceiver extends BroadcastReceiver {
 
     public static String APID_UPDATED_ACTION_SUFFIX = ".apid.updated";
 
-    // A set of actions that launch activities with a push is opened.  Update
+    // A set of actions that launch activities when a push is opened.  Update
     // with any custom actions that also start activities when a push is opened.
     private static String[] ACTIVITY_ACTIONS = new String[] {
             DeepLinkAction.DEFAULT_REGISTRY_NAME,

@@ -51,8 +51,8 @@ import java.util.Map;
  *
  * vnd.urbanairship.push://deeplink/home/preferences/location
  *
- * Will open the application to the location activity the preferences and main activity
- * on the task stack.
+ * Will open the application to the location activity with the preferences and
+ * main activity on the task stack.
  *
  */
 public class ParseDeepLinkActivity extends Activity{
@@ -104,7 +104,7 @@ public class ParseDeepLinkActivity extends Activity{
      * Parses a deep link (a path segment) to an intent that starts an activity
      *
      * @param deepLink The deep link
-     * @return An intent that corresponds to the deepLink, or null if matching
+     * @return An intent that corresponds to the deepLink, or null if matching no
      * activity is found.
      */
     private Intent parseDeepLink(String deepLink) {

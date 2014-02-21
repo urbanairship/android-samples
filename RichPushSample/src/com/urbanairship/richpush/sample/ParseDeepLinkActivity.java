@@ -104,7 +104,7 @@ public class ParseDeepLinkActivity extends Activity{
      * Parses a deep link (a path segment) to an intent that starts an activity
      *
      * @param deepLink The deep link
-     * @return An intent that corresponds to the deepLink, or null if matching
+     * @return An intent that corresponds to the deepLink, or null if no matching
      * activity is found.
      */
     private Intent parseDeepLink(String deepLink) {
