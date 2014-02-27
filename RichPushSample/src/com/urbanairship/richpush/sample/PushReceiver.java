@@ -53,7 +53,7 @@ public class PushReceiver extends BroadcastReceiver {
         }
 
         // Only launch the main activity if the payload does not contain any
-        // actions that might of already opened an activity
+        // actions that might have already opened an activity
         if (ActionUtils.containsRegisteredActions(intent.getExtras(), ACTIVITY_ACTIONS)) {
             return;
         }
