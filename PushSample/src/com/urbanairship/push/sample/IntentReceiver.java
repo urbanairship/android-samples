@@ -76,7 +76,7 @@ public class IntentReceiver extends BroadcastReceiver {
             logPushExtras(intent);
 
             // Only launch the main activity if the payload does not contain any
-            // actions that might of already opened an activity
+            // actions that might have already opened an activity
             if (!ActionUtils.containsRegisteredActions(intent.getExtras(), ACTIVITY_ACTIONS)) {
                 Intent launch = new Intent(Intent.ACTION_MAIN);
                 launch.setClass(UAirship.shared().getApplicationContext(), MainActivity.class);
