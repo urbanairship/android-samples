@@ -3,11 +3,11 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:minHeight="300dp">
-    
-    <com.urbanairship.widget.RichPushMessageView 
+
+    <com.urbanairship.widget.RichPushMessageWebView
             android:id="@+id/message_browser"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:contentDescription="Rich push message dialog" />
-    
+
 </LinearLayout>
