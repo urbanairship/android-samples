@@ -64,10 +64,10 @@ AddTagsPreference.java
    DialogPreference to add the tags.
 
 CustomSlidingPaneLayout.java
-   Sliding pane layout that only allows sliding if the slide gesture originates from a gutter
+   Sliding pane layout that only allows sliding if the slide gesture originates from a gutter.
 
 CustomViewPager.java
-   A ViewPager that allows touch events to be enabled and disabled
+   A ViewPager that allows touch events to be enabled and disabled.
 
 InboxActivity.java
    * Displays the InboxFragment.
@@ -96,7 +96,7 @@ PushReceiver.java
    Broadcast receiver to handle all push notifications.
 
 RichPushApplication.java
-   The main Rich Push application
+   The main Rich Push application.
 
 RichPushMessageAdapter.java
    ArrayAdapter for rich push messages. This is used for the InboxFragment.
@@ -180,10 +180,10 @@ menu/selection.xml
    Menu items that appears for the select/deselect all action item.
 
 values/dimens.xml
-   Defines the default layout dimensions for the widget margin
+   Defines the default layout dimensions for the widget margin.
 
 values-v14/dimens.xml
-   Defines the api 14 and above layout dimensions for the widget margin
+   Defines the api 14 and above layout dimensions for the widget margin.
 
 values/strings.xml
    Defines all the string resources.
