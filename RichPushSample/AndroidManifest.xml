@@ -89,6 +89,9 @@
             </intent-filter>
         </activity>
 
+        <!-- Optional: Needed for Action.startActivityForResult -->
+        <activity android:name="com.urbanairship.actions.ActionActivity"/>
+
         <!-- MODIFICATION REQUIRED
             - Set or Remove the parent activity
             - Set or Remove the theme.  Removing the theme will cause the landing page
@@ -97,7 +100,7 @@
             up navigation.
             - For more customization details, see com.urbanairship.actions.ActionActivity -->
         <activity
-            android:name="com.urbanairship.actions.ActionActivity"
+            android:name="com.urbanairship.actions.LandingPageActivity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/LandingPage"
             android:exported="false">
@@ -114,17 +117,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.urbanairship.richpush.sample.MainActivity" />
 
-            <!-- Required for landing page action -->
             <intent-filter>
                 <action android:name="com.urbanairship.actions.SHOW_LANDING_PAGE_INTENT_ACTION"/>
                 <data android:scheme="http" />
                 <data android:scheme="https" />
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-
-            <!-- Required for starting an activity for a result within an action -->
-            <intent-filter>
-                <action android:name="com.urbanairship.actions.START_ACTIVITY_FOR_RESULT_INTENT_ACTION"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
