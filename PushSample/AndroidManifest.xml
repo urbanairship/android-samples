@@ -44,7 +44,7 @@
                  android:debuggable="true"
                  android:allowClearUserData="true"
                  android:enabled="true">
-        
+
         <activity android:name="com.urbanairship.push.sample.MainActivity"
                   android:label="@string/app_name"
                   android:launchMode="singleTask">
@@ -57,6 +57,50 @@
         <activity android:name="com.urbanairship.push.sample.preference.CustomPreferencesActivity" />
         <activity android:name="com.urbanairship.push.sample.preference.PreferencesActivity" />
         <activity android:name="com.urbanairship.push.sample.LocationActivity" />
+
+
+        <!-- Optional: This is an example of one of the many ways to handle deep
+       linking in the application.  To use with your application, update the data
+       scheme to be unique for the application and modify ParseDeepLinkActivity.parseDeepLink
+       method to match your application's deep link parsing -->
+        <activity android:name=".ParseDeepLinkActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <!-- Handles any vnd.urbanairship.push://deeplink URI's -->
+                <data android:scheme="vnd.urbanairship.push" android:host="deeplink" />
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+        </activity>
+
+        <!-- MODIFICATION REQUIRED
+            - Set or Remove the parent activity
+            - For more customization details, see com.urbanairship.actions.ActionActivity -->
+        <activity
+            android:name="com.urbanairship.actions.ActionActivity"
+            android:parentActivityName=".MainActivity"
+            android:exported="false">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.urbanairship.push.sample.MainActivity" />
+
+            <!-- Landing page action -->
+            <intent-filter>
+                <action android:name="com.urbanairship.actions.SHOW_LANDING_PAGE_INTENT_ACTION"/>
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+
+            <!-- Starting an activity for a result from an action -->
+            <intent-filter>
+                <action android:name="com.urbanairship.actions.START_ACTIVITY_FOR_RESULT_INTENT_ACTION"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
 
         <!-- REQUIRED for Urban Airship GCM-->
         <receiver android:name="com.urbanairship.CoreReceiver" />
@@ -79,6 +123,7 @@
 
         <service android:name="com.urbanairship.push.PushService" android:label="Push Notification Service"/>
         <service android:name="com.urbanairship.analytics.EventService" android:label="Event Service"/>
+        <service android:name="com.urbanairship.actions.ActionService" />
 
         <!-- This is required for persisting preferences related to push and location -->
         <!-- MODIFICATION REQUIRED - Replace "com.urbanairship.push.sample" with your package name -->
