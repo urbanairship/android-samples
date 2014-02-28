@@ -1,22 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!-- Custom landing page view example -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <!-- Layout must contain a LandingPageWebView with id @android:id/primary -->
-    <com.urbanairship.widget.LandingPageWebView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@android:id/primary"/>
+    <FrameLayout
+        android:layout_margin="16dp"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-    <!-- Optional progress view with id @android:id/progress -->
-    <ProgressBar
+        <!-- Layout must contain a LandingPageWebView with id @android:id/primary -->
+        <com.urbanairship.widget.LandingPageWebView
+            android:id="@android:id/primary"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"/>
+
+        <!-- Optional progress view with id @android:id/progress -->
+        <ProgressBar
+            android:id="@android:id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
+
+    <!-- Optional close button.  "onCloseButtonClick" will finish the
+    landing page activity -->
+    <ImageButton
+        android:id="@+id/close_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@android:id/progress"
-        android:layout_gravity="center"/>
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_close"
+        android:background="@null"
+        android:onClick="onCloseButtonClick"/>
 
-</FrameLayout>
+</RelativeLayout>
