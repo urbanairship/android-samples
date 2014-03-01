@@ -2,6 +2,8 @@
 
 <!-- Custom landing page view example -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                tools:context="com.urbanairship.actions.LandingPageActivity"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -34,6 +36,7 @@
         android:layout_alignParentRight="true"
         android:src="@drawable/ic_close"
         android:background="@null"
+        tools:ignore="OnClick"
         android:onClick="onCloseButtonClick"/>
 
 </RelativeLayout>
