@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.urbanairship.UAirship;
+import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.R;
 import com.urbanairship.richpush.sample.preference.PushPreferencesActivity;
@@ -31,6 +32,14 @@ public class MessageActivity extends ActionBarActivity implements MessagePagerFr
 
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.getSupportActionBar().setHomeButtonEnabled(true);
+
+        MessagePagerFragment pagerFragment = (MessagePagerFragment) getSupportFragmentManager().findFragmentById(R.id.pager);
+
+        if (savedInstanceState == null) {
+            String messageId = getIntent().getStringExtra(EXTRA_MESSAGE_ID_KEY);
+            RichPushMessage message = RichPushInbox.shared().getMessage(messageId);
+            pagerFragment.setCurrentMessage(message);
+        }
     }
 
     @Override
