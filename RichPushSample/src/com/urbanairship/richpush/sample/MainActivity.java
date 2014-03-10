@@ -38,7 +38,7 @@ ActionBar.OnNavigationListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.main);
+        this.setContentView(R.layout.main_activity);
         this.configureActionBar();
 
         this.user = RichPushManager.shared().getRichPushUser();

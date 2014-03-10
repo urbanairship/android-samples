@@ -4,163 +4,272 @@
 
 package com.urbanairship.richpush.sample.inbox;
 
-import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
+import android.support.v7.widget.PopupMenu;
+import android.text.format.DateFormat;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.urbanairship.Logger;
 import com.urbanairship.richpush.RichPushMessage;
+import com.urbanairship.richpush.sample.R;
+import com.urbanairship.richpush.sample.RichNotificationBuilder;
 
-import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 /**
- * A list fragment that shows rich push messages.
- *
+ * Implementation of the AbstractInboxFragment that supports an action mode
  */
-public abstract class InboxFragment extends ListFragment {
-    public static final String EMPTY_COLUMN_NAME = "";
-    public static final String ROW_LAYOUT_ID_KEY = "row_layout_id";
-    public static final String EMPTY_LIST_STRING_KEY = "empty_list_string";
+public class InboxFragment extends AbstractInboxFragment implements ActionMode.Callback {
 
-    private OnMessageListener listener;
-    private RichPushMessageAdapter adapter;
-    private List<String> selectedMessageIds = new ArrayList<String>();
-    private List<RichPushMessage> messages;
+    private final static long ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.setActivityAsListener(activity);
-    }
+    private ActionMode actionMode;
+    private Button actionSelectionButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Set the RichPushMessageAdapter
-        this.adapter = new RichPushMessageAdapter(getActivity(), getRowLayoutId());
-        adapter.setViewBinder(createMessageBinder());
-        this.setListAdapter(adapter);
-
-        // Retain the instance so we keep list position and selection on activity re-creation
-        setRetainInstance(true);
+        setHasOptionsMenu(true);
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        this.setEmptyText(getString(getEmptyListStringId()));
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.inbox_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.refresh) {
+            this.refreshMessages();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        startActionModeIfNecessary();
+
+        // Dismiss any notifications if available
+        RichNotificationBuilder.dismissInboxNotification();
+    }
+
+    @Override
+    public int getRowLayoutId() {
+        return R.layout.inbox_list_item;
+    }
+
+    @Override
+    public int getEmptyListStringId() {
+        return R.string.no_messages;
+    }
+
+    private String getMessageDate(Date date) {
+        long age = System.currentTimeMillis() - date.getTime();
+
+        // Only show the date if older then 1 day
+        if (age > ONE_DAY_MS) {
+            return DateFormat.getDateFormat(getActivity()).format(date);
+        }
+
+        return DateFormat.getTimeFormat(getActivity()).format(date);
+    }
+
+    public void bindView(final View view, final RichPushMessage message, final int position) {
+        View unreadIndicator = view.findViewById(R.id.unread_indicator);
+        TextView title = (TextView) view.findViewById(R.id.title);
+        TextView timeStamp = (TextView) view.findViewById(R.id.date_sent);
+        final CheckBox checkBox = (CheckBox) view.findViewById(R.id.message_checkbox);
+
+        if (message.isRead()) {
+            unreadIndicator.setBackgroundColor(Color.BLACK);
+            unreadIndicator.setContentDescription("Message is read");
+        } else {
+            unreadIndicator.setBackgroundColor(Color.YELLOW);
+            unreadIndicator.setContentDescription("Message is unread");
+        }
+
+        title.setText(message.getTitle());
+        timeStamp.setText(getMessageDate(message.getSentDate()));
+
+        checkBox.setChecked(isMessageSelected(message.getMessageId()));
+
+        checkBox.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onMessageSelected(message.getMessageId(), checkBox.isChecked());
+            }
+        });
+        view.setFocusable(false);
+        view.setFocusableInTouchMode(false);
+    }
+
+    @Override
+    public void clearSelection() {
+        super.clearSelection();
+        if (actionMode != null) {
+            actionMode.finish();
+        }
+    }
+
+    /**
+     * Starts the action mode if there are any selected
+     * messages in the inbox fragment
+     */
+    private void startActionModeIfNecessary() {
+        List<String> checkedIds = getSelectedMessages();
+        if (actionMode != null && checkedIds.isEmpty()) {
+            actionMode.finish();
+        } else if (actionMode == null && !checkedIds.isEmpty()) {
+            actionMode = ((ActionBarActivity) this.getActivity()).startSupportActionMode(this);
+        }
+    }
+
+    @Override
+    protected void onMessageSelected(String messageId, boolean isChecked) {
+        super.onMessageSelected(messageId, isChecked);
+        startActionModeIfNecessary();
+
+        if (actionMode != null) {
+            actionMode.invalidate();
+        }
     }
 
     @Override
     public void onListItemClick(ListView list, View view, int position, long id) {
-        this.listener.onMessageOpen(this.adapter.getItem(position));
-    }
-
-    /**
-     * Sets the rich push messages to display
-     * @param messages Current list of rich push messages
-     */
-    public void setMessages(List<RichPushMessage> messages) {
-        this.messages = messages;
-        adapter.setMessages(messages);
-    }
-
-    /**
-     * @return The list of ids of the selected messages
-     */
-    public List<String> getSelectedMessages() {
-        return selectedMessageIds;
-    }
-
-    /**
-     * Clears the selected messages
-     */
-    public void clearSelection() {
-        selectedMessageIds.clear();
-        adapter.notifyDataSetChanged();
-        listener.onSelectionChanged();
-    }
-
-    /**
-     * Selects all the messages in the inbox
-     */
-    public void selectAll() {
-        selectedMessageIds.clear();
-        for (RichPushMessage message : messages) {
-            selectedMessageIds.add(message.getMessageId());
-        }
-        adapter.notifyDataSetChanged();
-        listener.onSelectionChanged();
-    }
-
-    /**
-     * @return The layout id to use in the RichPushMessageAdapter
-     */
-    public abstract int getRowLayoutId();
-
-    /**
-     * @return The string id of the message to display when no messages are available
-     */
-    public abstract int getEmptyListStringId();
-
-    /**
-     * Tries to set the activity as an OnMessageListener
-     * @param activity The specified activity
-     */
-    private void setActivityAsListener(Activity activity) {
-        try {
-            this.listener = (OnMessageListener) activity;
-        } catch (ClassCastException e) {
-            throw new IllegalStateException("Activities using InboxFragment must implement " +
-                    "the InboxFragment.OnMessageListener interface.");
+        super.onListItemClick(list, view, position, id);
+        // If we are in actionMode, update the menu items
+        if (actionMode != null) {
+            actionMode.invalidate();
         }
     }
 
-    /**
-     * Listens for message selection and selection changes
-     *
-     */
-    public interface OnMessageListener {
-        void onMessageOpen(RichPushMessage message);
-        void onSelectionChanged();
+    public ActionMode getActionMode() {
+        return actionMode;
     }
 
+    @Override
+    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        mode.getMenuInflater().inflate(R.menu.inbox_actions_menu, menu);
 
-    /**
-     * Sets a message is selected or not
-     * @param messageId The id of the message
-     * @param isChecked Boolean indicating if the message is selected or not
-     */
-    protected void onMessageSelected(String messageId, boolean isChecked) {
-        if (isChecked && !selectedMessageIds.contains(messageId)) {
-            selectedMessageIds.add(messageId);
-        } else if (!isChecked && selectedMessageIds.contains(messageId)) {
-            selectedMessageIds.remove(messageId);
+        View customView = LayoutInflater.from(this.getActivity()).inflate(R.layout.cab_selection_dropdown, null);
+        actionSelectionButton = (Button) customView.findViewById(R.id.selection_button);
+
+        final PopupMenu popupMenu = new PopupMenu(this.getActivity(), customView);
+        popupMenu.getMenuInflater().inflate(R.menu.selection, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.menu_deselect_all) {
+                    clearSelection();
+                } else {
+                    selectAll();
+                }
+                return true;
+            }
+        });
+
+        actionSelectionButton.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                Menu menu = popupMenu.getMenu();
+                menu.findItem(R.id.menu_deselect_all).setVisible(true);
+                menu.findItem(R.id.menu_select_all).setVisible(getSelectedMessages().size() != getMessages().size());
+                popupMenu.show();
+            }
+
+        });
+
+
+        mode.setCustomView(customView);
+
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        Logger.debug("onPrepareActionMode");
+
+        boolean selectionContainsRead = false;
+        boolean selectionContainsUnread = false;
+
+        for (String id : getSelectedMessages()) {
+            RichPushMessage message = getRichPushInbox().getMessage(id);
+            if (message.isRead()) {
+                selectionContainsRead = true;
+            } else {
+                selectionContainsUnread = true;
+            }
+
+            if (selectionContainsRead && selectionContainsUnread) {
+                break;
+            }
         }
 
-        listener.onSelectionChanged();
+        // Show them both
+        menu.findItem(R.id.mark_read).setVisible(selectionContainsUnread);
+        menu.findItem(R.id.mark_unread).setVisible(selectionContainsRead);
+
+        // If we have an action selection_popup button update the text
+        if (actionSelectionButton != null) {
+            String selectionText = this.getString(R.string.cab_selection, getSelectedMessages().size());
+            actionSelectionButton.setText(selectionText);
+        }
+
+        return true;
     }
 
-    /**
-     * Returns if a message is selected
-     * @param messageId The id of the message
-     * @return <code>true</code> If the message is selected, <code>false</code> otherwise.
-     */
-    protected boolean isMessageSelected(String messageId) {
-        return selectedMessageIds.contains(messageId);
+    @Override
+    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        Logger.debug("onActionItemClicked");
+        switch (item.getItemId()) {
+            case R.id.mark_read:
+                getRichPushInbox().markMessagesRead(new HashSet<String>(getSelectedMessages()));
+                break;
+            case R.id.mark_unread:
+                getRichPushInbox().markMessagesUnread(new HashSet<String>(getSelectedMessages()));
+                break;
+            case R.id.delete:
+                getRichPushInbox().deleteMessages(new HashSet<String>(getSelectedMessages()));
+                break;
+            default:
+                return false;
+        }
+
+        actionMode.finish();
+        return true;
     }
 
-    /**
-     * @return RichPushMessageAdapter.ViewBinder to bind messages to a list view item
-     * in the list adapter.
-     */
-    protected abstract RichPushMessageAdapter.ViewBinder createMessageBinder();
+    @Override
+    public void onDestroyActionMode(ActionMode mode) {
+        Logger.debug("onDestroyActionMode");
+        if (actionMode != null) {
+            actionMode = null;
+            clearSelection();
+        }
+    }
 
-
-
-
+    public void onUpdateInbox() {
+        super.onUpdateInbox();
+        if (actionMode != null) {
+            actionMode.invalidate();
+        }
+    }
 }

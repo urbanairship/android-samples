@@ -24,7 +24,7 @@ public class RichPushWidgetUtils {
     }
 
     /**
-     * Sends a request to the rich push message to refresh with a delay
+     * Sends a request to the rich push message to ic_refresh with a delay
      * @param context Application context
      * @param delayInMs Delay to wait in milliseconds before sending the request
      */
