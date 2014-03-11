@@ -136,7 +136,7 @@ public abstract class AbstractInboxFragment extends ListFragment
         if (isManualRefreshing && !success) {
             Toaster.longerToast("Failed to update messages!");
         }
-
+        isManualRefreshing = false;
         setListShown(true);
     }
 
