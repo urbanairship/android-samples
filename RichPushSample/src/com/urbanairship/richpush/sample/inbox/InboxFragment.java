@@ -223,8 +223,10 @@ public class InboxFragment extends AbstractInboxFragment implements ActionMode.C
             }
         }
 
-        // Show them both
+        // Show the mark read action if any of the selected messages are unread
         menu.findItem(R.id.mark_read).setVisible(selectionContainsUnread);
+        
+        // Show the mark unread action if any of the selected messages are read
         menu.findItem(R.id.mark_unread).setVisible(selectionContainsRead);
 
         // If we have an action selection_popup button update the text
