@@ -100,8 +100,8 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
         try {
             this.listener = (Listener) activity;
         } catch (ClassCastException e) {
-            throw new IllegalStateException("Activities using AbstractInboxFragment must implement " +
-                    "the AbstractInboxFragment.OnMessageListener interface.");
+            throw new IllegalStateException("Activities using MessagePagerFragment must implement " +
+                    "the MessagePagerFragment.Listener interface.");
         }
     }
 
