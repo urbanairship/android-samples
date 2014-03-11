@@ -44,7 +44,7 @@ public abstract class AbstractInboxFragment extends ListFragment
             this.listener = (Listener) activity;
         } catch (ClassCastException e) {
             throw new IllegalStateException("Activities using AbstractInboxFragment must implement " +
-                    "the AbstractInboxFragment.OnMessageListener interface.");
+                    "the AbstractInboxFragment.Listener interface.");
         }
     }
 
