@@ -30,7 +30,7 @@ import java.util.Map;
  * A custom push notification builder to create inbox style notifications
  * for rich push messages.  In the case of standard push notifications, it will
  * fall back to the default behavior.
- * 
+ *
  */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class RichNotificationBuilder extends BasicPushNotificationBuilder {
@@ -59,7 +59,7 @@ public class RichNotificationBuilder extends BasicPushNotificationBuilder {
     /**
      * Creates an inbox style notification summarizing the unread messages
      * in the inbox
-     * 
+     *
      * @param incomingAlert The alert message from an Urban Airship push
      * @return An inbox style notification
      */
@@ -67,11 +67,7 @@ public class RichNotificationBuilder extends BasicPushNotificationBuilder {
         Context context = UAirship.shared().getApplicationContext();
 
         List<RichPushMessage> unreadMessages = RichPushInbox.shared().getUnreadMessages();
-        int inboxUnreadCount = unreadMessages.size();
-
-        // The incoming message is not immediately made available to the inbox because it needs
-        // to first fetch its contents.
-        int totalUnreadCount = inboxUnreadCount + 1;
+        int totalUnreadCount = unreadMessages.size();
 
         Resources res = UAirship.shared().getApplicationContext().getResources();
         String title = res.getQuantityString(R.plurals.inbox_notification_title, totalUnreadCount, totalUnreadCount);
@@ -91,14 +87,14 @@ public class RichNotificationBuilder extends BasicPushNotificationBuilder {
         style.addLine(Html.fromHtml("<b>"+incomingAlert+"</b>"));
 
         // Add any extra messages to the notification style
-        int extraMessages =  Math.min(EXTRA_MESSAGES_TO_SHOW, inboxUnreadCount);
+        int extraMessages =  Math.min(EXTRA_MESSAGES_TO_SHOW, totalUnreadCount);
         for (int i = 0; i < extraMessages; i++) {
             style.addLine(unreadMessages.get(i).getTitle());
         }
 
         // If we have more messages to show then the EXTRA_MESSAGES_TO_SHOW, add a summary
-        if (inboxUnreadCount > EXTRA_MESSAGES_TO_SHOW) {
-            style.setSummaryText(context.getString(R.string.inbox_summary, inboxUnreadCount - EXTRA_MESSAGES_TO_SHOW));
+        if (totalUnreadCount > EXTRA_MESSAGES_TO_SHOW) {
+            style.setSummaryText(context.getString(R.string.inbox_summary, totalUnreadCount - EXTRA_MESSAGES_TO_SHOW));
         }
 
         return style.build();
