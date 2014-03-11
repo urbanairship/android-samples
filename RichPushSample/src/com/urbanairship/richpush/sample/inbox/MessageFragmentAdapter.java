@@ -13,8 +13,8 @@ import com.urbanairship.richpush.RichPushMessage;
 import java.util.List;
 
 /**
- * Pager adapter that manages the message fragments
- *
+ * Pager adapter that manages the message fragments.  Activities that attach
+ * this fragment must implement MessageFragmentAdapter.Listener.
  */
 public class MessageFragmentAdapter extends FragmentStatePagerAdapter {
 
@@ -29,10 +29,8 @@ public class MessageFragmentAdapter extends FragmentStatePagerAdapter {
         if (messages == null || position >= messages.size()) {
             return null;
         }
-
         String messageId = messages.get(position).getMessageId();
-        MessageFragment fragment = MessageFragment.newInstance(messageId);
-        return fragment;
+        return MessageFragment.newInstance(messageId);
     }
 
     @Override
@@ -43,14 +41,6 @@ public class MessageFragmentAdapter extends FragmentStatePagerAdapter {
         return messages.size();
     }
 
-    @Override
-    public int getItemPosition(Object item) {
-
-        // The default implementation of this method returns POSITION_UNCHANGED, which effectively
-        // assumes that fragments will never change position or be destroyed
-        return POSITION_NONE;
-    }
-
     /**
      * Set the list of rich push messages
      * @param messages The current list of rich push messages to display
@@ -58,5 +48,14 @@ public class MessageFragmentAdapter extends FragmentStatePagerAdapter {
     public void setRichPushMessages(List<RichPushMessage> messages) {
         this.messages = messages;
         this.notifyDataSetChanged();
+    }
+
+    /**
+     * Gets the RichPushMessage at the position in the adapter
+     * @param position Position of the rich push message
+     * @return The rich push message at the position in the adapter
+     */
+    public RichPushMessage getMessage(int position) {
+        return messages.get(position);
     }
 }

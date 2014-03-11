@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.urbanairship.widget.RichPushMessageWebView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/browser"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:contentDescription="Rich push message"
-/>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.urbanairship.widget.RichPushMessageWebView
+        android:id="@+id/message_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:progressBarStyleLarge"
+        android:layout_gravity="center"/>
+
+</FrameLayout>

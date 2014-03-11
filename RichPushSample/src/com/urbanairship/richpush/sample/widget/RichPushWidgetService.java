@@ -77,7 +77,7 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         RemoteViews rv = new RemoteViews(context.getPackageName(), itemId);
         rv.setTextViewText(R.id.widget_item_text, String.format(formatStr, message.getTitle()));
 
-        int iconDrawable = message.isRead() ? R.drawable.mark_read : R.drawable.mark_unread;
+        int iconDrawable = message.isRead() ? R.drawable.ic_mark_read : R.drawable.ic_mark_unread;
         rv.setImageViewResource(R.id.widget_item_icon, iconDrawable);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");

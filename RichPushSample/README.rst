@@ -60,6 +60,9 @@ Sample App Components
 Source files
 ^^^^^^^^^^^^
 
+AbstractInboxFragment.java
+   An abstract class that implements the basic functionality for a rich push inbox.
+
 AddTagsPreference.java
    DialogPreference to add the tags.
 
@@ -72,22 +75,28 @@ CustomViewPager.java
 InboxActivity.java
    * Displays the InboxFragment.
    * If application is on a phone, will show just the InboxFragment and launch MessageActivity when a message is selected.
-   * If application is on a tablet, will show the InboxFragment as a pane on the left and the MessageFragment as a pane on the right.
+   * If application is on a tablet, will show the InboxFragment as a pane on the left and the MessagePagerFragment as a pane on the right.
 
 InboxFragment.java
-   A ListFragment that uses the RichPushMessageAdapter to display the contents of the RichPushInbox.
+   An AbstractInboxFragment that shows the inbox with an action mode.
 
 InboxNotificationBuilder.java
    A custom push notification builder to create inbox style notifications for rich push messages.
 
 MessageActivity.java
-   A simple Activity that displays a MessageFragment inside a ViewPager. This is only used on phones.
+   A simple Activity that displays a MessagePagerFragment.  This is only used on phones.
 
 MessageFragment.java
    A Fragment that contains a WebView that displays the contents of the RichPushMessage.
 
+MessagePagerFragment.java
+   A Fragment that shows MessageFragments in a view pager.
+
 MessageFragmentAdapter.java
    A FragmentAdapter for a ViewPager that displays rich push messages.
+
+ParseDeepLinkActivity.java
+   An activity that handles parsing deep links.
 
 PushPreferencesActivity.java
    Displays the preferences.
@@ -98,17 +107,8 @@ PushReceiver.java
 RichPushApplication.java
    The main Rich Push application.
 
-RichPushMessageAdapter.java
-   ArrayAdapter for rich push messages. This is used for the InboxFragment.
-
 RichPushMessageDialogFragment.java
    Dialog Fragment that displays a rich push message. This is used to display a message in a dialog in the MainActivity.
-
-RichPushSampleInboxFragment.java
-   Sample implementation of the InboxFragment.
-
-SetAliasPreference.java
-   DialogPreference to set the alias.
 
 RemoteViewsFactory.java
    Factory class to create remote views for the widget layouts.
@@ -122,8 +122,12 @@ RichPushWidgetService.java
 RichPushWidgetUtils.java
    Utility class to help refresh the rich push inbox widget.
 
-ParseDeepLinkActivity.java
-   An activity that handles parsing deep links.
+SetAliasPreference.java
+   DialogPreference to set the alias.
+
+ViewBinderArrayAdapter.java
+   A generic base adapter that binds items to views using the ViewBinder interface.
+
 
 Resources
 ^^^^^^^^^^^^
@@ -131,14 +135,20 @@ Resources
 layout/cab_selection_dropdown.xml
    The select all/deselect all action item in the Inbox CAB.
 
-layout/inbox_message.xml
-   The inbox line item layout for the inbox.
+layout/inbox_activity.xml
+   Layout for the inbox activity.
 
-layout/inbox.xml
-   InboxFragment layout for phones.
+layout/inbox_list_item.xml
+   Layout for the inbox line items.
 
-layout/main.xml
+layout/landing_page_activity
+   Custom landing page layout.
+
+layout/main_activity.xml
    Layout for MainActivity.
+
+layout/message_activity.xml
+   Layout for MessageActivity.
 
 layout/message_dialog.xml
    Layout for the RichPushMessageDialogFragment.
@@ -146,8 +156,8 @@ layout/message_dialog.xml
 layout/message_fragment.xml
    Layout for MessageFragments.
 
-layout/message.xml
-   Layout for MessageActivity.
+layout/message_pager_fragment.xml
+   Layout for the MessagePagerFragment.
 
 layout/tag_preference_item.xml
    Layout for the tag preference.
@@ -164,7 +174,7 @@ layout/widget_layout_small.xml
 layout/widget_layout.xml
    The large widget inbox layout with a list of messages.
 
-layout-sw600dp/inbox.xml
+layout-sw600dp/inbox_activity.xml
    InboxFragment layout for large screen devices (600dp and higher).
 
 menu/inbox_actions_menu.xml
@@ -175,6 +185,9 @@ menu/inbox_menu.xml
 
 menu/main_menu.xml
    Menu items that appear in the action bar in the MainActivity.
+
+menu/message_activity.xml
+   Menu items that appear in the action bar in the MessageActivity.
 
 menu/selection.xml
    Menu items that appears for the select/deselect all action item.

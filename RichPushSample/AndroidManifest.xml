@@ -108,7 +108,7 @@
             <!-- Sample layout, remove to use the default -->
              <meta-data
                 android:name="com.urbanairship.action.LANDING_PAGE_VIEW"
-                android:resource="@layout/landing_page" />
+                android:resource="@layout/landing_page_activity" />
 
             <!-- Optional: Landing page will start the parent activity if the landing
             page is the root task.  Also supports proper up navigation if the action
