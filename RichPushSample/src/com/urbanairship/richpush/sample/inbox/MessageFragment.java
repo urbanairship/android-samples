@@ -105,6 +105,24 @@ public class MessageFragment extends Fragment {
         }
     }
 
+    @SuppressLint("NewApi")
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (Build.VERSION.SDK_INT >= 11) {
+            browser.onResume();
+        }
+    }
+
+    @SuppressLint("NewApi")
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (Build.VERSION.SDK_INT >= 11) {
+            browser.onPause();
+        }
+    }
+
     private void crossFade() {
         browser.animate()
                 .alpha(1f)
