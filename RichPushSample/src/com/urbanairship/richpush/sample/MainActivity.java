@@ -31,10 +31,6 @@ import com.urbanairship.util.UAStringUtil;
  */
 public class MainActivity extends ActionBarActivity implements
 ActionBar.OnNavigationListener {
-    protected static final String TAG = "MainActivity";
-
-    static final String ALIAS_KEY = "com.urbanairship.richpush.sample.ALIAS";
-    static final int aliasType = 1;
 
     ArrayAdapter<String> navAdapter;
     RichPushUser user;
@@ -42,7 +38,7 @@ ActionBar.OnNavigationListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.main);
+        this.setContentView(R.layout.main_activity);
         this.configureActionBar();
 
         this.user = RichPushManager.shared().getRichPushUser();

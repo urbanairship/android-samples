@@ -15,7 +15,7 @@ import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.R;
 import com.urbanairship.richpush.sample.widget.RichPushWidgetUtils;
-import com.urbanairship.widget.RichPushMessageView;
+import com.urbanairship.widget.RichPushMessageWebView;
 
 /**
  * Dialog Fragment that displays a rich push message
@@ -56,7 +56,7 @@ public class RichPushMessageDialogFragment extends DialogFragment {
 
         View view = inflater.inflate(R.layout.message_dialog, container, true);
 
-        RichPushMessageView messageView = (RichPushMessageView) view.findViewById(R.id.message_browser);
+        RichPushMessageWebView messageView = (RichPushMessageWebView) view.findViewById(R.id.message_browser);
         messageView.loadRichPushMessage(message);
         message.markRead();
 
