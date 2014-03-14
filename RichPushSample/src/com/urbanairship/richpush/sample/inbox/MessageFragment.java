@@ -13,17 +13,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.HttpAuthHandler;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
 import com.urbanairship.Logger;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
-import com.urbanairship.richpush.RichPushUser;
 import com.urbanairship.richpush.sample.R;
 import com.urbanairship.widget.RichPushMessageWebView;
-import com.urbanairship.widget.UAWebViewClient;
+import com.urbanairship.widget.RichPushWebViewClient;
 
 /**
  * Fragment that displays a rich push message in a RichPushMessageView
@@ -75,15 +73,15 @@ public class MessageFragment extends Fragment {
             browser.setVisibility(View.INVISIBLE);
         }
 
-        browser.setWebViewClient(new UAWebViewClient() {
-            @Override
-            public void onReceivedHttpAuthRequest(WebView view, HttpAuthHandler handler, String host, String realm) {
-                RichPushUser user = RichPushManager.shared().getRichPushUser();
-                handler.proceed(user.getId(), user.getPassword());
-            }
-
+        // Set a custom RichPushWebViewClient view client to listen for the page finish
+        // Note: RichPushWebViewClient is required to load the proper auth and to
+        // inject the Urban Airship Javascript interface.  When overriding any methods
+        // make sure to call through to the supers implementation.
+        browser.setWebViewClient(new RichPushWebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+
                 if (Build.VERSION.SDK_INT >= 12) {
                     crossFade();
                 } else {
