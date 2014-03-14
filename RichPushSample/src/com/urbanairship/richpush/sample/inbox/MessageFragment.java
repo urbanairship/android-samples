@@ -76,7 +76,7 @@ public class MessageFragment extends Fragment {
         // Set a custom RichPushWebViewClient view client to listen for the page finish
         // Note: RichPushWebViewClient is required to load the proper auth and to
         // inject the Urban Airship Javascript interface.  When overriding any methods
-        // make sure to call through to the supers implementation.
+        // make sure to call through to the super's implementation.
         browser.setWebViewClient(new RichPushWebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
