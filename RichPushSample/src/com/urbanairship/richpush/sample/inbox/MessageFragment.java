@@ -21,7 +21,7 @@ import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.R;
 import com.urbanairship.widget.RichPushMessageWebView;
-import com.urbanairship.widget.RichPushWebViewClient;
+import com.urbanairship.widget.UAWebViewClient;
 
 /**
  * Fragment that displays a rich push message in a RichPushMessageView
@@ -74,10 +74,10 @@ public class MessageFragment extends Fragment {
         }
 
         // Set a custom RichPushWebViewClient view client to listen for the page finish
-        // Note: RichPushWebViewClient is required to load the proper auth and to
+        // Note: UAWebViewClient is required to load the proper auth and to
         // inject the Urban Airship Javascript interface.  When overriding any methods
         // make sure to call through to the super's implementation.
-        browser.setWebViewClient(new RichPushWebViewClient() {
+        browser.setWebViewClient(new UAWebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
