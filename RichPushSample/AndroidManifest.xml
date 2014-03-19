@@ -137,6 +137,12 @@
               <!-- MODIFICATION REQUIRED - Use your package name as the category -->
               <category android:name="com.urbanairship.richpush.sample" />
           </intent-filter>
+
+          <!--  REQUIRED for detecting when the application is upgraded so it can request a new GCM ID -->
+          <intent-filter>
+              <action android:name="android.intent.action.PACKAGE_REPLACED" />
+              <data android:scheme="package"/>
+          </intent-filter>
         </receiver>
 
         <service android:name="com.urbanairship.push.PushService" android:label="Push Notification Service"/>
