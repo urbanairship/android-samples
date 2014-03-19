@@ -6,13 +6,13 @@ package com.urbanairship.richpush.sample;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
-import android.app.Notification.InboxStyle;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.support.v4.app.NotificationCompat;
 import android.text.Html;
 
 import com.urbanairship.UAirship;
@@ -74,8 +74,8 @@ public class RichNotificationBuilder extends BasicPushNotificationBuilder {
 
         Bitmap largeIcon = BitmapFactory.decodeResource(res, R.drawable.ua_launcher);
 
-        InboxStyle style = new Notification.InboxStyle(
-                new Notification.Builder(context)
+        NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle(
+                new NotificationCompat.Builder(context)
                 .setDefaults(getNotificationDefaults())
                 .setContentTitle(title)
                 .setContentText(incomingAlert)
