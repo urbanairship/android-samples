@@ -76,12 +76,14 @@ public class RichNotificationBuilder extends BasicPushNotificationBuilder {
 
         NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle(
                 new NotificationCompat.Builder(context)
-                .setDefaults(getNotificationDefaults())
-                .setContentTitle(title)
-                .setContentText(incomingAlert)
-                .setLargeIcon(largeIcon)
-                .setSmallIcon(R.drawable.ua_notification_icon)
-                .setNumber(totalUnreadCount));
+                    .setDefaults(getNotificationDefaults())
+                    .setContentTitle(title)
+                    .setContentText(incomingAlert)
+                    .setLargeIcon(largeIcon)
+                    .setSmallIcon(R.drawable.ua_notification_icon)
+                    .setNumber(totalUnreadCount)
+                    .setAutoCancel(true)
+        );
 
         // Add the incoming alert as the first line in bold
         style.addLine(Html.fromHtml("<b>"+incomingAlert+"</b>"));
