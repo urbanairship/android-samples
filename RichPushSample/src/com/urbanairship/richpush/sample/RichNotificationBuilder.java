@@ -6,13 +6,13 @@ package com.urbanairship.richpush.sample;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
-import android.app.Notification.InboxStyle;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.support.v4.app.NotificationCompat;
 import android.text.Html;
 
 import com.urbanairship.UAirship;
@@ -74,14 +74,16 @@ public class RichNotificationBuilder extends BasicPushNotificationBuilder {
 
         Bitmap largeIcon = BitmapFactory.decodeResource(res, R.drawable.ua_launcher);
 
-        InboxStyle style = new Notification.InboxStyle(
-                new Notification.Builder(context)
-                .setDefaults(getNotificationDefaults())
-                .setContentTitle(title)
-                .setContentText(incomingAlert)
-                .setLargeIcon(largeIcon)
-                .setSmallIcon(R.drawable.ua_notification_icon)
-                .setNumber(totalUnreadCount));
+        NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle(
+                new NotificationCompat.Builder(context)
+                    .setDefaults(getNotificationDefaults())
+                    .setContentTitle(title)
+                    .setContentText(incomingAlert)
+                    .setLargeIcon(largeIcon)
+                    .setSmallIcon(R.drawable.ua_notification_icon)
+                    .setNumber(totalUnreadCount)
+                    .setAutoCancel(true)
+        );
 
         // Add the incoming alert as the first line in bold
         style.addLine(Html.fromHtml("<b>"+incomingAlert+"</b>"));

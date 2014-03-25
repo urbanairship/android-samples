@@ -169,6 +169,10 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
      * @param position The new message position.
      */
     private void messageChanged(int position) {
+        if (position >= messages.size()) {
+            return;
+        }
+
         RichPushMessage message = messages.get(position);
         if (message != null) {
             message.markRead();

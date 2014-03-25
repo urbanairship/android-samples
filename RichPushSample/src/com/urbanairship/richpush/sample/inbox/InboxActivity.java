@@ -128,8 +128,7 @@ public class InboxActivity extends ActionBarActivity implements
                 }
                 break;
             case R.id.refresh:
-                inbox.setListShownNoAnimation(false);
-                RichPushManager.shared().refreshMessages();
+                inbox.refreshMessages();
                 break;
             case R.id.preferences:
                 this.startActivity(new Intent(this, PushPreferencesActivity.class));
