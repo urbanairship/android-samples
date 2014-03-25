@@ -4,24 +4,23 @@
 
 package com.urbanairship.richpush.sample;
 
-import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.text.Html;
 
 import com.urbanairship.UAirship;
-import com.urbanairship.push.BasicPushNotificationBuilder;
 import com.urbanairship.push.PushManager;
+import com.urbanairship.push.PushNotificationBuilder;
 import com.urbanairship.push.PushPreferences;
 import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
+import com.urbanairship.util.NotificationIDGenerator;
 
 import java.util.List;
 import java.util.Map;
@@ -32,8 +31,7 @@ import java.util.Map;
  * fall back to the default behavior.
  *
  */
-@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-public class RichNotificationBuilder extends BasicPushNotificationBuilder {
+public class RichNotificationBuilder implements PushNotificationBuilder {
 
     private static final int EXTRA_MESSAGES_TO_SHOW = 2;
     private static final int INBOX_NOTIFICATION_ID = 9000000;
@@ -43,7 +41,7 @@ public class RichNotificationBuilder extends BasicPushNotificationBuilder {
         if (extras != null && RichPushManager.isRichPushMessage(extras)) {
             return createInboxNotification(alert);
         } else {
-            return super.buildNotification(alert, extras);
+            return createNotification(alert);
         }
     }
 
@@ -52,7 +50,7 @@ public class RichNotificationBuilder extends BasicPushNotificationBuilder {
         if (extras != null && extras.containsKey(PushReceiver.EXTRA_MESSAGE_ID_KEY)) {
             return INBOX_NOTIFICATION_ID;
         } else {
-            return super.getNextId(alert, extras);
+            return NotificationIDGenerator.nextID();
         }
     }
 
@@ -68,6 +66,12 @@ public class RichNotificationBuilder extends BasicPushNotificationBuilder {
 
         List<RichPushMessage> unreadMessages = RichPushInbox.shared().getUnreadMessages();
         int totalUnreadCount = unreadMessages.size();
+
+        // If we do not have any unread messages (message already read or they failed to fetch)
+        // show a normal notification.
+        if (totalUnreadCount == 0) {
+            return createNotification(incomingAlert);
+        }
 
         Resources res = UAirship.shared().getApplicationContext().getResources();
         String title = res.getQuantityString(R.plurals.inbox_notification_title, totalUnreadCount, totalUnreadCount);
@@ -100,6 +104,20 @@ public class RichNotificationBuilder extends BasicPushNotificationBuilder {
         }
 
         return style.build();
+    }
+
+    private Notification createNotification(String alert) {
+        Resources res = UAirship.shared().getApplicationContext().getResources();
+        Bitmap largeIcon = BitmapFactory.decodeResource(res, R.drawable.ua_launcher);
+
+        return new NotificationCompat.Builder(UAirship.shared().getApplicationContext())
+                .setContentTitle(UAirship.getAppName())
+                .setContentText(alert)
+                .setDefaults(getNotificationDefaults())
+                .setSmallIcon(R.drawable.ua_notification_icon)
+                .setLargeIcon(largeIcon)
+                .setAutoCancel(true)
+                .build();
     }
 
     /**

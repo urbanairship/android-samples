@@ -1,5 +1,5 @@
-RichPushSample
-==============
+PushSample
+==========
 
 Introduction
 ------------
@@ -24,10 +24,10 @@ Eclipse (ADT) Setup
 -------------------
 
 Add Urban Airship Library SDK:
-  - Copy Urban Airship Library JAR into RichPushSample/libs/
+  - Copy Urban Airship Library JAR into PushSample/libs/
 
 Import project:
-  - Eclipse -> Import Android Project -> Samples/RichPushSample
+  - Eclipse -> Import Android Project -> Samples/PushSample
 
 Setup Support Library:
  - Follow http://developer.android.com/tools/support-library/setup.html to setup
@@ -39,6 +39,6 @@ If you have updated to ADT 22, you may need to include the Android Private Libra
 Further Reading
 ---------------
 
-For more information on using Rich Push for Android see our documentation_ site.
+For more information on using Push for Android see our documentation_ site.
 
 .. _documentation: http://docs.urbanairship.com

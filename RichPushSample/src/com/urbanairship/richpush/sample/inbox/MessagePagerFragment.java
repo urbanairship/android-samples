@@ -73,7 +73,7 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.message_pager_fragment, container, false);
         this.messagePager = (CustomViewPager) view.findViewById(R.id.message_pager);
-        this.adapter = new MessageFragmentAdapter(this.getFragmentManager());
+        this.adapter = new MessageFragmentAdapter(this.getChildFragmentManager());
 
         messagePager.setAdapter(adapter);
         updateRichPushMessages();
@@ -134,8 +134,20 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
      * with the inbox fragment and message view pager if available
      */
     private void updateRichPushMessages() {
+        // Store the current message id so we can restore the same position in the message list
+        String currentMessageID = null;
+        if (messages != null && messages.size() > messagePager.getCurrentItem()) {
+            currentMessageID = messages.get(messagePager.getCurrentItem()).getMessageId();
+        }
+
         this.messages = RichPushManager.shared().getRichPushUser().getInbox().getMessages();
         adapter.setRichPushMessages(messages);
+
+        // Restore the position in the message list if the message still exists
+        RichPushMessage message = RichPushInbox.shared().getMessage(currentMessageID);
+        if (message != null) {
+            setCurrentMessage(message);
+        }
     }
 
     @Override
@@ -157,6 +169,10 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
      * @param message The message to view
      */
     public void setCurrentMessage(RichPushMessage message) {
+        if (message == null) {
+            return;
+        }
+
         int position = messages.indexOf(message);
         if (position != -1) {
             messagePager.setCurrentItem(position, false);
