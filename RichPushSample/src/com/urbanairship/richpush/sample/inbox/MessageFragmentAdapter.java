@@ -41,6 +41,11 @@ public class MessageFragmentAdapter extends FragmentStatePagerAdapter {
         return messages.size();
     }
 
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
     /**
      * Set the list of rich push messages
      * @param messages The current list of rich push messages to display
@@ -48,14 +53,5 @@ public class MessageFragmentAdapter extends FragmentStatePagerAdapter {
     public void setRichPushMessages(List<RichPushMessage> messages) {
         this.messages = messages;
         this.notifyDataSetChanged();
-    }
-
-    /**
-     * Gets the RichPushMessage at the position in the adapter
-     * @param position Position of the rich push message
-     * @return The rich push message at the position in the adapter
-     */
-    public RichPushMessage getMessage(int position) {
-        return messages.get(position);
     }
 }
