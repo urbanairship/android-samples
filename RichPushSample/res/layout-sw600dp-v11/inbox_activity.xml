@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.urbanairship.richpush.sample.view.CustomSlidingPaneLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sliding_pane_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layerType="hardware">
+
+
+    <fragment
+        class="com.urbanairship.richpush.sample.inbox.InboxFragment"
+        android:id="@+id/inbox"
+        android:layout_width="250dp"
+        android:layout_height="fill_parent"
+        tools:layout="@layout/inbox_list_item"/>
+
+
+    <fragment
+        class="com.urbanairship.richpush.sample.inbox.MessagePagerFragment"
+        android:id="@+id/pager"
+        android:layout_width="400dp"
+        android:layout_weight="1"
+        android:layout_height="fill_parent"
+        tools:layout="@layout/message_pager_fragment"/>
+
+</com.urbanairship.richpush.sample.view.CustomSlidingPaneLayout>

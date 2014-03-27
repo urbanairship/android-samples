@@ -128,8 +128,7 @@ public class InboxActivity extends ActionBarActivity implements
                 }
                 break;
             case R.id.refresh:
-                inbox.setListShownNoAnimation(false);
-                RichPushManager.shared().refreshMessages();
+                inbox.refreshMessages();
                 break;
             case R.id.preferences:
                 this.startActivity(new Intent(this, PushPreferencesActivity.class));
@@ -220,7 +219,7 @@ public class InboxActivity extends ActionBarActivity implements
             return;
         }
 
-        if (slidingPaneLayout != null && slidingPaneLayout.isOpen()) {
+        if (slidingPaneLayout != null && slidingPaneLayout.isSlideable() && slidingPaneLayout.isOpen()) {
             slidingPaneLayout.closePane();
         }
 

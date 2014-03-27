@@ -89,7 +89,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Optional: Needed for Action.startActivityForResult -->
+        <!-- Needed for Action.startActivityForResult -->
         <activity android:name="com.urbanairship.actions.ActionActivity"/>
 
         <!-- MODIFICATION REQUIRED
@@ -98,7 +98,7 @@
             to use the default theme for the application.  If the theme allows an action
             bar and is running on a honeycomb or newer device, the action bar will enable
             up navigation.
-            - For more customization details, see com.urbanairship.actions.ActionActivity -->
+            - For more customization details, see com.urbanairship.actions.LandingPageActivity -->
         <activity
             android:name="com.urbanairship.actions.LandingPageActivity"
             android:parentActivityName=".MainActivity"
@@ -136,6 +136,12 @@
 
               <!-- MODIFICATION REQUIRED - Use your package name as the category -->
               <category android:name="com.urbanairship.richpush.sample" />
+          </intent-filter>
+
+          <!--  REQUIRED for detecting when the application is upgraded so it can request a new GCM ID -->
+          <intent-filter>
+              <action android:name="android.intent.action.PACKAGE_REPLACED" />
+              <data android:scheme="package"/>
           </intent-filter>
         </receiver>
 
