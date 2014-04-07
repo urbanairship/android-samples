@@ -11,21 +11,21 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/apidLabelView"
+            android:id="@+id/channelIdLabelView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="APID"
+            android:text="Channel ID"
             android:textAppearance="?android:attr/textAppearanceLarge" />
         
         <EditText
-            android:id="@+id/apidText"
+            android:id="@+id/channelIdText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dip"
             android:layout_marginRight="5dip"
             android:layout_marginTop="0dip"
             android:editable="false"
-            android:contentDescription="apid"
+            android:contentDescription="channelId"
             android:selectAllOnFocus="true"
             android:textSize="12dip" >
 

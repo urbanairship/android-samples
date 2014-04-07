@@ -42,8 +42,6 @@ import com.urbanairship.location.UALocationManager;
 import com.urbanairship.push.PushManager;
 import com.urbanairship.push.PushPreferences;
 import com.urbanairship.push.sample.R;
-import com.urbanairship.push.sample.R.id;
-import com.urbanairship.push.sample.R.layout;
 
 import java.util.Calendar;
 import java.util.Date;
