@@ -10,6 +10,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -94,13 +95,13 @@ public class LocationActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        registerReceiver(locationUpdateReceiver, locationFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(locationUpdateReceiver, locationFilter);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        unregisterReceiver(locationUpdateReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(locationUpdateReceiver);
     }
 
     BroadcastReceiver locationUpdateReceiver = new BroadcastReceiver() {

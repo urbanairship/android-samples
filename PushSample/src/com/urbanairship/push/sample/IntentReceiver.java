@@ -28,6 +28,8 @@ package com.urbanairship.push.sample;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.urbanairship.UAirship;
@@ -35,6 +37,7 @@ import com.urbanairship.actions.ActionUtils;
 import com.urbanairship.actions.DeepLinkAction;
 import com.urbanairship.actions.LandingPageAction;
 import com.urbanairship.actions.OpenExternalUrlAction;
+import com.urbanairship.location.UALocationManager;
 import com.urbanairship.push.GCMMessageHandler;
 import com.urbanairship.push.PushManager;
 
@@ -60,6 +63,10 @@ public class IntentReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.i(logTag, "Received intent: " + intent.toString());
         String action = intent.getAction();
+
+        if (action == null) {
+            return;
+        }
 
         if (action.equals(PushManager.ACTION_PUSH_RECEIVED)) {
 
@@ -94,6 +101,10 @@ public class IntentReceiver extends BroadcastReceiver {
 
         } else if (action.equals(GCMMessageHandler.ACTION_GCM_DELETED_MESSAGES)) {
             Log.i(logTag, "The GCM service deleted "+intent.getStringExtra(GCMMessageHandler.EXTRA_GCM_TOTAL_DELETED)+" messages.");
+        } else if (action.equals(UALocationManager.getLocationIntentAction(UALocationManager.ACTION_SUFFIX_LOCATION_UPDATE))) {
+            Location location = (Location)intent.getParcelableExtra(UALocationManager.LOCATION_KEY);
+            Log.i(logTag, "New location: " + location);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         }
 
     }
