@@ -19,3 +19,4 @@ proguard/
 *.swp
 *.iml
 AndroidAutomatorUtils.jar
+.gradle/*

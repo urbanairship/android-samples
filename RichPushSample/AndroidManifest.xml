@@ -43,8 +43,7 @@
     <application android:label="@string/app_name"
                  android:icon="@drawable/ua_launcher"
                  android:name="com.urbanairship.richpush.sample.RichPushApplication"
-                 android:theme="@style/Theme.AppCompat"
-                 android:debuggable="true">
+                 android:theme="@style/Theme.AppCompat">
 
         <!-- OPTIONAL (for the inbox widget) -->
         <receiver android:name=".widget.RichPushWidgetProvider">
