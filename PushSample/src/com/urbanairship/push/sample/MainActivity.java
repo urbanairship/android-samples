@@ -31,13 +31,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.urbanairship.Logger;
-import com.urbanairship.UAirship;
 import com.urbanairship.analytics.InstrumentedActivity;
 import com.urbanairship.location.UALocationManager;
 import com.urbanairship.push.PushManager;
@@ -90,11 +90,11 @@ public class MainActivity extends InstrumentedActivity {
         });
 
         boundServiceFilter = new IntentFilter();
-        boundServiceFilter.addAction(UALocationManager.getLocationIntentAction(UALocationManager.ACTION_SUFFIX_LOCATION_SERVICE_BOUND));
-        boundServiceFilter.addAction(UALocationManager.getLocationIntentAction(UALocationManager.ACTION_SUFFIX_LOCATION_SERVICE_UNBOUND));
+        boundServiceFilter.addAction(UALocationManager.ACTION_LOCATION_SERVICE_UNBOUND);
+        boundServiceFilter.addAction(UALocationManager.ACTION_LOCATION_SERVICE_BOUND);
 
         apidUpdateFilter = new IntentFilter();
-        apidUpdateFilter.addAction(UAirship.getPackageName()+IntentReceiver.APID_UPDATED_ACTION_SUFFIX);
+        apidUpdateFilter.addAction(PushManager.ACTION_REGISTRATION_FINISHED);
     }
 
     @Override
@@ -107,8 +107,10 @@ public class MainActivity extends InstrumentedActivity {
 
         handleLocationButton();
 
-        registerReceiver(boundServiceReceiver, boundServiceFilter);
-        registerReceiver(apidUpdateReceiver, apidUpdateFilter);
+        // Use local broadcast manager to receive
+        LocalBroadcastManager locationBroadcastManager = LocalBroadcastManager.getInstance(this);
+        locationBroadcastManager.registerReceiver(boundServiceReceiver, boundServiceFilter);
+        locationBroadcastManager.registerReceiver(apidUpdateReceiver, apidUpdateFilter);
         updateApidField();
     }
 
@@ -125,18 +127,15 @@ public class MainActivity extends InstrumentedActivity {
     @Override
     public void onPause() {
         super.onPause();
-        try {
-            unregisterReceiver(boundServiceReceiver);
-            unregisterReceiver(apidUpdateReceiver);
-        } catch (IllegalArgumentException e) {
-            Logger.error(e.getMessage());
-        }
+        LocalBroadcastManager locationBroadcastManager = LocalBroadcastManager.getInstance(this);
+        locationBroadcastManager.unregisterReceiver(boundServiceReceiver);
+        locationBroadcastManager.unregisterReceiver(apidUpdateReceiver);
     }
 
     private BroadcastReceiver boundServiceReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (UALocationManager.getLocationIntentAction(UALocationManager.ACTION_SUFFIX_LOCATION_SERVICE_BOUND).equals(intent.getAction())) {
+            if (UALocationManager.ACTION_LOCATION_SERVICE_BOUND.equals(intent.getAction())) {
                 locationButton.setEnabled(true);
             } else {
                 locationButton.setEnabled(false);

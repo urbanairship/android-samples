@@ -28,6 +28,7 @@ package com.urbanairship.push.sample;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.urbanairship.UAirship;
@@ -46,7 +47,6 @@ public class IntentReceiver extends BroadcastReceiver {
 
     private static final String logTag = "PushSample";
 
-    public static String APID_UPDATED_ACTION_SUFFIX = ".apid.updated";
 
     // A set of actions that launch activities when a push is opened.  Update
     // with any custom actions that also start activities when a push is opened.
@@ -60,6 +60,11 @@ public class IntentReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.i(logTag, "Received intent: " + intent.toString());
         String action = intent.getAction();
+
+        if (action == null) {
+            return;
+        }
+
 
         if (action.equals(PushManager.ACTION_PUSH_RECEIVED)) {
 
@@ -85,17 +90,17 @@ public class IntentReceiver extends BroadcastReceiver {
             }
 
         } else if (action.equals(PushManager.ACTION_REGISTRATION_FINISHED)) {
+
             Log.i(logTag, "Registration complete. APID:" + intent.getStringExtra(PushManager.EXTRA_APID)
                     + ". Valid: " + intent.getBooleanExtra(PushManager.EXTRA_REGISTRATION_VALID, false));
-
-            // Notify any app-specific listeners
-            Intent launch = new Intent(UAirship.getPackageName() + APID_UPDATED_ACTION_SUFFIX);
-            UAirship.shared().getApplicationContext().sendBroadcast(launch);
-
         } else if (action.equals(GCMMessageHandler.ACTION_GCM_DELETED_MESSAGES)) {
             Log.i(logTag, "The GCM service deleted "+intent.getStringExtra(GCMMessageHandler.EXTRA_GCM_TOTAL_DELETED)+" messages.");
         }
 
+        // Notify any app-specific listeners using the local broadcast receiver to avoid
+        // leaking any sensitive information.  This sends out all push and location intents
+        // to the rest of the application.
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
 
