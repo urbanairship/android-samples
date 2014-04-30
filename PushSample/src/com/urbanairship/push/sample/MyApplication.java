@@ -31,6 +31,7 @@ import android.util.Log;
 import com.urbanairship.AirshipConfigOptions;
 import com.urbanairship.Logger;
 import com.urbanairship.UAirship;
+import com.urbanairship.location.UALocationManager;
 import com.urbanairship.push.CustomPushNotificationBuilder;
 import com.urbanairship.push.PushManager;
 
@@ -68,6 +69,6 @@ public class MyApplication extends Application {
 
         PushManager.shared().setNotificationBuilder(nb);
         PushManager.shared().setIntentReceiver(IntentReceiver.class);
-
+        UALocationManager.shared().setIntentReceiver(IntentReceiver.class);
     }
 }

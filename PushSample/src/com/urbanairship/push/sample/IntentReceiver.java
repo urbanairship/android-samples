@@ -101,7 +101,7 @@ public class IntentReceiver extends BroadcastReceiver {
 
         } else if (action.equals(GCMMessageHandler.ACTION_GCM_DELETED_MESSAGES)) {
             Log.i(logTag, "The GCM service deleted "+intent.getStringExtra(GCMMessageHandler.EXTRA_GCM_TOTAL_DELETED)+" messages.");
-        } else if (action.equals(UALocationManager.getLocationIntentAction(UALocationManager.ACTION_SUFFIX_LOCATION_UPDATE))) {
+        } else if (action.equals(UALocationManager.ACTION_LOCATION_UPDATE)) {
             Location location = (Location)intent.getParcelableExtra(UALocationManager.LOCATION_KEY);
             Log.i(logTag, "New location: " + location);
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
