@@ -41,7 +41,7 @@ public class LocationActivity extends Activity {
         gpsUpdateButton = (Button) findViewById(R.id.gps_update_button);
 
         locationFilter = new IntentFilter();
-        locationFilter.addAction(UALocationManager.getLocationIntentAction(UALocationManager.ACTION_SUFFIX_LOCATION_UPDATE));
+        locationFilter.addAction(UALocationManager.ACTION_LOCATION_UPDATE);
 
         newCriteria = new Criteria();
         newCriteria.setAccuracy(Criteria.ACCURACY_FINE);
@@ -108,7 +108,7 @@ public class LocationActivity extends Activity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (UALocationManager.getLocationIntentAction(UALocationManager.ACTION_SUFFIX_LOCATION_UPDATE).equals(intent.getAction())) {
+            if (UALocationManager.ACTION_LOCATION_UPDATE.equals(intent.getAction())) {
                 Location newLocation = (Location) intent.getExtras().get(UALocationManager.LOCATION_KEY);
 
                 String text = String.format("lat: %s, lon: %s", newLocation.getLatitude(),
