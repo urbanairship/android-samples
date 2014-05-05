@@ -7,7 +7,6 @@ import com.urbanairship.AirshipConfigOptions;
 import com.urbanairship.UAirship;
 import com.urbanairship.preference.UAPreferenceAdapter;
 import com.urbanairship.push.sample.R;
-import com.urbanairship.push.sample.R.xml;
 
 public class PreferencesActivity extends PreferenceActivity {
 
@@ -24,10 +23,8 @@ public class PreferencesActivity extends PreferenceActivity {
             this.addPreferencesFromResource(R.xml.push_preferences);
         }
 
-        // Only add the location preferences if the locationServiceEnabled is true
-        if (options.locationOptions.locationServiceEnabled) {
-            this.addPreferencesFromResource(R.xml.location_preferences);
-        }
+        this.addPreferencesFromResource(R.xml.location_preferences);
+
 
         // Display the advanced settings
         if (options.pushServiceEnabled) {
