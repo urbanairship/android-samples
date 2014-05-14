@@ -38,6 +38,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.urbanairship.analytics.InstrumentedActivity;
+import com.urbanairship.google.PlayServicesUtils;
 import com.urbanairship.push.PushManager;
 import com.urbanairship.push.sample.preference.PreferencesActivity;
 
@@ -72,6 +73,14 @@ public class MainActivity extends InstrumentedActivity {
 
         apidUpdateFilter = new IntentFilter();
         apidUpdateFilter.addAction(PushManager.ACTION_REGISTRATION_FINISHED);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // Handle any Google Play services errors
+        PlayServicesUtils.handleAnyPlayServicesError(this);
     }
 
     @Override
