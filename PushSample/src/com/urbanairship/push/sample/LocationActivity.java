@@ -8,7 +8,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.urbanairship.UAirship;
-import com.urbanairship.common.PendingResult;
+import com.urbanairship.PendingResult;
 import com.urbanairship.location.LocationRequestOptions;
 import com.urbanairship.location.UALocationManager;
 
