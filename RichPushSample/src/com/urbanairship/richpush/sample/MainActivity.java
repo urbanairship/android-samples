@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 
 import com.urbanairship.UAirship;
+import com.urbanairship.google.PlayServicesUtils;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushUser;
 import com.urbanairship.richpush.sample.inbox.InboxActivity;
@@ -73,6 +74,9 @@ ActionBar.OnNavigationListener {
     @Override
     protected void onStart() {
         super.onStart();
+
+        // Handle any Google Play services errors
+        PlayServicesUtils.handleAnyPlayServicesError(this);
 
         // Activity instrumentation for analytic tracking
         UAirship.shared().getAnalytics().activityStarted(this);

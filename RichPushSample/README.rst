@@ -37,8 +37,10 @@ Import project:
   - Eclipse -> Import Android Project -> Samples/RichPushSample
 
 Setup Support Library:
- - `Android Support-v4 Library <http://developer.android.com/tools/extras/support-library.html>`_ **Minimum required revision: 13**
  - `Android Support-v7 AppCompat Library <http://developer.android.com/tools/support-library/features.html#v7-appcompat>`_ **Minimum required revision: 18**
+
+Setup Google Play services:
+ - http://developer.android.com/google/play-services/setup.html#Setup
 
 Add Urban Airship Android Library to 'libs' directory:
  - `(Download latest stable release) <http://com.urbanairship.filereleases.s3.amazonaws.com/ua-android-lib-latest.zip>`_
