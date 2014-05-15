@@ -37,19 +37,13 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.urbanairship.Logger;
 import com.urbanairship.analytics.InstrumentedActivity;
-import com.urbanairship.location.UALocationManager;
+import com.urbanairship.google.PlayServicesUtils;
 import com.urbanairship.push.PushManager;
-import com.urbanairship.push.sample.preference.CustomPreferencesActivity;
 import com.urbanairship.push.sample.preference.PreferencesActivity;
 
 public class MainActivity extends InstrumentedActivity {
 
-
-    Button locationButton;
-
-    IntentFilter boundServiceFilter;
     IntentFilter apidUpdateFilter;
 
     @Override
@@ -57,28 +51,16 @@ public class MainActivity extends InstrumentedActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        locationButton = (Button)findViewById(R.id.location_button);
+        // Location
+        Button locationButton = (Button)findViewById(R.id.location_button);
         locationButton.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getBaseContext(), LocationActivity.class));
             }
-
         });
 
-        // Set up custom preference screen style button
-        Button customPreferencesButton = (Button)findViewById(R.id.push_custom_preferences_button);
-        customPreferencesButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(), CustomPreferencesActivity.class));
-            }
-
-        });
-
-        // Set up android built-in preference screen style button
+        // Preferences
         Button preferencesButton = (Button)findViewById(R.id.push_preferences_button);
         preferencesButton.setOnClickListener(new OnClickListener() {
 
@@ -89,12 +71,16 @@ public class MainActivity extends InstrumentedActivity {
 
         });
 
-        boundServiceFilter = new IntentFilter();
-        boundServiceFilter.addAction(UALocationManager.ACTION_LOCATION_SERVICE_UNBOUND);
-        boundServiceFilter.addAction(UALocationManager.ACTION_LOCATION_SERVICE_BOUND);
-
         apidUpdateFilter = new IntentFilter();
         apidUpdateFilter.addAction(PushManager.ACTION_REGISTRATION_FINISHED);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // Handle any Google Play services errors
+        PlayServicesUtils.handleAnyPlayServicesError(this);
     }
 
     @Override
@@ -105,43 +91,21 @@ public class MainActivity extends InstrumentedActivity {
         NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
 
-        handleLocationButton();
 
         // Use local broadcast manager to receive
         LocalBroadcastManager locationBroadcastManager = LocalBroadcastManager.getInstance(this);
-        locationBroadcastManager.registerReceiver(boundServiceReceiver, boundServiceFilter);
         locationBroadcastManager.registerReceiver(apidUpdateReceiver, apidUpdateFilter);
         updateApidField();
     }
 
-    private void handleLocationButton() {
-        if (UALocationManager.isServiceBound()) {
-            Logger.info("LocationService is bound to MainActivity");
-            locationButton.setEnabled(true);
-        } else {
-            Logger.info("LocationService is not bound to MainActivity");
-            locationButton.setEnabled(false);
-        }
-    }
 
     @Override
     public void onPause() {
         super.onPause();
         LocalBroadcastManager locationBroadcastManager = LocalBroadcastManager.getInstance(this);
-        locationBroadcastManager.unregisterReceiver(boundServiceReceiver);
         locationBroadcastManager.unregisterReceiver(apidUpdateReceiver);
     }
 
-    private BroadcastReceiver boundServiceReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (UALocationManager.ACTION_LOCATION_SERVICE_BOUND.equals(intent.getAction())) {
-                locationButton.setEnabled(true);
-            } else {
-                locationButton.setEnabled(false);
-            }
-        }
-    };
 
     private BroadcastReceiver apidUpdateReceiver = new BroadcastReceiver() {
         @Override
