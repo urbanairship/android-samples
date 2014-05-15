@@ -29,9 +29,8 @@ Add Urban Airship Library SDK:
 Import project:
   - Eclipse -> Import Android Project -> Samples/PushSample
 
-Setup Support Library:
- - Follow http://developer.android.com/tools/support-library/setup.html to setup
- the v4 support library
+Set up Google Play services:
+ - http://developer.android.com/google/play-services/setup.html#Setup
 
 If you have updated to ADT 22, you may need to include the Android Private Libraries:
   - Right-click on PushSample project -> Properties > Java Build Path > Order and Export and check the Android Private Libraries

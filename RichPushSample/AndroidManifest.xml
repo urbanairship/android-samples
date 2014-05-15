@@ -45,6 +45,10 @@
                  android:name="com.urbanairship.richpush.sample.RichPushApplication"
                  android:theme="@style/Theme.AppCompat">
 
+        <!-- Required for Google Play services -->
+        <meta-data android:name="com.google.android.gms.version"
+                   android:value="@integer/google_play_services_version" />
+
         <!-- OPTIONAL (for the inbox widget) -->
         <receiver android:name=".widget.RichPushWidgetProvider">
             <intent-filter>
@@ -124,6 +128,8 @@
             </intent-filter>
         </activity>
 
+        <!-- Used to handle any Google Play services recoverable errors. -->
+        <activity android:name="com.urbanairship.google.PlayServicesErrorActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
         <!-- REQUIRED for Urban Airship GCM-->
         <receiver android:name="com.urbanairship.CoreReceiver" />
