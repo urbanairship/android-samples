@@ -36,10 +36,10 @@ Add Urban Airship Library SDK:
 Import project:
   - Eclipse -> Import Android Project -> Samples/RichPushSample
 
-Setup Support Library:
+Set up Support Library:
  - `Android Support-v7 AppCompat Library <http://developer.android.com/tools/support-library/features.html#v7-appcompat>`_ **Minimum required revision: 18**
 
-Setup Google Play services:
+Set up Google Play services:
  - http://developer.android.com/google/play-services/setup.html#Setup
 
 Add Urban Airship Android Library to 'libs' directory:
