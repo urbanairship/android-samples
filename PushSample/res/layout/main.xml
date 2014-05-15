@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:background="@drawable/tiledstripes"
     android:layout_height="fill_parent">
-    
+
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:text="APID"
             android:textAppearance="?android:attr/textAppearanceLarge" />
-        
+
         <EditText
             android:id="@+id/apidText"
             android:layout_width="match_parent"
@@ -31,15 +31,10 @@
 
 	        <!--  <requestFocus /> -->
 	    </EditText>
-        
+
     </LinearLayout>
-    
-  <Button
-        android:id="@+id/push_custom_preferences_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Custom Preferences" />
-  
+
+
   <Button
         android:id="@+id/push_preferences_button"
         android:layout_width="fill_parent"
@@ -51,5 +46,5 @@
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:text="View Location" />
-       
+
 </LinearLayout>
