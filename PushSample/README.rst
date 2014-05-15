@@ -29,7 +29,7 @@ Add Urban Airship Library SDK:
 Import project:
   - Eclipse -> Import Android Project -> Samples/PushSample
 
-Setup Google Play services:
+Set up Google Play services:
  - http://developer.android.com/google/play-services/setup.html#Setup
 
 If you have updated to ADT 22, you may need to include the Android Private Libraries:
