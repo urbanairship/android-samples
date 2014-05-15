@@ -1,20 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="@drawable/tiledstripes"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+              android:orientation="vertical"
+              android:background="@drawable/tiledstripes"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
 
-    <Button
-        android:id="@+id/network_update_button"
+    <TextView
+        android:text="Request Priority:"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <RadioGroup
+        android:id="@+id/location_priority"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Request Location Update With Network" />
+        android:layout_marginLeft="8dp"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/priority_high_accuracy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="High Accuracy"/>
+
+        <RadioButton
+            android:id="@+id/priority_balanced"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Balanced Power and Accuracy"/>
+
+        <RadioButton
+            android:id="@+id/priority_low_power"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Low Power"/>
+
+        <RadioButton
+            android:id="@+id/priority_no_power"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Power"/>
+    </RadioGroup>
 
     <Button
-        android:id="@+id/gps_update_button"
+        android:id="@+id/request_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Request Location Update With GPS" />
+        android:text="Request Location"
+        android:onClick="onRequestLocationClicked"/>
+
+    <LinearLayout
+        android:id="@+id/request_progress"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Requesting Location"
+            android:layout_gravity="center"
+            android:id="@+id/textView"/>
+
+
+    </LinearLayout>
+
 
 </LinearLayout>

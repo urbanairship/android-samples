@@ -46,10 +46,8 @@ public class PreferencesActivity extends PreferenceActivity {
         // Display the push preferences
         this.addPreferencesFromResource(R.xml.push_preferences);
 
-        // Only add the location preferences if the locationServiceEnabled is true
-        if (options.locationOptions.locationServiceEnabled) {
-            this.addPreferencesFromResource(R.xml.location_preferences);
-        }
+        this.addPreferencesFromResource(R.xml.location_preferences);
+
 
         // Display the advanced settings
         this.addPreferencesFromResource(R.xml.advanced_preferences);
