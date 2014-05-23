@@ -76,7 +76,9 @@ ActionBar.OnNavigationListener {
         super.onStart();
 
         // Handle any Google Play services errors
-        PlayServicesUtils.handleAnyPlayServicesError(this);
+        if (PlayServicesUtils.isGooglePlayStoreAvailable()) {
+            PlayServicesUtils.handleAnyPlayServicesError(this);
+        }
 
         // Activity instrumentation for analytic tracking
         UAirship.shared().getAnalytics().activityStarted(this);

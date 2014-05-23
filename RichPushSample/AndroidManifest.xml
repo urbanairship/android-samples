@@ -1,33 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.urbanairship.richpush.sample"
-      android:versionCode="1"
-      android:versionName="1.0">
+          xmlns:amazon="http://schemas.amazon.com/apk/res/android"
+          package="com.urbanairship.richpush.sample"
+          android:versionCode="1"
+          android:versionName="1.0">
 
-    <!-- minSdkVersion sets runtime compatibility ("will run on API level 7") -->
+    <!-- minSdkVersion sets runtime compatibility ("will run on API level 9") -->
     <!-- targetSdkVersion should be set to the latest version tested, to disable compatibility modes -->
-    <uses-sdk android:minSdkVersion="7"
-              android:targetSdkVersion="19"/>
+    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="19" />
 
-    <!-- REQUIRED PERMISSIONS (for Urban Airship GCM) -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" /><!-- GCM requires a Google account. -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- Keeps the processor from sleeping when a message is received. -->
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" /><!-- This app has permission to register with GCM and receive message -->
-
-    <!-- MODIFICATION REQUIRED - Replace "com.urbanairship.richpush.sample" with your package name -->
-    <permission android:name="com.urbanairship.richpush.sample.permission.C2D_MESSAGE" android:protectionLevel="signature" />
-    <uses-permission android:name="com.urbanairship.richpush.sample.permission.C2D_MESSAGE" />
-    <!-- The two elements above ensure that only this application can receive the messages and registration result -->
+    <!-- REQUIRED for Urban Airship -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />  <!-- Required for Push -->
 
     <!-- MODIFICATION REQUIRED - Replace "com.urbanairship.richpush.sample" with your package name -->
     <permission android:name="com.urbanairship.richpush.sample.permission.UA_DATA" android:protectionLevel="signature" />
     <uses-permission android:name="com.urbanairship.richpush.sample.permission.UA_DATA" />
     <!-- The two elements above ensure that only this application has access to the Urban Airship provider -->
 
-    <!--  END Urban Airship Required Permissions -->
+    <!-- REQUIRED PERMISSIONS for GCM -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <!-- GCM requires a Google account. -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <!-- This app has permission to register with GCM and receive message -->
+    <!-- Required MODIFICATION REQUIRED - Replace "com.urbanairship.richpush.sample" with your package name -->
+    <permission android:name="com.urbanairship.richpush.sample.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="com.urbanairship.richpush.sample.permission.C2D_MESSAGE" />
+    <!-- The two elements above ensure that only this application can receive the messages and registration result -->
+
+    <!-- REQUIRED PERMISSIONS for ADM -->
+    <uses-permission android:name="com.amazon.device.messaging.permission.RECEIVE" />
+    <!-- Required MODIFICATION REQUIRED - Replace "com.urbanairship.richpush.sample" with your package name -->
+    <permission android:name="com.urbanairship.richpush.sample.permission.RECEIVE_ADM_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="com.urbanairship.richpush.sample.permission.RECEIVE_ADM_MESSAGE" />
+    <!-- The two elements above ensure that only this application can receive the messages and registration result -->
 
     <!-- OPTIONAL Urban Airship Settings -->
     <!-- REQUIRED FOR LOCATION -->
@@ -38,34 +46,13 @@
     <!--  OPTIONAL - This permission is only necessary if your app has multiple processes -->
     <!--  <uses-permission android:name="android.permission.BROADCAST_STICKY" /> -->
 
-    <!-- END OPTIONAL Urban Airship Settings -->
+    <application
+        android:label="@string/app_name"
+        android:icon="@drawable/ua_launcher"
+        android:name="com.urbanairship.richpush.sample.RichPushApplication"
+        android:theme="@style/Theme.AppCompat">
 
-    <application android:label="@string/app_name"
-                 android:icon="@drawable/ua_launcher"
-                 android:name="com.urbanairship.richpush.sample.RichPushApplication"
-                 android:theme="@style/Theme.AppCompat">
-
-        <!-- Required for Google Play services -->
-        <meta-data android:name="com.google.android.gms.version"
-                   android:value="@integer/google_play_services_version" />
-
-        <!-- OPTIONAL (for the inbox widget) -->
-        <receiver android:name=".widget.RichPushWidgetProvider">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <!-- This specifies the widget provider info -->
-            <meta-data android:name="android.appwidget.provider"
-                    android:resource="@xml/widgetinfo" />
-        </receiver>
-
-        <!-- The service serving the RemoteViews to the collection widget -->
-        <service android:name=".widget.RichPushWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"
-            android:exported="false" />
-
-        <activity android:name=".MainActivity"
-                  android:label="@string/app_name" >
+        <activity android:name=".MainActivity" android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -77,25 +64,63 @@
         <activity android:name="com.urbanairship.richpush.sample.inbox.MessageActivity" />
 
         <!-- Optional: This is an example of one of the many ways to handle deep
-         linking in the application.  To use with your application, update the data
-         scheme to be unique for the application and modify ParseDeepLinkActivity.parseDeepLink
-         method to match your application's deep link parsing -->
+        linking in the application.  To use with your application, update the data
+        scheme to be unique for the application and modify ParseDeepLinkActivity.parseDeepLink
+        method to match your application's deep link parsing -->
         <activity android:name=".ParseDeepLinkActivity">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
                 <!-- Handles any vnd.urbanairship.richpush://deeplink URI's -->
-                <data android:scheme="vnd.urbanairship.richpush" android:host="deeplink" />
+                <data
+                    android:scheme="vnd.urbanairship.richpush" android:host="deeplink" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
 
-        <!-- Needed for Action.startActivityForResult -->
-        <activity android:name="com.urbanairship.actions.ActionActivity"/>
+        <!-- The provider is needed for the RichPush Widget -->
+        <receiver android:name=".widget.RichPushWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <!-- This specifies the widget provider info -->
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widgetinfo" />
+        </receiver>
 
-        <!-- MODIFICATION REQUIRED
+        <!-- The service serving the RemoteViews to the collection widget -->
+        <service
+            android:name=".widget.RichPushWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            android:exported="false" />
+
+        <!-- OPTIONAL, if you want to receive push, push opened and registration completed intents -->
+        <!-- Replace the receiver below with your package and class name -->
+        <receiver android:name="com.urbanairship.richpush.sample.PushReceiver" />
+
+
+        <!-- REQUIRED for ADM - You must explicitly enable ADM and declare whether your app cannot work without
+          ADM (android:required="true") or can work without ADM (android:required="false").
+          If you specify android:required="false", your app must degrade gracefully if ADM
+          is unavailable. -->
+        <amazon:enable-feature
+            android:name="com.amazon.device.messaging"
+            android:required="false" />
+
+        <!-- REQUIRED for Google Play services (GCM)-->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+
+        <!-- Needed for Action.startActivityForResult -->
+        <activity android:name="com.urbanairship.actions.ActionActivity" />
+
+        <!-- REQUIRED for Landing Pages
+        MODIFICATION REQUIRED:
             - Set or Remove the parent activity
             - Set or Remove the theme.  Removing the theme will cause the landing page
             to use the default theme for the application.  If the theme allows an action
@@ -109,7 +134,7 @@
             android:exported="false">
 
             <!-- Sample layout, remove to use the default -->
-             <meta-data
+            <meta-data
                 android:name="com.urbanairship.action.LANDING_PAGE_VIEW"
                 android:resource="@layout/landing_page_activity" />
 
@@ -121,64 +146,66 @@
                 android:value="com.urbanairship.richpush.sample.MainActivity" />
 
             <intent-filter>
-                <action android:name="com.urbanairship.actions.SHOW_LANDING_PAGE_INTENT_ACTION"/>
+                <action android:name="com.urbanairship.actions.SHOW_LANDING_PAGE_INTENT_ACTION" />
                 <data android:scheme="http" />
                 <data android:scheme="https" />
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-        <!-- Used to handle any Google Play services recoverable errors. -->
-        <activity android:name="com.urbanairship.google.PlayServicesErrorActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <!-- REQUIRED for PlayServiceUtils.handleAnyPlayServicesError to handle Google Play services recoverable errors. -->
+        <activity
+            android:name="com.urbanairship.google.PlayServicesErrorActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <!-- REQUIRED for Urban Airship GCM-->
+        <!-- REQUIRED for Urban Airship Push -->
         <receiver android:name="com.urbanairship.CoreReceiver" />
 
-        <receiver android:name="com.urbanairship.push.GCMPushReceiver" android:permission="com.google.android.c2dm.permission.SEND">
-          <intent-filter>
-              <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-              <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+        <!-- REQUIRED for GCM -->
+        <receiver
+            android:name="com.urbanairship.push.GCMPushReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
 
-              <!-- MODIFICATION REQUIRED - Use your package name as the category -->
-              <category android:name="com.urbanairship.richpush.sample" />
-          </intent-filter>
-
-          <!--  REQUIRED for detecting when the application is upgraded so it can request a new GCM ID -->
-          <intent-filter>
-              <action android:name="android.intent.action.PACKAGE_REPLACED" />
-              <data android:scheme="package"/>
-          </intent-filter>
-        </receiver>
-
-        <service android:name="com.urbanairship.push.PushService" android:label="Push Notification Service"/>
-        <service android:name="com.urbanairship.analytics.EventService" android:label="Event Service"/>
-        <service android:name="com.urbanairship.actions.ActionService" />
-
-        <!-- This is required for persisting preferences related to push and location -->
-        <!-- MODIFICATION REQUIRED - Replace "com.urbanairship.richpush.sample" with your package name -->
-        <provider android:name="com.urbanairship.UrbanAirshipProvider"
-                  android:authorities="com.urbanairship.richpush.sample.urbanairship.provider"
-                  android:permission="com.urbanairship.richpush.sample.permission.UA_DATA"
-                  android:exported="true"
-                  android:multiprocess="true" />
-
-        <!-- REQUIRED for Rich Push -->
-        <service android:name="com.urbanairship.richpush.RichPushUpdateService"/>
-
-        <!-- END OF REQUIRED ITEMS -->
-
-
-        <!-- OPTIONAL (for segments support) -->
-        <service android:name="com.urbanairship.location.LocationService" android:label="Segments Service"/>
-
-        <!-- OPTIONAL, if you want to receive push, push opened and registration completed intents -->
-        <!-- Replace the receiver below with your package and class name -->
-        <receiver android:name="com.urbanairship.richpush.sample.PushReceiver">
-            <!-- REQUIRED IntentFilter - For Helium and Hybrid -->
             <intent-filter>
-                <action android:name="com.urbanairship.push.PushManager.ACTION_NOTIFICATION_OPENED" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <!-- MODIFICATION REQUIRED - Use your package name as the category -->
+                <category android:name="com.urbanairship.richpush.sample" />
             </intent-filter>
         </receiver>
 
+        <!-- REQUIRED for ADM -->         
+        <receiver
+            android:name="com.urbanairship.push.ADMPushReceiver"
+            android:permission="com.amazon.device.messaging.permission.SEND">
+                
+            <intent-filter>
+                <action android:name="com.amazon.device.messaging.intent.REGISTRATION" />
+                <action android:name="com.amazon.device.messaging.intent.RECEIVE" />
+
+                <!-- MODIFICATION REQUIRED - Use your package name as the category -->
+                <category android:name="com.urbanairship.richpush.sample" />                    
+            </intent-filter>
+        </receiver>
+
+        <!-- REQUIRED for Urban Airship -->
+        <service android:name="com.urbanairship.push.PushService" android:label="Push Notification Service" />
+        <service android:name="com.urbanairship.analytics.EventService" android:label="Event Service" />
+        <service android:name="com.urbanairship.actions.ActionService" />
+        <service android:name="com.urbanairship.richpush.RichPushUpdateService" />
+
+        <!-- OPTIONAL for Urban Airship Location (for segments support) -->
+        <service android:name="com.urbanairship.location.LocationService" android:label="Segments Service" />
+
+        <!-- This is required for persisting preferences related to push and location -->
+        <!-- MODIFICATION REQUIRED - Replace "com.urbanairship.richpush.sample" with your package name -->
+        <provider
+            android:name="com.urbanairship.UrbanAirshipProvider"
+            android:authorities="com.urbanairship.richpush.sample.urbanairship.provider"
+            android:permission="com.urbanairship.richpush.sample.permission.UA_DATA"
+            android:exported="true"
+            android:multiprocess="true" />
     </application>
+
 </manifest>

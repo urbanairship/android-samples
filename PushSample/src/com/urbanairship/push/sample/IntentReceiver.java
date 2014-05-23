@@ -36,7 +36,7 @@ import com.urbanairship.actions.ActionUtils;
 import com.urbanairship.actions.DeepLinkAction;
 import com.urbanairship.actions.LandingPageAction;
 import com.urbanairship.actions.OpenExternalUrlAction;
-import com.urbanairship.push.GCMMessageHandler;
+import com.urbanairship.push.GCMConstants;
 import com.urbanairship.push.PushManager;
 
 import java.util.Arrays;
@@ -45,14 +45,11 @@ import java.util.Set;
 
 public class IntentReceiver extends BroadcastReceiver {
 
-    private static final String logTag = "PushSample";
-
-    public static String CHANNEL_ID_UPDATED_ACTION_SUFFIX = ".channelid.updated";
-
+    private static final String TAG = "PushSample";
 
     // A set of actions that launch activities when a push is opened.  Update
     // with any custom actions that also start activities when a push is opened.
-    private static String[] ACTIVITY_ACTIONS = new String[] {
+    private static String[] ACTIVITY_ACTIONS = new String[]{
             DeepLinkAction.DEFAULT_REGISTRY_NAME,
             OpenExternalUrlAction.DEFAULT_REGISTRY_NAME,
             LandingPageAction.DEFAULT_REGISTRY_NAME
@@ -60,26 +57,25 @@ public class IntentReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i(logTag, "Received intent: " + intent.toString());
+        Log.i(TAG, "Received intent: " + intent.toString());
         String action = intent.getAction();
 
         if (action == null) {
             return;
         }
 
-
         if (action.equals(PushManager.ACTION_PUSH_RECEIVED)) {
 
             int id = intent.getIntExtra(PushManager.EXTRA_NOTIFICATION_ID, 0);
 
-            Log.i(logTag, "Received push notification. Alert: "
+            Log.i(TAG, "Received push notification. Alert: "
                     + intent.getStringExtra(PushManager.EXTRA_ALERT)
-                    + " [NotificationID="+id+"]");
+                    + " [NotificationID=" + id + "]");
 
             logPushExtras(intent);
 
         } else if (action.equals(PushManager.ACTION_NOTIFICATION_OPENED)) {
-            Log.i(logTag, "User clicked notification. Message: " + intent.getStringExtra(PushManager.EXTRA_ALERT));
+            Log.i(TAG, "User clicked notification. Message: " + intent.getStringExtra(PushManager.EXTRA_ALERT));
             logPushExtras(intent);
 
             // Only launch the main activity if the payload does not contain any
@@ -92,9 +88,9 @@ public class IntentReceiver extends BroadcastReceiver {
             }
 
         } else if (action.equals(PushManager.ACTION_REGISTRATION_SUCCEEDED)) {
-            Log.i(logTag, "Registration complete. Channel Id:" + intent.getStringExtra(PushManager.EXTRA_CHANNEL) + ".");
-        } else if (action.equals(GCMMessageHandler.ACTION_GCM_DELETED_MESSAGES)) {
-            Log.i(logTag, "The GCM service deleted "+intent.getStringExtra(GCMMessageHandler.EXTRA_GCM_TOTAL_DELETED)+" messages.");
+            Log.i(TAG, "Registration complete. Channel Id:" + intent.getStringExtra(PushManager.EXTRA_CHANNEL) + ".");
+        } else if (action.equals(GCMConstants.ACTION_GCM_DELETED_MESSAGES)) {
+            Log.i(TAG, "The GCM service deleted " + intent.getStringExtra(GCMConstants.EXTRA_GCM_TOTAL_DELETED) + " messages.");
         }
 
         // Notify any app-specific listeners using the local broadcast receiver to avoid
@@ -102,7 +98,6 @@ public class IntentReceiver extends BroadcastReceiver {
         // to the rest of the application.
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
-
 
     /**
      * Log the values sent in the payload's "extra" dictionary.
@@ -114,7 +109,7 @@ public class IntentReceiver extends BroadcastReceiver {
         for (String key : keys) {
 
             //ignore standard C2DM extra keys
-            List<String> ignoredKeys = (List<String>)Arrays.asList(
+            List<String> ignoredKeys = (List<String>) Arrays.asList(
                     "collapse_key",//c2dm collapse key
                     "from",//c2dm sender
                     PushManager.EXTRA_NOTIFICATION_ID,//int id of generated notification (ACTION_PUSH_RECEIVED only)
@@ -123,7 +118,7 @@ public class IntentReceiver extends BroadcastReceiver {
             if (ignoredKeys.contains(key)) {
                 continue;
             }
-            Log.i(logTag, "Push Notification Extra: ["+key+" : " + intent.getStringExtra(key) + "]");
+            Log.i(TAG, "Push Notification Extra: [" + key + " : " + intent.getStringExtra(key) + "]");
         }
     }
 }

@@ -37,16 +37,13 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.urbanairship.UAirship;
 import com.urbanairship.analytics.InstrumentedActivity;
 import com.urbanairship.google.PlayServicesUtils;
 import com.urbanairship.push.PushManager;
 import com.urbanairship.push.sample.preference.PreferencesActivity;
+import com.urbanairship.util.UAStringUtil;
 
 public class MainActivity extends InstrumentedActivity {
-
-    IntentFilter channelIdUpdateFilter;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,9 +69,6 @@ public class MainActivity extends InstrumentedActivity {
             }
 
         });
-
-        channelIdUpdateFilter = new IntentFilter();
-        channelIdUpdateFilter.addAction(UAirship.getPackageName() + IntentReceiver.CHANNEL_ID_UPDATED_ACTION_SUFFIX);
     }
 
     @Override
@@ -82,7 +76,9 @@ public class MainActivity extends InstrumentedActivity {
         super.onStart();
 
         // Handle any Google Play services errors
-        PlayServicesUtils.handleAnyPlayServicesError(this);
+        if (PlayServicesUtils.isGooglePlayStoreAvailable()) {
+            PlayServicesUtils.handleAnyPlayServicesError(this);
+        }
     }
 
     @Override
@@ -93,13 +89,17 @@ public class MainActivity extends InstrumentedActivity {
         NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
 
-
-        // Use local broadcast manager to receive
         LocalBroadcastManager locationBroadcastManager = LocalBroadcastManager.getInstance(this);
+
+        // Use local broadcast manager to receive registration events to update the channel
+        IntentFilter channelIdUpdateFilter;
+        channelIdUpdateFilter = new IntentFilter();
+        channelIdUpdateFilter.addAction(PushManager.ACTION_REGISTRATION_SUCCEEDED);
         locationBroadcastManager.registerReceiver(channelIdUpdateReceiver, channelIdUpdateFilter);
+
+        // Update the channel field
         updateChannelIdField();
     }
-
 
     @Override
     public void onPause() {
@@ -107,7 +107,6 @@ public class MainActivity extends InstrumentedActivity {
         LocalBroadcastManager locationBroadcastManager = LocalBroadcastManager.getInstance(this);
         locationBroadcastManager.unregisterReceiver(channelIdUpdateReceiver);
     }
-
 
     private BroadcastReceiver channelIdUpdateReceiver = new BroadcastReceiver() {
         @Override
@@ -118,9 +117,7 @@ public class MainActivity extends InstrumentedActivity {
 
     private void updateChannelIdField() {
         String channelIdString = PushManager.shared().getChannelId();
-        if (!PushManager.shared().getPreferences().isPushEnabled() || channelIdString == null) {
-            channelIdString = "";
-        }
+        channelIdString = UAStringUtil.isEmpty(channelIdString) ? "" : channelIdString;
 
         // fill in channel ID text
         EditText channelIdTextField = (EditText)findViewById(R.id.channelIdText);
