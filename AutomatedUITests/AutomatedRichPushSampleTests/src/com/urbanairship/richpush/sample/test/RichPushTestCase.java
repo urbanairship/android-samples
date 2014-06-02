@@ -56,7 +56,7 @@ public class RichPushTestCase extends BaseTestCase {
 
         // APIv1/v2: Send broadcast with extras
         String uniqueAlertId = pushSender.sendPushMessage(activityExtras);
-        verifyRichPushNotification("Rich push message dialog", uniqueAlertId, "API v1 broadcast to webview failed", ++messageCount);
+        verifyRichPushNotification("Rich Push Message", uniqueAlertId, "API v1 broadcast to webview failed", ++messageCount);
 
         // APIv1/v2: Send Rich Push Message to User Id
         uniqueAlertId = pushSender.sendRichPushToUser(richPushId);
@@ -64,7 +64,7 @@ public class RichPushTestCase extends BaseTestCase {
 
         // APIv3: Broadcast push with extras
         uniqueAlertId = pushSenderV3.sendPushMessage(activityExtras);
-        verifyRichPushNotification("Rich push message dialog", uniqueAlertId, "API v3 broadcast push failed", ++messageCount);
+        verifyRichPushNotification("Rich Push Message", uniqueAlertId, "API v3 broadcast push failed", ++messageCount);
 
         // APIv3: Push to APID
         uniqueAlertId = pushSenderV3.sendPushToApid(apid);

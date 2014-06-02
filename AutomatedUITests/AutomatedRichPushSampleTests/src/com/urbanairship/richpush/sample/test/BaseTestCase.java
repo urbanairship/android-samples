@@ -91,10 +91,9 @@ public class BaseTestCase extends UiAutomatorTestCase {
         UiObject notificationAlert = new UiObject(new UiSelector().textContains(uniqueAlertId));
         notificationAlert.click();
 
-        // Make sure we have a dialog fragment and web view in main activity
-        UiSelector webViewSelector = new UiSelector().className("android.webkit.WebView");
+        UiSelector webViewSelector = new UiSelector().className("android.view.View");
         if (description != null) {
-            webViewSelector.description(description);
+            webViewSelector.descriptionContains(uniqueAlertId);
         }
 
         UiObject richPushDialog = new UiObject(webViewSelector);
@@ -197,20 +196,14 @@ public class BaseTestCase extends UiAutomatorTestCase {
      * @throws Exception
      */
     void navigateToAppHome() throws Exception {
+        UiObject navigateUpButton = new UiObject(new UiSelector().description("Rich Push Sample, Navigate up"));
+        if (navigateUpButton.exists()) {
+            navigateUpButton.click();
+        }
+
         UiObject inbox = new UiObject(new UiSelector().text("Inbox"));
         if (inbox.exists()) {
             UiDevice.getInstance().pressBack();
-        }
-
-        UiObject navigateHomeButton = new UiObject(new UiSelector().description("Navigate home"));
-        UiObject navigateUpButton = new UiObject(new UiSelector().description("Navigate up"));
-        if (navigateHomeButton.exists()) {
-            navigateHomeButton.click();
-        } else if (navigateUpButton.exists()) {
-            navigateUpButton.click();
-            navigateHomeButton.click();
-        } else {
-            throw new Exception("Where are we?");
         }
 
         // Wait for activity

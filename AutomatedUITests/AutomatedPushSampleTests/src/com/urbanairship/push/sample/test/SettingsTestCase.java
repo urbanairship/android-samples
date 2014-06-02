@@ -52,21 +52,19 @@ public class SettingsTestCase extends BaseTestCase {
         // Location Settings
 
         // Test for parent location setting
-        verifyCheckBoxSetting("LOCATION_ENABLE");
+        verifyCheckBoxSetting("LOCATION_UPDATES_ENABLED");
 
         // The other location preferences depend on having location enabled
-        preferences.setPreferenceCheckBoxEnabled("LOCATION_ENABLE", true);
+        preferences.setPreferenceCheckBoxEnabled("LOCATION_UPDATES_ENABLED", true);
 
-        // Test foreground and background enable preferences
-        verifyCheckBoxSetting("LOCATION_FOREGROUND_ENABLE");
-        verifyCheckBoxSetting("LOCATION_BACKGROUND_ENABLE");
+        // Test background enable preferences
+        verifyCheckBoxSetting("LOCATION_BACKGROUND_UPDATES_ALLOWED");
 
         // Disable location settings
-        preferences.setPreferenceCheckBoxEnabled("LOCATION_ENABLE", false);
+        preferences.setPreferenceCheckBoxEnabled("LOCATION_UPDATES_ENABLED", false);
 
         // Make sure the rest of the location preference views are disabled
-        assertFalse(preferences.isPreferenceViewEnabled("LOCATION_FOREGROUND_ENABLE"));
-        assertFalse(preferences.isPreferenceViewEnabled("LOCATION_BACKGROUND_ENABLE"));
+        assertFalse(preferences.isPreferenceViewEnabled("LOCATION_BACKGROUND_UPDATES_ALLOWED"));
 
         this.getUiDevice().pressBack();
     }
