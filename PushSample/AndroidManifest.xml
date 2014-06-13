@@ -90,9 +90,9 @@
 
 
         <!-- REQUIRED for ADM - You must explicitly enable ADM and declare whether your app cannot work without
-        ADM (android:required="true") or can work without ADM (android:required="false").
-        If you specify android:required="false", your app must degrade gracefully if ADM
-        is unavailable. -->
+        ADM (android:required="true") or can work without ADM (android:required="false").
+        If you specify android:required="false", your app must degrade gracefully if ADM
+        is unavailable. -->
         <amazon:enable-feature
             android:name="com.amazon.device.messaging"
             android:required="false" />
