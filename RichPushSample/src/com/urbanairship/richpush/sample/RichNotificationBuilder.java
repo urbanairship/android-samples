@@ -37,8 +37,6 @@ import android.text.Html;
 import com.urbanairship.UAirship;
 import com.urbanairship.push.PushManager;
 import com.urbanairship.push.PushNotificationBuilder;
-import com.urbanairship.push.PushPreferences;
-import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.util.NotificationIDGenerator;
@@ -85,7 +83,7 @@ public class RichNotificationBuilder implements PushNotificationBuilder {
     private Notification createInboxNotification(String incomingAlert) {
         Context context = UAirship.shared().getApplicationContext();
 
-        List<RichPushMessage> unreadMessages = RichPushInbox.shared().getUnreadMessages();
+        List<RichPushMessage> unreadMessages = RichPushManager.shared().getRichPushInbox().getUnreadMessages();
         int totalUnreadCount = unreadMessages.size();
 
         // If we do not have any unread messages (message already read or they failed to fetch)
@@ -159,15 +157,15 @@ public class RichNotificationBuilder implements PushNotificationBuilder {
      * @return Notification defaults
      */
     private int getNotificationDefaults() {
-        PushPreferences prefs = PushManager.shared().getPreferences();
+        PushManager pushManager = PushManager.shared();
         int defaults = Notification.DEFAULT_LIGHTS;
 
-        if (!prefs.isInQuietTime()) {
-            if (prefs.isVibrateEnabled()) {
+        if (!pushManager.isInQuietTime()) {
+            if (pushManager.isVibrateEnabled()) {
                 defaults |= Notification.DEFAULT_VIBRATE;
             }
 
-            if (prefs.isSoundEnabled()) {
+            if (pushManager.isSoundEnabled()) {
                 defaults |= Notification.DEFAULT_SOUND;
             }
         }

@@ -221,7 +221,7 @@ public class InboxActivity extends ActionBarActivity implements
         if (!UAStringUtil.isEmpty(pendingMessageId)) {
             getIntent().removeExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
 
-            RichPushInbox richPushInbox = RichPushManager.shared().getRichPushUser().getInbox();
+            RichPushInbox richPushInbox = RichPushManager.shared().getRichPushInbox();
             RichPushMessage message = richPushInbox.getMessage(pendingMessageId);
             showMessage(message);
         }

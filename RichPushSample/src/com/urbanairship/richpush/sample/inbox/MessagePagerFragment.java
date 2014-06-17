@@ -66,7 +66,7 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.richPushInbox = RichPushManager.shared().getRichPushUser().getInbox();
+        this.richPushInbox = RichPushManager.shared().getRichPushInbox();
     }
 
     @Override
@@ -140,11 +140,11 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
             currentMessageID = messages.get(messagePager.getCurrentItem()).getMessageId();
         }
 
-        this.messages = RichPushManager.shared().getRichPushUser().getInbox().getMessages();
+        this.messages = RichPushManager.shared().getRichPushInbox().getMessages();
         adapter.setRichPushMessages(messages);
 
         // Restore the position in the message list if the message still exists
-        RichPushMessage message = RichPushInbox.shared().getMessage(currentMessageID);
+        RichPushMessage message = RichPushManager.shared().getRichPushInbox().getMessage(currentMessageID);
         if (message != null) {
             setCurrentMessage(message);
         }
