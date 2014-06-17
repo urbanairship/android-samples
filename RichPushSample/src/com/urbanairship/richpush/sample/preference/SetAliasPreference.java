@@ -47,7 +47,7 @@ public class SetAliasPreference extends DialogPreference {
     public SetAliasPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        currentAlias = PushManager.shared().getPreferences().getAlias();
+        currentAlias = PushManager.shared().getAlias();
     }
 
     @Override
