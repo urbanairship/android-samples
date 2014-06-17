@@ -103,9 +103,9 @@
 
 
         <!-- REQUIRED for ADM - You must explicitly enable ADM and declare whether your app cannot work without
-          ADM (android:required="true") or can work without ADM (android:required="false").
-          If you specify android:required="false", your app must degrade gracefully if ADM
-          is unavailable. -->
+        ADM (android:required="true") or can work without ADM (android:required="false").
+        If you specify android:required="false", your app must degrade gracefully if ADM
+        is unavailable. -->
         <amazon:enable-feature
             android:name="com.amazon.device.messaging"
             android:required="false" />
@@ -121,12 +121,12 @@
 
         <!-- REQUIRED for Landing Pages
         MODIFICATION REQUIRED:
-            - Set or Remove the parent activity
-            - Set or Remove the theme.  Removing the theme will cause the landing page
-            to use the default theme for the application.  If the theme allows an action
-            bar and is running on a honeycomb or newer device, the action bar will enable
-            up navigation.
-            - For more customization details, see com.urbanairship.actions.LandingPageActivity -->
+         - Set or Remove the parent activity
+         - Set or Remove the theme.  Removing the theme will cause the landing page
+         to use the default theme for the application.  If the theme allows an action
+         bar and is running on a honeycomb or newer device, the action bar will enable
+         up navigation.
+         - For more customization details, see com.urbanairship.actions.LandingPageActivity -->
         <activity
             android:name="com.urbanairship.actions.LandingPageActivity"
             android:parentActivityName=".MainActivity"
@@ -175,17 +175,16 @@
             </intent-filter>
         </receiver>
 
-        <!-- REQUIRED for ADM -->         
+        <!-- REQUIRED for ADM -->
         <receiver
             android:name="com.urbanairship.push.ADMPushReceiver"
             android:permission="com.amazon.device.messaging.permission.SEND">
-                
             <intent-filter>
                 <action android:name="com.amazon.device.messaging.intent.REGISTRATION" />
                 <action android:name="com.amazon.device.messaging.intent.RECEIVE" />
 
                 <!-- MODIFICATION REQUIRED - Use your package name as the category -->
-                <category android:name="com.urbanairship.richpush.sample" />                    
+                <category android:name="com.urbanairship.richpush.sample" />
             </intent-filter>
         </receiver>
 
