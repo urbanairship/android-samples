@@ -38,7 +38,6 @@ import com.urbanairship.UAirship;
 import com.urbanairship.push.PushManager;
 import com.urbanairship.push.PushNotificationBuilder;
 import com.urbanairship.push.PushPreferences;
-import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.util.NotificationIDGenerator;
@@ -85,7 +84,7 @@ public class RichNotificationBuilder implements PushNotificationBuilder {
     private Notification createInboxNotification(String incomingAlert) {
         Context context = UAirship.shared().getApplicationContext();
 
-        List<RichPushMessage> unreadMessages = RichPushInbox.shared().getUnreadMessages();
+        List<RichPushMessage> unreadMessages = RichPushManager.shared().getRichPushInbox().getUnreadMessages();
         int totalUnreadCount = unreadMessages.size();
 
         // If we do not have any unread messages (message already read or they failed to fetch)

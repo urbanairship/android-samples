@@ -102,7 +102,7 @@ public abstract class AbstractInboxFragment extends ListFragment
         this.setListAdapter(adapter);
         setRetainInstance(true);
 
-        this.richPushInbox = RichPushManager.shared().getRichPushUser().getInbox();
+        this.richPushInbox = RichPushManager.shared().getRichPushInbox();
     }
 
     @Override
