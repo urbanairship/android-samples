@@ -5,20 +5,19 @@
     <item
         android:id="@+id/mark_read"
         android:icon="@drawable/ic_mark_read"
-        app:showAsAction="ifRoom|withText"
-        android:title="@string/mark_read" />
+        android:title="@string/mark_read"
+        app:showAsAction="ifRoom|withText"/>
 
     <item
         android:id="@+id/mark_unread"
         android:icon="@drawable/ic_mark_unread"
-        app:showAsAction="ifRoom|withText"
-        android:title="@string/mark_unread" />
+        android:title="@string/mark_unread"
+        app:showAsAction="ifRoom|withText"/>
 
     <item
         android:id="@+id/delete"
         android:icon="@drawable/ic_delete"
-        app:showAsAction="ifRoom|withText"
         android:title="@string/delete"
-    />
+        app:showAsAction="ifRoom|withText"/>
 
 </menu>
