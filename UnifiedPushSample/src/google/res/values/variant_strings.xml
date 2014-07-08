@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="push_token_label">APID</string>
+    <string name="location_preference_title">Enable Location</string>
+    <string name="foreground_location_preference_title">Enable Foreground Location</string>
+    <string name="background_location_preference_title">Enable Background Location</string>
+</resources>

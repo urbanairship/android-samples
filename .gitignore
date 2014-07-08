@@ -21,3 +21,4 @@ proguard/
 *.iml
 AndroidAutomatorUtils.jar
 .gradle/*
+api_key.txt

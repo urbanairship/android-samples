@@ -1,0 +1,51 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.12.+'
+    }
+}
+
+apply plugin: 'com.android.application'
+
+repositories {
+    mavenCentral()
+}
+
+android {
+    compileSdkVersion 20
+    buildToolsVersion "20.0.0"
+
+    defaultConfig {
+        versionCode 1
+        versionName "1.0"
+        minSdkVersion 10
+        targetSdkVersion 20
+    }
+
+    productFlavors {
+        // Amazon store build - ADM
+        amazon {
+            applicationId "com.urbanairship.unified.sample.amazon"
+        }
+
+        // Google play store build - GCM
+        google {
+            applicationId "com.urbanairship.unified.sample.android"
+        }
+    }
+}
+
+dependencies {
+    // Common dependencies
+    compile 'com.android.support:support-v4:20.0.0'
+
+    // Google flavor dependencies
+    googleCompile fileTree(dir: 'libs/google', include: '*.jar')
+
+    // Amazon flavor dependencies
+    amazonCompile fileTree(dir: 'libs/amazon', include: '*.jar')
+}
+
+
