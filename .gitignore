@@ -20,3 +20,4 @@ proguard/
 *.iml
 AndroidAutomatorUtils.jar
 .gradle/*
+.idea
