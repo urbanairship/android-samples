@@ -16,7 +16,8 @@ repositories {
 dependencies {
     // Include any jars in the libs directory
     compile fileTree(dir: 'libs', include: '*.jar')
-    compile 'com.google.android.gms:play-services:4.4.52'
+
+    compile 'com.android.support:support-v4:20.0.0'
 
     // Compile the UrbanAirship library from source
     // if its available.  Used for library development only.
@@ -26,14 +27,14 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion 20
     buildToolsVersion "20.0.0"
 
     defaultConfig {
         versionCode 1
         versionName "1.0"
         minSdkVersion 9
-        targetSdkVersion 19
+        targetSdkVersion 29
     }
 
     sourceSets {

@@ -38,7 +38,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.urbanairship.analytics.InstrumentedActivity;
-import com.urbanairship.google.PlayServicesUtils;
 import com.urbanairship.push.PushManager;
 import com.urbanairship.push.sample.preference.PreferencesActivity;
 import com.urbanairship.util.UAStringUtil;
@@ -69,16 +68,6 @@ public class MainActivity extends InstrumentedActivity {
             }
 
         });
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // Handle any Google Play services errors
-        if (PlayServicesUtils.isGooglePlayStoreAvailable()) {
-            PlayServicesUtils.handleAnyPlayServicesError(this);
-        }
     }
 
     @Override

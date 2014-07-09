@@ -12,7 +12,7 @@ Rich Push, or as a reference point for integrating Rich Push into your own proje
 Android Studio Setup
 --------------------
 
-Add Urban Airship Library SDK:
+Add Amazon Urban Airship Library SDK:
   - Copy Urban Airship Library JAR into RichPushSample/libs/
 
 Android SDK Manager:
@@ -23,14 +23,11 @@ Import Project:
  - Open Android Studio to welcome screen
  - Import project, Select Samples root directory
 
-Add Urban Airship Android Library to 'libs' directory:
- - `(Download latest stable release) <http://com.urbanairship.filereleases.s3.amazonaws.com/ua-android-lib-latest.zip>`_
-
 
 Eclipse (ADT) Setup
 -------------------
 
-Add Urban Airship Library SDK:
+Add Amazon Urban Airship Library SDK:
   - Copy Urban Airship Library JAR into RichPushSample/libs/
 
 Import project:
@@ -39,14 +36,8 @@ Import project:
 Set up Support Library:
  - `Android Support-v7 AppCompat Library <http://developer.android.com/tools/support-library/features.html#v7-appcompat>`_ **Minimum required revision: 18**
 
-Set up Google Play services:
- - http://developer.android.com/google/play-services/setup.html#Setup
-
 Add Urban Airship Android Library to 'libs' directory:
  - `(Download latest stable release) <http://com.urbanairship.filereleases.s3.amazonaws.com/ua-android-lib-latest.zip>`_
-
-If you have updated to ADT 22, you may need to include the Android Private Libraries:
-  - Right-click on RichPushSample project -> Properties > Java Build Path > Order and Export and check the Android Private Libraries
 
 Further Reading
 ---------------

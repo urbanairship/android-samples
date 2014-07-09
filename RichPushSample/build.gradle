@@ -15,7 +15,6 @@ repositories {
 
 dependencies {
     compile "com.android.support:appcompat-v7:19.1.+"
-    compile 'com.google.android.gms:play-services:4.4.52'
 
     // Include any jars in the libs directory
     compile fileTree(dir: 'libs', include: '*.jar')
@@ -28,14 +27,14 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion 20
     buildToolsVersion "20.0.0"
 
     defaultConfig {
         versionCode 1
         versionName "1.0"
         minSdkVersion 9
-        targetSdkVersion 19
+        targetSdkVersion 20
     }
 
     sourceSets {

@@ -7,7 +7,7 @@
 
     <!-- minSdkVersion sets runtime compatibility ("will run on API level 9") -->
     <!-- targetSdkVersion should be set to the latest version tested, to disable compatibility modes -->
-    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="19" />
+    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="20" />
 
     <!-- REQUIRED for Urban Airship -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -19,16 +19,6 @@
     <permission android:name="com.urbanairship.push.sample.permission.UA_DATA" android:protectionLevel="signature" />
     <uses-permission android:name="com.urbanairship.push.sample.permission.UA_DATA" />
     <!-- The two elements above ensure that only this application has access to the Urban Airship provider -->
-
-    <!-- REQUIRED PERMISSIONS for GCM -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <!-- GCM requires a Google account. -->
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <!-- This app has permission to register with GCM and receive message -->
-    <!-- Required MODIFICATION REQUIRED - Replace "com.urbanairship.push.sample" with your package name -->
-    <permission android:name="com.urbanairship.push.sample.permission.C2D_MESSAGE" android:protectionLevel="signature" />
-    <uses-permission android:name="com.urbanairship.push.sample.permission.C2D_MESSAGE" />
-    <!-- The two elements above ensure that only this application can receive the messages and registration result -->
 
     <!-- REQUIRED PERMISSIONS for ADM -->
     <uses-permission android:name="com.amazon.device.messaging.permission.RECEIVE" />
@@ -97,12 +87,6 @@
             android:name="com.amazon.device.messaging"
             android:required="false" />
 
-        <!-- REQUIRED for Google Play services (GCM)-->
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
-
         <!-- REQUIRED for Action.startActivityForResult -->
         <activity android:name="com.urbanairship.actions.ActionActivity" />
 
@@ -129,11 +113,6 @@
             </intent-filter>
         </activity>
 
-        <!-- REQUIRED for PlayServiceUtils.handleAnyPlayServicesError to handle Google Play services recoverable errors. -->
-        <activity
-            android:name="com.urbanairship.google.PlayServicesErrorActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
         <!-- REQUIRED for Urban Airship Push -->
         <receiver android:name="com.urbanairship.CoreReceiver" />
 
@@ -151,20 +130,7 @@
             </intent-filter>
         </receiver>
 
-        <!-- REQUIRED for GCM -->
-        <receiver
-            android:name="com.urbanairship.push.GCMPushReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND">
-
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-
-                <!-- MODIFICATION REQUIRED - Use your package name as the category -->
-                <category android:name="com.urbanairship.push.sample" />
-            </intent-filter>
-        </receiver>
-
+        <!-- REQUIRED for Urban Airship -->
         <service android:name="com.urbanairship.push.PushService" android:label="Push Notification Service" />
         <service android:name="com.urbanairship.analytics.EventService" android:label="Event Service" />
         <service android:name="com.urbanairship.actions.ActionService" />
@@ -173,7 +139,7 @@
         <!-- OPTIONAL for Urban Airship Location (for segments support) -->
         <service android:name="com.urbanairship.location.LocationService" android:label="Segments Service" />
 
-        <!-- This is required for persisting preferences related to push and location -->
+        <!-- REQUIRED for Urban Airship. Used to persist preferences related to push and location -->
         <!-- MODIFICATION REQUIRED - Replace "com.urbanairship.push.sample" with your package name -->
         <provider
             android:name="com.urbanairship.UrbanAirshipProvider"

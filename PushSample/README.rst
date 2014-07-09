@@ -9,7 +9,7 @@ PushSample is a basic implementation of the Urban Airship SDK to receive push no
 Android Studio Setup
 --------------------
 
-Add Urban Airship Library SDK:
+Add Amazon Urban Airship Library SDK:
   - Copy Urban Airship Library JAR into PushSample/libs/
 
 Android SDK Manager:
@@ -23,17 +23,13 @@ Import Project:
 Eclipse (ADT) Setup
 -------------------
 
-Add Urban Airship Library SDK:
+Add Amazon Urban Airship Library SDK:
   - Copy Urban Airship Library JAR into PushSample/libs/
 
 Import project:
   - Eclipse -> Import Android Project -> Samples/PushSample
 
-Set up Google Play services:
- - http://developer.android.com/google/play-services/setup.html#Setup
-
-If you have updated to ADT 22, you may need to include the Android Private Libraries:
-  - Right-click on PushSample project -> Properties > Java Build Path > Order and Export and check the Android Private Libraries
+Add v4 support library.
 
 Further Reading
 ---------------
