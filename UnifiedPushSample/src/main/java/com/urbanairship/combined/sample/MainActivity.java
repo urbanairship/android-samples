@@ -74,10 +74,9 @@ public class MainActivity extends InstrumentedActivity {
         LocalBroadcastManager locationBroadcastManager = LocalBroadcastManager.getInstance(this);
 
         // Use local broadcast manager to receive registration finished events.
-        IntentFilter channelIdUpdateFilter;
-        channelIdUpdateFilter = new IntentFilter();
-        channelIdUpdateFilter.addAction(ACTION_REGISTRATION_FINISHED);
-        locationBroadcastManager.registerReceiver(registrationFinishedReceiver, channelIdUpdateFilter);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_REGISTRATION_FINISHED);
+        locationBroadcastManager.registerReceiver(registrationFinishedReceiver, filter);
 
         // Update the push token field.
         updatePushTokenField();
@@ -104,9 +103,9 @@ public class MainActivity extends InstrumentedActivity {
         pushToken = UAStringUtil.isEmpty(pushToken) ? "" : pushToken;
 
         // fill in token
-        EditText channelIdTextField = (EditText)findViewById(R.id.pushToken);
-        if (!pushToken.equals(channelIdTextField.getText())) {
-            channelIdTextField.setText(pushToken);
+        EditText tokenTextField = (EditText)findViewById(R.id.pushToken);
+        if (!pushToken.equals(tokenTextField.getText())) {
+            tokenTextField.setText(pushToken);
         }
     }
 }
