@@ -8,8 +8,8 @@ the problem. This sample is only compatible with Android Studio and the gradle b
 advantage of the new manifest merger and application flavors.
 
 Under the src directory there are 3 folders - main, google, and amazon. The main directory contains
-the common application code and resources. The google and amazon are product flavors that contain any
-requires changes in the source code, resources, and manifest.
+the common application code and resources. The google and amazon directories are product flavors and
+contains platform specific changes in the source code, resources, and manifest.
 
 Most of the APIs are the same between the two Urban Airship SDKs with exceptions of the push token
 (APIDs and Channels) and the location module. To bridge the differences between the SDKs, an
