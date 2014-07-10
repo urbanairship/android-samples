@@ -1,1 +1,1 @@
-include ':RichPushSample', ':PushSample'
+include ':RichPushSample', ':PushSample', ':UnifiedPushSample'

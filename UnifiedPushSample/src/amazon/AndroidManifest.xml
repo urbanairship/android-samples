@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:amazon="http://schemas.amazon.com/apk/res/android"
+    package="com.urbanairship.combined.sample">
+
+    <!-- REQUIRED PERMISSIONS (for Urban Airship ADM) -->
+    <uses-permission android:name="com.amazon.device.messaging.permission.RECEIVE" />
+
+    <!-- Ensure that only this application can receive the messages and registration result -->
+    <permission android:name="${applicationId}.permission.RECEIVE_ADM_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="${applicationId}.permission.RECEIVE_ADM_MESSAGE" />
+
+    <application>
+
+        <!-- REQUIRED for ADM - You must explicitly enable ADM and declare whether your app cannot work without
+       ADM (android:required="true") or can work without ADM (android:required="false").
+       If you specify android:required="false", your app must degrade gracefully if ADM
+       is unavailable. -->
+        <amazon:enable-feature
+            android:name="com.amazon.device.messaging"
+            android:required="false" />
+
+        <!-- REQUIRED RECEIVER (for Urban Airship ADM) -->
+        <receiver
+            android:name="com.urbanairship.push.ADMPushReceiver"
+            android:permission="com.amazon.device.messaging.permission.SEND">
+
+            <intent-filter>
+                <action android:name="com.amazon.device.messaging.intent.REGISTRATION" />
+                <action android:name="com.amazon.device.messaging.intent.RECEIVE" />
+
+                <category android:name="${applicationId}" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>
