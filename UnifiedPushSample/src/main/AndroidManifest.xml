@@ -88,6 +88,9 @@
         <service android:name="com.urbanairship.analytics.EventService" android:label="Event Service"/>
         <service android:name="com.urbanairship.actions.ActionService"/>
 
+        <!-- REQUIRED for Urban Airship Push -->
+        <receiver android:name="com.urbanairship.CoreReceiver" />
+
         <!-- This is required for persisting preferences related to push and location -->
         <provider android:name="com.urbanairship.UrbanAirshipProvider"
                   android:authorities="${applicationId}.urbanairship.provider"
