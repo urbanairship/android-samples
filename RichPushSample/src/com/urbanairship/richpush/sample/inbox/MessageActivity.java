@@ -26,6 +26,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package com.urbanairship.richpush.sample.inbox;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -109,7 +110,11 @@ public class MessageActivity extends ActionBarActivity implements MessagePagerFr
     @Override
     public void onMessageChanged(int position, RichPushMessage message) {
         if (message != null) {
-            setTitle(message.getTitle());
+            if (Build.VERSION.SDK_INT < 11) {
+                this.getSupportActionBar().setTitle(message.getTitle());
+            } else {
+                setTitle(message.getTitle());
+            }
         }
     }
 }
