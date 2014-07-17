@@ -109,7 +109,7 @@ public class MessageActivity extends ActionBarActivity implements MessagePagerFr
     @Override
     public void onMessageChanged(int position, RichPushMessage message) {
         if (message != null) {
-            setTitle(message.getTitle());
+            this.getSupportActionBar().setTitle(message.getTitle());
         }
     }
 }
