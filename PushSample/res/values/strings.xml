@@ -4,7 +4,7 @@
   <string name="short_app_name">PushSample</string>
 
   <string name="app_description">
-      © 2013 Urban Airship, Inc. All Rights Reserved.\n\n
+      © 2014 Urban Airship, Inc. All Rights Reserved.\n\n
   </string>
 
     <string name="push_preference_category_title">Push Preferences</string>
@@ -16,9 +16,9 @@
     <string name="push_preference_title">Enable Push</string>
     <string name="sound_preference_title">Enable Sound</string>
     <string name="vibrate_preference_title">Enable Vibrate</string>
+    <string name="channel_id_preference_title">Channel ID</string>
     <string name="location_preference_title">Enable Location Updates</string>
     <string name="background_location_preference_title">Allow Background Location</string>
-    <string name="apid_preference_title">APID</string>
     <string name="advanced_preference_category_title">Advanced</string>
     <string name="set_alias_preference_title">Set Alias</string>
     <string name="add_tags_preference_title">Add Tags</string>

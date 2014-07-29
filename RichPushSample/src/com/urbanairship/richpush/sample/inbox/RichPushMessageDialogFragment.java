@@ -68,7 +68,7 @@ public class RichPushMessageDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         String messageId = getArguments().getString(MESSAGE_ID_KEY);
-        RichPushMessage message = RichPushManager.shared().getRichPushUser().getInbox().getMessage(messageId);
+        RichPushMessage message = RichPushManager.shared().getRichPushInbox().getMessage(messageId);
 
         if (message == null) {
             return null;

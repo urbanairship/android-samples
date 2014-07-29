@@ -76,14 +76,14 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public int getCount() {
-        return RichPushManager.shared().getRichPushUser().getInbox().getCount();
+        return RichPushManager.shared().getRichPushInbox().getCount();
     }
 
     @Override
     @SuppressLint("NewApi")
     public RemoteViews getViewAt(int position) {
 
-        List<RichPushMessage> messages = RichPushManager.shared().getRichPushUser().getInbox().getMessages();
+        List<RichPushMessage> messages = RichPushManager.shared().getRichPushInbox().getMessages();
 
         if (position > messages.size()) {
             return null;

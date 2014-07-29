@@ -74,7 +74,7 @@ public class MessageFragment extends Fragment {
         setHasOptionsMenu(true);
 
         String messageId = getArguments().getString(MESSAGE_ID_KEY);
-        message = RichPushManager.shared().getRichPushUser().getInbox().getMessage(messageId);
+        message = RichPushManager.shared().getRichPushInbox().getMessage(messageId);
 
         if (message == null) {
             Logger.info("Couldn't retrieve message for ID: " + messageId);

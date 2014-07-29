@@ -58,22 +58,15 @@ public class PushPreferencesActivity extends PreferenceActivity {
             }
         }
 
-
-
-
         AirshipConfigOptions options = UAirship.shared().getAirshipConfigOptions();
 
-        // Only add the push preferences if the pushServiceEnabled is true
-        if (options.pushServiceEnabled) {
-            this.addPreferencesFromResource(R.xml.push_preferences);
-        }
+        // Display the push preferences
+        this.addPreferencesFromResource(R.xml.push_preferences);
 
         this.addPreferencesFromResource(R.xml.location_preferences);
 
         // Display the advanced settings
-        if (options.pushServiceEnabled) {
-            this.addPreferencesFromResource(R.xml.advanced_preferences);
-        }
+        this.addPreferencesFromResource(R.xml.advanced_preferences);
 
         // Creates the UAPreferenceAdapter with the entire preference screen
         preferenceAdapter = new UAPreferenceAdapter(getPreferenceScreen());

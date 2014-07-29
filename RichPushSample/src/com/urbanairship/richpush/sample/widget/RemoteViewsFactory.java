@@ -48,7 +48,7 @@ class RemoteViewsFactory {
 
     /**
      * Creates a layout depending on the app widgets options
-     * 
+     *
      * @param context Application context
      * @param appWidgetId Id of the widget
      * @param options Widgets options
@@ -63,8 +63,8 @@ class RemoteViewsFactory {
 
     /**
      * Creates a layout depending on the current sdk version
-     * 
-     * 
+     *
+     *
      * @param context Application context
      * @param appWidgetId Id of the widget
      * @return RemoteViews for the layout
@@ -78,9 +78,9 @@ class RemoteViewsFactory {
 
     /**
      * Creates a large layout for the app widget
-     * 
+     *
      * This layout is only supported in SDK >= 11 (Honeycomb)
-     * 
+     *
      * @param context Application context
      * @param appWidgetId id of the widget
      * @return RemoteViews for the large layout
@@ -109,8 +109,8 @@ class RemoteViewsFactory {
 
     /**
      * Creates a small layout for the app widget
-     * 
-     * 
+     *
+     *
      * @param context Application context
      * @param appWidgetId id of the widget
      * @return RemoteViews for the small layout
@@ -119,7 +119,7 @@ class RemoteViewsFactory {
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout_small);
 
         // Update the header for the current unread message count
-        int count = RichPushManager.shared().getRichPushUser().getInbox().getUnreadCount();
+        int count = RichPushManager.shared().getRichPushInbox().getUnreadCount();
         String header = context.getString(R.string.header_format_string, count);
 
         remoteViews.setTextViewText(R.id.widget_header_text, header);
@@ -144,7 +144,7 @@ class RemoteViewsFactory {
     /**
      * Creates a pending broadcast intent as a template
      * for each message in the app widget
-     * 
+     *
      * @param context Application context
      * @param appWidgetId Id of the widget
      * @return Pending broadcast intent

@@ -41,10 +41,9 @@ import com.urbanairship.analytics.InstrumentedActivity;
 import com.urbanairship.google.PlayServicesUtils;
 import com.urbanairship.push.PushManager;
 import com.urbanairship.push.sample.preference.PreferencesActivity;
+import com.urbanairship.util.UAStringUtil;
 
 public class MainActivity extends InstrumentedActivity {
-
-    IntentFilter apidUpdateFilter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,9 +69,6 @@ public class MainActivity extends InstrumentedActivity {
             }
 
         });
-
-        apidUpdateFilter = new IntentFilter();
-        apidUpdateFilter.addAction(PushManager.ACTION_REGISTRATION_FINISHED);
     }
 
     @Override
@@ -80,7 +76,9 @@ public class MainActivity extends InstrumentedActivity {
         super.onStart();
 
         // Handle any Google Play services errors
-        PlayServicesUtils.handleAnyPlayServicesError(this);
+        if (PlayServicesUtils.isGooglePlayStoreAvailable()) {
+            PlayServicesUtils.handleAnyPlayServicesError(this);
+        }
     }
 
     @Override
@@ -91,39 +89,40 @@ public class MainActivity extends InstrumentedActivity {
         NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
 
-
-        // Use local broadcast manager to receive
         LocalBroadcastManager locationBroadcastManager = LocalBroadcastManager.getInstance(this);
-        locationBroadcastManager.registerReceiver(apidUpdateReceiver, apidUpdateFilter);
-        updateApidField();
-    }
 
+        // Use local broadcast manager to receive registration events to update the channel
+        IntentFilter channelIdUpdateFilter;
+        channelIdUpdateFilter = new IntentFilter();
+        channelIdUpdateFilter.addAction(PushManager.ACTION_REGISTRATION_SUCCEEDED);
+        locationBroadcastManager.registerReceiver(channelIdUpdateReceiver, channelIdUpdateFilter);
+
+        // Update the channel field
+        updateChannelIdField();
+    }
 
     @Override
     public void onPause() {
         super.onPause();
         LocalBroadcastManager locationBroadcastManager = LocalBroadcastManager.getInstance(this);
-        locationBroadcastManager.unregisterReceiver(apidUpdateReceiver);
+        locationBroadcastManager.unregisterReceiver(channelIdUpdateReceiver);
     }
 
-
-    private BroadcastReceiver apidUpdateReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver channelIdUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            updateApidField();
+            updateChannelIdField();
         }
     };
 
-    private void updateApidField() {
-        String apidString = PushManager.shared().getAPID();
-        if (!PushManager.shared().getPreferences().isPushEnabled() || apidString == null) {
-            apidString = "";
-        }
+    private void updateChannelIdField() {
+        String channelIdString = PushManager.shared().getChannelId();
+        channelIdString = UAStringUtil.isEmpty(channelIdString) ? "" : channelIdString;
 
-        // fill in apid text
-        EditText apidTextField = (EditText)findViewById(R.id.apidText);
-        if (!apidString.equals(apidTextField.getText())) {
-            apidTextField.setText(apidString);
+        // fill in channel ID text
+        EditText channelIdTextField = (EditText)findViewById(R.id.channelIdText);
+        if (!channelIdString.equals(channelIdTextField.getText())) {
+            channelIdTextField.setText(channelIdString);
         }
     }
 }
