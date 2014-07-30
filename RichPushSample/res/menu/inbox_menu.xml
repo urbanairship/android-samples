@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/refresh"
         android:icon="@drawable/ic_refresh"
-        android:showAsAction="ifRoom"
-        android:title="@string/refresh" />
+        android:title="@string/refresh"
+        app:showAsAction="ifRoom"/>
 
-     <item
+    <item
         android:id="@+id/preferences"
         android:icon="@drawable/ic_settings"
-        android:showAsAction="ifRoom"
-        android:title="@string/preferences" />
+        android:title="@string/preferences"
+        app:showAsAction="ifRoom"/>
 
 </menu>
