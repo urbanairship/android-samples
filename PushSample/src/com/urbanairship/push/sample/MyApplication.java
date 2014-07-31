@@ -31,7 +31,7 @@ import android.util.Log;
 import com.urbanairship.AirshipConfigOptions;
 import com.urbanairship.Logger;
 import com.urbanairship.UAirship;
-import com.urbanairship.push.CustomPushNotificationBuilder;
+import com.urbanairship.push.builders.CustomPushNotificationBuilder;
 import com.urbanairship.push.PushManager;
 
 public class MyApplication extends Application {
