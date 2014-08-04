@@ -36,37 +36,38 @@ import android.text.Html;
 
 import com.urbanairship.UAirship;
 import com.urbanairship.push.PushManager;
-import com.urbanairship.push.PushNotificationBuilder;
+import com.urbanairship.push.PushMessage;
+import com.urbanairship.push.builders.NotificationBuilder;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.util.NotificationIDGenerator;
+import com.urbanairship.util.UAStringUtil;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * A custom push notification builder to create inbox style notifications
  * for rich push messages.  In the case of standard push notifications, it will
  * fall back to the default behavior.
- *
  */
-public class RichNotificationBuilder implements PushNotificationBuilder {
+public class RichNotificationBuilder extends NotificationBuilder {
 
     private static final int EXTRA_MESSAGES_TO_SHOW = 2;
     private static final int INBOX_NOTIFICATION_ID = 9000000;
 
     @Override
-    public Notification buildNotification(String alert, Map<String, String> extras) {
-        if (extras != null && RichPushManager.isRichPushMessage(extras)) {
-            return createInboxNotification(alert);
+    public Notification buildNotification(Context context, PushMessage pushMessage, int notificationId) {
+        if (!UAStringUtil.isEmpty(pushMessage.getRichPushMessageId())) {
+            return createInboxNotification(pushMessage.getAlert());
         } else {
-            return createNotification(alert);
+            return createNotification(pushMessage.getAlert());
         }
     }
 
     @Override
-    public int getNextId(String alert, Map<String, String> extras) {
-        if (extras != null && extras.containsKey(PushReceiver.EXTRA_MESSAGE_ID_KEY)) {
+    public int getNextId(PushMessage pushMessage) {
+
+        if (!UAStringUtil.isEmpty(pushMessage.getRichPushMessageId())) {
             return INBOX_NOTIFICATION_ID;
         } else {
             return NotificationIDGenerator.nextID();
@@ -99,20 +100,20 @@ public class RichNotificationBuilder implements PushNotificationBuilder {
 
         NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle(
                 new NotificationCompat.Builder(context)
-                    .setDefaults(getNotificationDefaults())
-                    .setContentTitle(title)
-                    .setContentText(incomingAlert)
-                    .setLargeIcon(largeIcon)
-                    .setSmallIcon(R.drawable.ua_notification_icon)
-                    .setNumber(totalUnreadCount)
-                    .setAutoCancel(true)
+                        .setDefaults(getNotificationDefaults())
+                        .setContentTitle(title)
+                        .setContentText(incomingAlert)
+                        .setLargeIcon(largeIcon)
+                        .setSmallIcon(R.drawable.ua_notification_icon)
+                        .setNumber(totalUnreadCount)
+                        .setAutoCancel(true)
         );
 
         // Add the incoming alert as the first line in bold
-        style.addLine(Html.fromHtml("<b>"+incomingAlert+"</b>"));
+        style.addLine(Html.fromHtml("<b>" + incomingAlert + "</b>"));
 
         // Add any extra messages to the notification style
-        int extraMessages =  Math.min(EXTRA_MESSAGES_TO_SHOW, totalUnreadCount);
+        int extraMessages = Math.min(EXTRA_MESSAGES_TO_SHOW, totalUnreadCount);
         for (int i = 0; i < extraMessages; i++) {
             style.addLine(unreadMessages.get(i).getTitle());
         }
