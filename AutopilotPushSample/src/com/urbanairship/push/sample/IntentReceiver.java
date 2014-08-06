@@ -63,10 +63,10 @@ public class IntentReceiver extends BroadcastReceiver {
             logPushExtras(intent);
 
             Intent launch = new Intent(Intent.ACTION_MAIN);
-            launch.setClass(UAirship.shared().getApplicationContext(), MainActivity.class);
+            launch.setClass(context, MainActivity.class);
             launch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-            UAirship.shared().getApplicationContext().startActivity(launch);
+            context.startActivity(launch);
 
         } else if (action.equals(PushManager.ACTION_REGISTRATION_FINISHED)) {
             Log.i(logTag, "Registration complete. APID:" + intent.getStringExtra(PushManager.EXTRA_APID)

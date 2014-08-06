@@ -31,7 +31,6 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.urbanairship.UAirship;
 import com.urbanairship.actions.ActionUtils;
 import com.urbanairship.actions.DeepLinkAction;
 import com.urbanairship.actions.LandingPageAction;
@@ -82,9 +81,9 @@ public class IntentReceiver extends BroadcastReceiver {
             // actions that might have already opened an activity
             if (!ActionUtils.containsRegisteredActions(intent.getExtras(), ACTIVITY_ACTIONS)) {
                 Intent launch = new Intent(Intent.ACTION_MAIN);
-                launch.setClass(UAirship.shared().getApplicationContext(), MainActivity.class);
+                launch.setClass(context, MainActivity.class);
                 launch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                UAirship.shared().getApplicationContext().startActivity(launch);
+                context.startActivity(launch);
             }
 
         } else if (action.equals(PushManager.ACTION_REGISTRATION_SUCCEEDED)) {

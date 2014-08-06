@@ -113,8 +113,7 @@ public class LocationActivity extends Activity {
                 String text = String.format("lat: %s, lon: %s", newLocation.getLatitude(),
                         newLocation.getLongitude());
 
-                Toast.makeText(UAirship.shared().getApplicationContext(),
-                        text, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, text, Toast.LENGTH_LONG).show();
 
             }
         }

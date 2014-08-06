@@ -82,7 +82,7 @@ public class RichNotificationBuilder extends NotificationBuilder {
      * @return An inbox style notification
      */
     private Notification createInboxNotification(String incomingAlert) {
-        Context context = UAirship.shared().getApplicationContext();
+        Context context = UAirship.getApplicationContext();
 
         List<RichPushMessage> unreadMessages = RichPushManager.shared().getRichPushInbox().getUnreadMessages();
         int totalUnreadCount = unreadMessages.size();
@@ -93,7 +93,7 @@ public class RichNotificationBuilder extends NotificationBuilder {
             return createNotification(incomingAlert);
         }
 
-        Resources res = UAirship.shared().getApplicationContext().getResources();
+        Resources res = context.getResources();
         String title = res.getQuantityString(R.plurals.inbox_notification_title, totalUnreadCount, totalUnreadCount);
 
         Bitmap largeIcon = BitmapFactory.decodeResource(res, R.drawable.ua_launcher);
@@ -127,10 +127,10 @@ public class RichNotificationBuilder extends NotificationBuilder {
     }
 
     private Notification createNotification(String alert) {
-        Resources res = UAirship.shared().getApplicationContext().getResources();
+        Resources res = UAirship.getApplicationContext().getResources();
         Bitmap largeIcon = BitmapFactory.decodeResource(res, R.drawable.ua_launcher);
 
-        return new NotificationCompat.Builder(UAirship.shared().getApplicationContext())
+        return new NotificationCompat.Builder(UAirship.getApplicationContext())
                 .setContentTitle(UAirship.getAppName())
                 .setContentText(alert)
                 .setDefaults(getNotificationDefaults())
