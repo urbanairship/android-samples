@@ -119,6 +119,8 @@
         <!-- Needed for Action.startActivityForResult -->
         <activity android:name="com.urbanairship.actions.ActionActivity" />
 
+        <activity android:name="com.urbanairship.CoreActivity" />
+
         <!-- REQUIRED for Landing Pages
         MODIFICATION REQUIRED:
          - Set or Remove the parent activity
