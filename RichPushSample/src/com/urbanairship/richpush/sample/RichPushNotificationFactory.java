@@ -35,9 +35,8 @@ import android.support.v4.app.NotificationCompat;
 import android.text.Html;
 
 import com.urbanairship.UAirship;
-import com.urbanairship.push.PushManager;
 import com.urbanairship.push.PushMessage;
-import com.urbanairship.push.builders.NotificationBuilder;
+import com.urbanairship.push.notifications.DefaultNotificationFactory;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.util.NotificationIDGenerator;
@@ -50,23 +49,26 @@ import java.util.List;
  * for rich push messages.  In the case of standard push notifications, it will
  * fall back to the default behavior.
  */
-public class RichNotificationBuilder extends NotificationBuilder {
+public class RichPushNotificationFactory extends DefaultNotificationFactory {
 
     private static final int EXTRA_MESSAGES_TO_SHOW = 2;
     private static final int INBOX_NOTIFICATION_ID = 9000000;
 
+    public RichPushNotificationFactory(Context context) {
+        super(context);
+    }
+
     @Override
-    public Notification buildNotification(Context context, PushMessage pushMessage, int notificationId) {
-        if (!UAStringUtil.isEmpty(pushMessage.getRichPushMessageId())) {
-            return createInboxNotification(pushMessage.getAlert());
+    public Notification createNotification(PushMessage message, int notificationId) {
+        if (!UAStringUtil.isEmpty(message.getRichPushMessageId())) {
+            return createInboxNotification(message, notificationId);
         } else {
-            return createNotification(pushMessage.getAlert());
+            return super.createNotification(message, notificationId);
         }
     }
 
     @Override
     public int getNextId(PushMessage pushMessage) {
-
         if (!UAStringUtil.isEmpty(pushMessage.getRichPushMessageId())) {
             return INBOX_NOTIFICATION_ID;
         } else {
@@ -78,19 +80,20 @@ public class RichNotificationBuilder extends NotificationBuilder {
      * Creates an inbox style notification summarizing the unread messages
      * in the inbox
      *
-     * @param incomingAlert The alert message from an Urban Airship push
+     * @param message The push message from an Urban Airship push
+     * @param notificationId The push notification id
      * @return An inbox style notification
      */
-    private Notification createInboxNotification(String incomingAlert) {
+    private Notification createInboxNotification(PushMessage message, int notificationId) {
         Context context = UAirship.getApplicationContext();
-
+        String incomingAlert = message.getAlert();
         List<RichPushMessage> unreadMessages = RichPushManager.shared().getRichPushInbox().getUnreadMessages();
         int totalUnreadCount = unreadMessages.size();
 
         // If we do not have any unread messages (message already read or they failed to fetch)
         // show a normal notification.
         if (totalUnreadCount == 0) {
-            return createNotification(incomingAlert);
+            return createNotification(message, notificationId);
         }
 
         Resources res = context.getResources();
@@ -98,46 +101,35 @@ public class RichNotificationBuilder extends NotificationBuilder {
 
         Bitmap largeIcon = BitmapFactory.decodeResource(res, R.drawable.ua_launcher);
 
-        NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle(
-                new NotificationCompat.Builder(context)
-                        .setDefaults(getNotificationDefaults())
-                        .setContentTitle(title)
-                        .setContentText(incomingAlert)
-                        .setLargeIcon(largeIcon)
-                        .setSmallIcon(R.drawable.ua_notification_icon)
-                        .setNumber(totalUnreadCount)
-                        .setAutoCancel(true)
-        );
+        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle()
+                .addLine(Html.fromHtml("<b>" + incomingAlert + "</b>"));
 
-        // Add the incoming alert as the first line in bold
-        style.addLine(Html.fromHtml("<b>" + incomingAlert + "</b>"));
 
         // Add any extra messages to the notification style
         int extraMessages = Math.min(EXTRA_MESSAGES_TO_SHOW, totalUnreadCount);
         for (int i = 0; i < extraMessages; i++) {
-            style.addLine(unreadMessages.get(i).getTitle());
+            inboxStyle.addLine(unreadMessages.get(i).getTitle());
         }
 
         // If we have more messages to show then the EXTRA_MESSAGES_TO_SHOW, add a summary
         if (totalUnreadCount > EXTRA_MESSAGES_TO_SHOW) {
-            style.setSummaryText(context.getString(R.string.inbox_summary, totalUnreadCount - EXTRA_MESSAGES_TO_SHOW));
+            inboxStyle.setSummaryText(context.getString(R.string.inbox_summary, totalUnreadCount - EXTRA_MESSAGES_TO_SHOW));
         }
 
-        return style.build();
-    }
 
-    private Notification createNotification(String alert) {
-        Resources res = UAirship.getApplicationContext().getResources();
-        Bitmap largeIcon = BitmapFactory.decodeResource(res, R.drawable.ua_launcher);
-
-        return new NotificationCompat.Builder(UAirship.getApplicationContext())
-                .setContentTitle(UAirship.getAppName())
-                .setContentText(alert)
-                .setDefaults(getNotificationDefaults())
-                .setSmallIcon(R.drawable.ua_notification_icon)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+                .setContentTitle(title)
+                .setContentText(message.getAlert())
                 .setLargeIcon(largeIcon)
+                .setSmallIcon(R.drawable.ua_notification_icon)
+                .setNumber(totalUnreadCount)
                 .setAutoCancel(true)
-                .build();
+                .setStyle(inboxStyle);
+
+        // Notification actions
+        builder.extend(createNotificationActionsExtender(message, notificationId));
+
+        return builder.build();
     }
 
     /**
@@ -148,29 +140,5 @@ public class RichNotificationBuilder extends NotificationBuilder {
                 getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
         manager.cancel(INBOX_NOTIFICATION_ID);
-    }
-
-    /**
-     * Gets the notification defaults based on
-     * the PushPreferences for quiet time, vibration enabled,
-     * and sound enabled.
-     *
-     * @return Notification defaults
-     */
-    private int getNotificationDefaults() {
-        PushManager pushManager = PushManager.shared();
-        int defaults = Notification.DEFAULT_LIGHTS;
-
-        if (!pushManager.isInQuietTime()) {
-            if (pushManager.isVibrateEnabled()) {
-                defaults |= Notification.DEFAULT_VIBRATE;
-            }
-
-            if (pushManager.isSoundEnabled()) {
-                defaults |= Notification.DEFAULT_SOUND;
-            }
-        }
-
-        return defaults;
     }
 }

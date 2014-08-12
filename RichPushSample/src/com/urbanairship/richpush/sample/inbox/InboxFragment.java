@@ -44,7 +44,7 @@ import android.widget.TextView;
 import com.urbanairship.Logger;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.R;
-import com.urbanairship.richpush.sample.RichNotificationBuilder;
+import com.urbanairship.richpush.sample.RichPushNotificationFactory;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -71,7 +71,7 @@ public class InboxFragment extends AbstractInboxFragment implements ActionMode.C
         startActionModeIfNecessary();
 
         // Dismiss any notifications if available
-        RichNotificationBuilder.dismissInboxNotification();
+        RichPushNotificationFactory.dismissInboxNotification();
     }
 
     @Override
