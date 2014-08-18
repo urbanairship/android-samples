@@ -25,6 +25,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package com.urbanairship.push.sample.preference;
 
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.os.Build;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ public class PreferencesActivity extends PreferenceActivity {
     private UAPreferenceAdapter preferenceAdapter;
 
     @Override
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
