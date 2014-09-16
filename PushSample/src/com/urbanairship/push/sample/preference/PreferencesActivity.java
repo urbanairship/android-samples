@@ -25,8 +25,12 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package com.urbanairship.push.sample.preference;
 
+import android.annotation.TargetApi;
+import android.app.ActionBar;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.view.MenuItem;
 
 import com.urbanairship.AirshipConfigOptions;
 import com.urbanairship.UAirship;
@@ -38,6 +42,7 @@ public class PreferencesActivity extends PreferenceActivity {
     private UAPreferenceAdapter preferenceAdapter;
 
     @Override
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -54,7 +59,31 @@ public class PreferencesActivity extends PreferenceActivity {
 
         // Creates the UAPreferenceAdapter with the entire preference screen
         preferenceAdapter = new UAPreferenceAdapter(getPreferenceScreen());
+
+
+
+        // Set the actionBar to have up navigation if HoneyComb or higher.
+        // PreferenceFragment or PreferenceActivity is not available in the support
+        // library.  ActionBarSherlock provides a PreferenceActivity if you absolutely
+        // need an action bar in the preferences on older devices.
+        if (Build.VERSION.SDK_INT >= 11) {
+            ActionBar actionBar = getActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayOptions(
+                        ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
+            }
+        }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return false;
+    }
+
 
     @Override
     protected void onStart() {
