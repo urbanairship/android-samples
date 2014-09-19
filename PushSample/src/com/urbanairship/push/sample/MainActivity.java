@@ -94,7 +94,7 @@ public class MainActivity extends InstrumentedActivity {
         // Use local broadcast manager to receive registration events to update the channel
         IntentFilter channelIdUpdateFilter;
         channelIdUpdateFilter = new IntentFilter();
-        channelIdUpdateFilter.addAction(PushManager.ACTION_REGISTRATION_SUCCEEDED);
+        channelIdUpdateFilter.addAction(IntentReceiver.ACTION_UPDATE_CHANNEL);
         locationBroadcastManager.registerReceiver(channelIdUpdateReceiver, channelIdUpdateFilter);
 
         // Update the channel field
