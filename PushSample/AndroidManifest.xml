@@ -150,7 +150,17 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!-- REQUIRED for Urban Airship Push -->
-        <receiver android:name="com.urbanairship.CoreReceiver" />
+        <receiver android:name="com.urbanairship.CoreReceiver"
+                  android:priority="-999"
+                  android:exported="false">
+
+            <intent-filter>
+                <action android:name="com.urbanairship.push.OPENED" />
+
+                <!-- MODIFICATION REQUIRED - Use your package name as the category -->
+                <category android:name="com.urbanairship.push.sample" />
+            </intent-filter>
+        </receiver>
 
         <!-- REQUIRED for ADM -->
         <receiver

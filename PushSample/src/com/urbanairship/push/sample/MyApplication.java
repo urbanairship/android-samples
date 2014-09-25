@@ -28,7 +28,6 @@ package com.urbanairship.push.sample;
 import android.app.Application;
 import android.util.Log;
 
-import com.urbanairship.AirshipConfigOptions;
 import com.urbanairship.Logger;
 import com.urbanairship.UAirship;
 
@@ -36,10 +35,9 @@ public class MyApplication extends Application {
 
     @Override
     public void onCreate() {
-
         super.onCreate();
 
-        AirshipConfigOptions options = AirshipConfigOptions.loadDefaultOptions(this);
+        Logger.logLevel = Log.VERBOSE;
 
         // Optionally, customize your config at runtime:
         //
@@ -47,7 +45,13 @@ public class MyApplication extends Application {
         // options.developmentAppKey = "Your Development App Key";
         // options.developmentAppSecret "Your Development App Secret";
 
-        UAirship.takeOff(this, options);
-        Logger.logLevel = Log.VERBOSE;
+        UAirship.takeOff(this, new UAirship.OnReadyCallback() {
+            @Override
+            public void onReady(UAirship airship) {
+                // Perform any airship configurations here
+
+                airship.getPushManager().setPushEnabled(true);
+            }
+        });
     }
 }
