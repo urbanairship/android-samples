@@ -32,9 +32,11 @@
 
     <!-- REQUIRED PERMISSIONS for ADM -->
     <uses-permission android:name="com.amazon.device.messaging.permission.RECEIVE" />
+
     <!-- Required MODIFICATION REQUIRED - Replace "com.urbanairship.push.sample" with your package name -->
     <permission android:name="com.urbanairship.push.sample.permission.RECEIVE_ADM_MESSAGE" android:protectionLevel="signature" />
     <uses-permission android:name="com.urbanairship.push.sample.permission.RECEIVE_ADM_MESSAGE" />
+
     <!-- The two elements above ensure that only this application can receive the messages and registration result -->
 
     <!-- OPTIONAL Urban Airship Settings -->
@@ -88,7 +90,18 @@
 
         <!-- OPTIONAL, if you want to receive push, push opened and registration completed intents -->
         <!-- Replace the receiver below with your package and class name -->
-        <receiver android:name="com.urbanairship.push.sample.IntentReceiver" />
+        <receiver android:name="com.urbanairship.push.sample.IntentReceiver"
+                  android:exported="false">
+
+            <intent-filter>
+                <action android:name="com.urbanairship.push.CHANNEL_UPDATED" />
+                <action android:name="com.urbanairship.push.OPENED" />
+                <action android:name="com.urbanairship.push.RECEIVED" />
+
+                <!-- MODIFICATION REQUIRED - Use your package name as the category -->
+                <category android:name="com.urbanairship.push.sample" />
+            </intent-filter>
+        </receiver>
 
 
         <!-- REQUIRED for ADM - You must explicitly enable ADM and declare whether your app cannot work without

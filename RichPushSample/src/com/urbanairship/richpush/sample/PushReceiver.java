@@ -25,16 +25,17 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package com.urbanairship.richpush.sample;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.urbanairship.Logger;
 import com.urbanairship.actions.ActionUtils;
 import com.urbanairship.actions.DeepLinkAction;
 import com.urbanairship.actions.LandingPageAction;
 import com.urbanairship.actions.OpenExternalUrlAction;
-import com.urbanairship.push.PushManager;
+import com.urbanairship.push.BaseIntentReceiver;
+import com.urbanairship.push.PushMessage;
 import com.urbanairship.richpush.sample.inbox.InboxActivity;
 import com.urbanairship.richpush.sample.widget.RichPushWidgetUtils;
 import com.urbanairship.util.UAStringUtil;
@@ -43,54 +44,75 @@ import com.urbanairship.util.UAStringUtil;
  * Broadcast receiver to handle all push notifications
  *
  */
-public class PushReceiver extends BroadcastReceiver {
-
-    public static final String EXTRA_MESSAGE_ID_KEY = "_uamid";
-
+public class PushReceiver extends BaseIntentReceiver {
     /**
      * Delay to refresh widget to give time to fetch the rich push message
      */
     private static final long WIDGET_REFRESH_DELAY_MS = 5000; //5 Seconds
 
+    private static final String TAG = "IntentReceiver";
+
     // A set of actions that launch activities when a push is opened.  Update
     // with any custom actions that also start activities when a push is opened.
-    private static String[] ACTIVITY_ACTIONS = new String[] {
+    private static String[] ACTIVITY_ACTIONS = new String[]{
             DeepLinkAction.DEFAULT_REGISTRY_NAME,
             OpenExternalUrlAction.DEFAULT_REGISTRY_NAME,
             LandingPageAction.DEFAULT_REGISTRY_NAME
     };
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    protected void onChannelRegistrationSucceeded(Context context, String channelId) {
+        Log.i(TAG, "Channel registration updated. Channel Id:" + channelId + ".");
+    }
 
-        // Refresh the widget after a push comes in
-        if (PushManager.ACTION_PUSH_RECEIVED.equals(intent.getAction())) {
-            RichPushWidgetUtils.refreshWidget(context, WIDGET_REFRESH_DELAY_MS);
+    @Override
+    protected void onChannelRegistrationFailed(Context context) {
+        Log.i(TAG, "Channel registration failed.");
+    }
+
+    @Override
+    protected void onPushReceived(Context context, PushMessage message, int notificationId) {
+        Log.i(TAG, "Received push notification. Alert: " + message.getAlert() + ". Notification ID: " + notificationId);
+        RichPushWidgetUtils.refreshWidget(context, WIDGET_REFRESH_DELAY_MS);
+    }
+
+    @Override
+    protected void onBackgroundPushReceived(Context context, PushMessage message) {
+        Log.i(TAG, "Received background push message: " + message);
+    }
+
+    @Override
+    protected void onNotificationOpened(Context context, PushMessage message, int notificationId) {
+        Log.i(TAG, "User clicked notification. Alert: " + message.getAlert());
+
+        // Only launch activities if the payload does not contain any
+        // actions that might have already opened an activity
+        if (!ActionUtils.containsRegisteredActions(message.getPushBundle(), ACTIVITY_ACTIONS)) {
+
+            Intent messageIntent;
+            String messageId = message.getRichPushMessageId();
+            if (UAStringUtil.isEmpty(messageId)) {
+                messageIntent =  new Intent(context, MainActivity.class);
+            } else {
+                Logger.debug("Notified of a notification opened with id " + messageId);
+                messageIntent =  new Intent(context, InboxActivity.class);
+                messageIntent.putExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY, messageId);
+            }
+
+            messageIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(messageIntent);
         }
+    }
 
-        // Only takes action when a notification is opened
-        if (!PushManager.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
-            return;
-        }
-
+    @Override
+    protected void onNotificationActionOpened(Context context, PushMessage message, int notificationId, String buttonId, boolean isForeground) {
         // Only launch the main activity if the payload does not contain any
         // actions that might have already opened an activity
-        if (ActionUtils.containsRegisteredActions(intent.getExtras(), ACTIVITY_ACTIONS)) {
-            return;
+        if (isForeground && !ActionUtils.containsRegisteredActions(message.getPushBundle(), ACTIVITY_ACTIONS)) {
+            Intent launch = new Intent(Intent.ACTION_MAIN);
+            launch.setClass(context, MainActivity.class);
+            launch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(launch);
         }
-
-        Intent messageIntent = null;
-
-        String messageId = intent.getStringExtra(EXTRA_MESSAGE_ID_KEY);
-        if (UAStringUtil.isEmpty(messageId)) {
-            messageIntent =  new Intent(context, MainActivity.class);
-        } else {
-            Logger.debug("Notified of a notification opened with id " + messageId);
-            messageIntent =  new Intent(context, InboxActivity.class);
-            messageIntent.putExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY, messageId);
-        }
-
-        messageIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(messageIntent);
     }
 }

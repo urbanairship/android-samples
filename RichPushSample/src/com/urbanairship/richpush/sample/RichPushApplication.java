@@ -42,7 +42,6 @@ public class RichPushApplication extends Application {
     @Override
     public void onCreate() {
         UAirship.takeOff(this);
-        PushManager.shared().setIntentReceiver(PushReceiver.class);
         PushManager.shared().setNotificationFactory(new RichPushNotificationFactory(this));
     }
 }
