@@ -34,8 +34,8 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 
 import com.urbanairship.UAirship;
+import com.urbanairship.analytics.Analytics;
 import com.urbanairship.google.PlayServicesUtils;
-import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushUser;
 import com.urbanairship.richpush.sample.inbox.InboxActivity;
 import com.urbanairship.richpush.sample.inbox.RichPushMessageDialogFragment;
@@ -63,7 +63,7 @@ ActionBar.OnNavigationListener {
         this.setContentView(R.layout.main_activity);
         this.configureActionBar();
 
-        this.user = RichPushManager.shared().getRichPushUser();
+        this.user = UAirship.shared().getRichPushManager().getRichPushUser();
     }
 
     @Override
@@ -81,7 +81,7 @@ ActionBar.OnNavigationListener {
         }
 
         // Activity instrumentation for analytic tracking
-        UAirship.shared().getAnalytics().activityStarted(this);
+        Analytics.activityStarted(this);
     }
 
     @Override
@@ -89,7 +89,7 @@ ActionBar.OnNavigationListener {
         super.onStop();
 
         // Activity instrumentation for analytic tracking
-        UAirship.shared().getAnalytics().activityStopped(this);
+        Analytics.activityStopped(this);
     }
 
     @Override

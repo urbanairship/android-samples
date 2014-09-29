@@ -34,7 +34,7 @@ import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import com.urbanairship.richpush.RichPushManager;
+import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.R;
 import com.urbanairship.richpush.sample.RichPushApplication;
@@ -76,14 +76,14 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public int getCount() {
-        return RichPushManager.shared().getRichPushInbox().getCount();
+        return UAirship.shared().getRichPushManager().getRichPushInbox().getCount();
     }
 
     @Override
     @SuppressLint("NewApi")
     public RemoteViews getViewAt(int position) {
 
-        List<RichPushMessage> messages = RichPushManager.shared().getRichPushInbox().getMessages();
+        List<RichPushMessage> messages = UAirship.shared().getRichPushManager().getRichPushInbox().getMessages();
 
         if (position > messages.size()) {
             return null;

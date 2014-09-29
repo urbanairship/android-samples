@@ -37,7 +37,6 @@ import android.text.Html;
 import com.urbanairship.UAirship;
 import com.urbanairship.push.PushMessage;
 import com.urbanairship.push.notifications.DefaultNotificationFactory;
-import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.util.NotificationIDGenerator;
 import com.urbanairship.util.UAStringUtil;
@@ -87,7 +86,7 @@ public class RichPushNotificationFactory extends DefaultNotificationFactory {
     private Notification createInboxNotification(PushMessage message, int notificationId) {
         Context context = UAirship.getApplicationContext();
         String incomingAlert = message.getAlert();
-        List<RichPushMessage> unreadMessages = RichPushManager.shared().getRichPushInbox().getUnreadMessages();
+        List<RichPushMessage> unreadMessages = UAirship.shared().getRichPushManager().getRichPushInbox().getUnreadMessages();
         int totalUnreadCount = unreadMessages.size();
 
         // If we do not have any unread messages (message already read or they failed to fetch)

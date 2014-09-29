@@ -31,6 +31,7 @@ import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
 
+import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
@@ -77,7 +78,7 @@ public abstract class AbstractInboxFragment extends ListFragment
         updateRichPushMessages();
 
         // Listen for any rich push message changes
-        RichPushManager.shared().addListener(this);
+        UAirship.shared().getRichPushManager().addListener(this);
         richPushInbox.addListener(this);
 
         // Refresh the widget inbox if we have one
@@ -89,7 +90,7 @@ public abstract class AbstractInboxFragment extends ListFragment
         super.onPause();
 
         // Remove listeners for message changes
-        RichPushManager.shared().removeListener(this);
+        UAirship.shared().getRichPushManager().removeListener(this);
         richPushInbox.removeListener(this);
     }
 
@@ -102,7 +103,7 @@ public abstract class AbstractInboxFragment extends ListFragment
         this.setListAdapter(adapter);
         setRetainInstance(true);
 
-        this.richPushInbox = RichPushManager.shared().getRichPushInbox();
+        this.richPushInbox = UAirship.shared().getRichPushManager().getRichPushInbox();
     }
 
     @Override
@@ -183,7 +184,7 @@ public abstract class AbstractInboxFragment extends ListFragment
     public void refreshMessages() {
         this.isManualRefreshing = true;
         this.setListShown(false);
-        RichPushManager.shared().refreshMessages();
+        UAirship.shared().getRichPushManager().refreshMessages();
     }
 
     /**

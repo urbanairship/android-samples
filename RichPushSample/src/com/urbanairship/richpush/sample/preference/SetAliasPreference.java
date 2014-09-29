@@ -32,7 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.urbanairship.push.PushManager;
+import com.urbanairship.UAirship;
 import com.urbanairship.util.UAStringUtil;
 
 /**
@@ -47,7 +47,7 @@ public class SetAliasPreference extends DialogPreference {
     public SetAliasPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        currentAlias = PushManager.shared().getAlias();
+        currentAlias = UAirship.shared().getPushManager().getAlias();
     }
 
     @Override
@@ -78,7 +78,7 @@ public class SetAliasPreference extends DialogPreference {
 
     private void setAlias(String alias) {
         currentAlias = UAStringUtil.isEmpty(alias) ? null : alias;
-        PushManager.shared().setAlias(currentAlias);
+        UAirship.shared().getPushManager().setAlias(currentAlias);
     }
 
     @Override
