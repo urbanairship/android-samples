@@ -34,8 +34,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushInbox;
-import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.R;
 import com.urbanairship.richpush.sample.view.CustomViewPager;
@@ -66,7 +66,7 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.richPushInbox = RichPushManager.shared().getRichPushInbox();
+        this.richPushInbox = UAirship.shared().getRichPushManager().getRichPushInbox();
     }
 
     @Override
@@ -140,11 +140,11 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
             currentMessageID = messages.get(messagePager.getCurrentItem()).getMessageId();
         }
 
-        this.messages = RichPushManager.shared().getRichPushInbox().getMessages();
+        this.messages = UAirship.shared().getRichPushManager().getRichPushInbox().getMessages();
         adapter.setRichPushMessages(messages);
 
         // Restore the position in the message list if the message still exists
-        RichPushMessage message = RichPushManager.shared().getRichPushInbox().getMessage(currentMessageID);
+        RichPushMessage message = UAirship.shared().getRichPushManager().getRichPushInbox().getMessage(currentMessageID);
         if (message != null) {
             setCurrentMessage(message);
         }

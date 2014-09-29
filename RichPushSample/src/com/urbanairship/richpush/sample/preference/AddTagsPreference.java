@@ -40,7 +40,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.urbanairship.push.PushManager;
+import com.urbanairship.UAirship;
 import com.urbanairship.richpush.sample.R;
 import com.urbanairship.util.UAStringUtil;
 
@@ -63,7 +63,7 @@ public class AddTagsPreference extends DialogPreference  {
     public AddTagsPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        currentTags = PushManager.shared().getTags();
+        currentTags = UAirship.shared().getPushManager().getTags();
     }
 
     @Override
@@ -145,7 +145,7 @@ public class AddTagsPreference extends DialogPreference  {
         currentTags.clear();
         currentTags.addAll(tags);
 
-        PushManager.shared().setTags(currentTags);
+        UAirship.shared().getPushManager().setTags(currentTags);
     }
 
     private void showDuplicateItemToast() {

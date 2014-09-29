@@ -28,7 +28,6 @@ package com.urbanairship.richpush.sample;
 import android.app.Application;
 
 import com.urbanairship.UAirship;
-import com.urbanairship.push.PushManager;
 
 public class RichPushApplication extends Application {
 
@@ -42,6 +41,6 @@ public class RichPushApplication extends Application {
     @Override
     public void onCreate() {
         UAirship.takeOff(this);
-        PushManager.shared().setNotificationFactory(new RichPushNotificationFactory(this));
+        UAirship.shared().getPushManager().setNotificationFactory(new RichPushNotificationFactory(this));
     }
 }

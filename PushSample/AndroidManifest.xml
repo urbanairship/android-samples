@@ -149,8 +149,21 @@
             android:name="com.urbanairship.google.PlayServicesErrorActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <!-- REQUIRED for Urban Airship Push -->
-        <receiver android:name="com.urbanairship.CoreReceiver" />
+        <!-- REQUIRED for Urban Airship Push. The priority is important to be set lower than the
+        application's push intent receiver in order for the push intent receiver to handle push intents
+        before the core receiver. This allows the application to launch any activities before Urban
+        Airship performs any actions or falls back to launching the application launch intent. -->
+        <receiver android:name="com.urbanairship.CoreReceiver"
+                  android:priority="-999"
+                  android:exported="false">
+
+            <intent-filter>
+                <action android:name="com.urbanairship.push.OPENED" />
+
+                <!-- MODIFICATION REQUIRED - Use your package name as the category -->
+                <category android:name="com.urbanairship.push.sample" />
+            </intent-filter>
+        </receiver>
 
         <!-- REQUIRED for ADM -->
         <receiver

@@ -34,6 +34,7 @@ import android.view.MenuItem;
 
 import com.urbanairship.AirshipConfigOptions;
 import com.urbanairship.UAirship;
+import com.urbanairship.analytics.Analytics;
 import com.urbanairship.preference.UAPreferenceAdapter;
 import com.urbanairship.push.sample.R;
 
@@ -90,7 +91,7 @@ public class PreferencesActivity extends PreferenceActivity {
         super.onStart();
 
         // Activity instrumentation for analytic tracking
-        UAirship.shared().getAnalytics().activityStarted(this);
+        Analytics.activityStarted(this);
     }
 
     @Override
@@ -98,7 +99,7 @@ public class PreferencesActivity extends PreferenceActivity {
         super.onStop();
 
         // Activity instrumentation for analytic tracking
-        UAirship.shared().getAnalytics().activityStopped(this);
+        Analytics.activityStopped(this);
 
         // Apply any changed UA preferences from the preference screen
         preferenceAdapter.applyUrbanAirshipPreferences();

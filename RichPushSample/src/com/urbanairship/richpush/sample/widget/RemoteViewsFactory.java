@@ -34,7 +34,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 
-import com.urbanairship.richpush.RichPushManager;
+import com.urbanairship.UAirship;
 import com.urbanairship.richpush.sample.R;
 import com.urbanairship.richpush.sample.inbox.InboxActivity;
 
@@ -119,7 +119,7 @@ class RemoteViewsFactory {
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout_small);
 
         // Update the header for the current unread message count
-        int count = RichPushManager.shared().getRichPushInbox().getUnreadCount();
+        int count = UAirship.shared().getRichPushManager().getRichPushInbox().getUnreadCount();
         String header = context.getString(R.string.header_format_string, count);
 
         remoteViews.setTextViewText(R.id.widget_header_text, header);

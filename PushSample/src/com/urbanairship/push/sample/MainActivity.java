@@ -37,9 +37,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.urbanairship.UAirship;
 import com.urbanairship.analytics.InstrumentedActivity;
 import com.urbanairship.google.PlayServicesUtils;
-import com.urbanairship.push.PushManager;
 import com.urbanairship.push.sample.preference.PreferencesActivity;
 import com.urbanairship.util.UAStringUtil;
 
@@ -116,7 +116,7 @@ public class MainActivity extends InstrumentedActivity {
     };
 
     private void updateChannelIdField() {
-        String channelIdString = PushManager.shared().getChannelId();
+        String channelIdString = UAirship.shared().getPushManager().getChannelId();
         channelIdString = UAStringUtil.isEmpty(channelIdString) ? "" : channelIdString;
 
         // fill in channel ID text

@@ -37,8 +37,8 @@ import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 
 import com.urbanairship.UAirship;
+import com.urbanairship.analytics.Analytics;
 import com.urbanairship.richpush.RichPushInbox;
-import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.MainActivity;
 import com.urbanairship.richpush.sample.R;
@@ -101,7 +101,7 @@ public class InboxActivity extends ActionBarActivity implements
         super.onStart();
 
         // Activity instrumentation for analytic tracking
-        UAirship.shared().getAnalytics().activityStarted(this);
+        Analytics.activityStarted(this);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class InboxActivity extends ActionBarActivity implements
         super.onStop();
 
         // Activity instrumentation for analytic tracking
-        UAirship.shared().getAnalytics().activityStopped(this);
+        Analytics.activityStopped(this);
     }
 
     @Override
@@ -221,7 +221,7 @@ public class InboxActivity extends ActionBarActivity implements
         if (!UAStringUtil.isEmpty(pendingMessageId)) {
             getIntent().removeExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
 
-            RichPushInbox richPushInbox = RichPushManager.shared().getRichPushInbox();
+            RichPushInbox richPushInbox = UAirship.shared().getRichPushManager().getRichPushInbox();
             RichPushMessage message = richPushInbox.getMessage(pendingMessageId);
             showMessage(message);
         }

@@ -32,7 +32,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.urbanairship.richpush.RichPushManager;
+import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.R;
 import com.urbanairship.richpush.sample.widget.RichPushWidgetUtils;
@@ -68,7 +68,7 @@ public class RichPushMessageDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         String messageId = getArguments().getString(MESSAGE_ID_KEY);
-        RichPushMessage message = RichPushManager.shared().getRichPushInbox().getMessage(messageId);
+        RichPushMessage message = UAirship.shared().getRichPushManager().getRichPushInbox().getMessage(messageId);
 
         if (message == null) {
             return null;

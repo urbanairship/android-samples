@@ -38,7 +38,7 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 
 import com.urbanairship.Logger;
-import com.urbanairship.richpush.RichPushManager;
+import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.R;
 import com.urbanairship.widget.RichPushMessageWebView;
@@ -74,7 +74,7 @@ public class MessageFragment extends Fragment {
         setHasOptionsMenu(true);
 
         String messageId = getArguments().getString(MESSAGE_ID_KEY);
-        message = RichPushManager.shared().getRichPushInbox().getMessage(messageId);
+        message = UAirship.shared().getRichPushManager().getRichPushInbox().getMessage(messageId);
 
         if (message == null) {
             Logger.info("Couldn't retrieve message for ID: " + messageId);

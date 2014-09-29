@@ -30,10 +30,6 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.urbanairship.Logger;
-import com.urbanairship.actions.ActionUtils;
-import com.urbanairship.actions.DeepLinkAction;
-import com.urbanairship.actions.LandingPageAction;
-import com.urbanairship.actions.OpenExternalUrlAction;
 import com.urbanairship.push.BaseIntentReceiver;
 import com.urbanairship.push.PushMessage;
 import com.urbanairship.richpush.sample.inbox.InboxActivity;
@@ -51,14 +47,6 @@ public class PushReceiver extends BaseIntentReceiver {
     private static final long WIDGET_REFRESH_DELAY_MS = 5000; //5 Seconds
 
     private static final String TAG = "IntentReceiver";
-
-    // A set of actions that launch activities when a push is opened.  Update
-    // with any custom actions that also start activities when a push is opened.
-    private static String[] ACTIVITY_ACTIONS = new String[]{
-            DeepLinkAction.DEFAULT_REGISTRY_NAME,
-            OpenExternalUrlAction.DEFAULT_REGISTRY_NAME,
-            LandingPageAction.DEFAULT_REGISTRY_NAME
-    };
 
     @Override
     protected void onChannelRegistrationSucceeded(Context context, String channelId) {
@@ -82,37 +70,35 @@ public class PushReceiver extends BaseIntentReceiver {
     }
 
     @Override
-    protected void onNotificationOpened(Context context, PushMessage message, int notificationId) {
+    protected boolean onNotificationOpened(Context context, PushMessage message, int notificationId) {
         Log.i(TAG, "User clicked notification. Alert: " + message.getAlert());
 
-        // Only launch activities if the payload does not contain any
-        // actions that might have already opened an activity
-        if (!ActionUtils.containsRegisteredActions(message.getPushBundle(), ACTIVITY_ACTIONS)) {
-
-            Intent messageIntent;
-            String messageId = message.getRichPushMessageId();
-            if (UAStringUtil.isEmpty(messageId)) {
-                messageIntent =  new Intent(context, MainActivity.class);
-            } else {
-                Logger.debug("Notified of a notification opened with id " + messageId);
-                messageIntent =  new Intent(context, InboxActivity.class);
-                messageIntent.putExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY, messageId);
-            }
-
-            messageIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(messageIntent);
+        Intent messageIntent;
+        String messageId = message.getRichPushMessageId();
+        if (UAStringUtil.isEmpty(messageId)) {
+            messageIntent =  new Intent(context, MainActivity.class);
+        } else {
+            Logger.debug("Notified of a notification opened with id " + messageId);
+            messageIntent =  new Intent(context, InboxActivity.class);
+            messageIntent.putExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY, messageId);
         }
+
+        messageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(messageIntent);
+
+        return true;
     }
 
     @Override
-    protected void onNotificationActionOpened(Context context, PushMessage message, int notificationId, String buttonId, boolean isForeground) {
+    protected boolean onNotificationActionOpened(Context context, PushMessage message, int notificationId, String buttonId, boolean isForeground) {
         // Only launch the main activity if the payload does not contain any
         // actions that might have already opened an activity
-        if (isForeground && !ActionUtils.containsRegisteredActions(message.getPushBundle(), ACTIVITY_ACTIONS)) {
+        if (isForeground) {
             Intent launch = new Intent(Intent.ACTION_MAIN);
             launch.setClass(context, MainActivity.class);
             launch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(launch);
         }
+        return true;
     }
 }

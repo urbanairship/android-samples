@@ -32,7 +32,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.urbanairship.UAirship;
-import com.urbanairship.richpush.RichPushManager;
+import com.urbanairship.analytics.Analytics;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.R;
 import com.urbanairship.richpush.sample.preference.PushPreferencesActivity;
@@ -58,7 +58,7 @@ public class MessageActivity extends ActionBarActivity implements MessagePagerFr
 
         if (savedInstanceState == null) {
             String messageId = getIntent().getStringExtra(EXTRA_MESSAGE_ID_KEY);
-            RichPushMessage message = RichPushManager.shared().getRichPushInbox().getMessage(messageId);
+            RichPushMessage message = UAirship.shared().getRichPushManager().getRichPushInbox().getMessage(messageId);
             pagerFragment.setCurrentMessage(message);
         }
     }
@@ -68,7 +68,7 @@ public class MessageActivity extends ActionBarActivity implements MessagePagerFr
         super.onStart();
 
         // Activity instrumentation for analytic tracking
-        UAirship.shared().getAnalytics().activityStarted(this);
+        Analytics.activityStarted(this);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class MessageActivity extends ActionBarActivity implements MessagePagerFr
         super.onStop();
 
         // Activity instrumentation for analytic tracking
-        UAirship.shared().getAnalytics().activityStopped(this);
+        Analytics.activityStopped(this);
     }
 
     @Override

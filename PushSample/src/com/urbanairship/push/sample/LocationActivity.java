@@ -7,10 +7,10 @@ import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.urbanairship.UAirship;
 import com.urbanairship.PendingResult;
+import com.urbanairship.UAirship;
+import com.urbanairship.analytics.Analytics;
 import com.urbanairship.location.LocationRequestOptions;
-import com.urbanairship.location.UALocationManager;
 
 public class LocationActivity extends Activity {
 
@@ -33,7 +33,7 @@ public class LocationActivity extends Activity {
         super.onStart();
 
         // Required for analytics
-        UAirship.shared().getAnalytics().activityStarted(this);
+        Analytics.activityStarted(this);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class LocationActivity extends Activity {
         super.onStop();
 
         // Required for analytics
-        UAirship.shared().getAnalytics().activityStopped(this);
+        Analytics.activityStopped(this);
 
         // Cancel the request
         if (pendingRequest != null) {
@@ -62,7 +62,7 @@ public class LocationActivity extends Activity {
                 .setPriority(getPriority())
                 .create();
 
-        pendingRequest = UALocationManager.shared().requestSingleLocation(options);
+        pendingRequest = UAirship.shared().getLocationManager().requestSingleLocation(options);
 
         pendingRequest.onResult(new PendingResult.ResultCallback<Location>() {
             @Override

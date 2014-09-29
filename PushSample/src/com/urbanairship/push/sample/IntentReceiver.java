@@ -30,10 +30,6 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.urbanairship.actions.ActionUtils;
-import com.urbanairship.actions.DeepLinkAction;
-import com.urbanairship.actions.LandingPageAction;
-import com.urbanairship.actions.OpenExternalUrlAction;
 import com.urbanairship.push.BaseIntentReceiver;
 import com.urbanairship.push.PushMessage;
 
@@ -42,14 +38,6 @@ public class IntentReceiver extends BaseIntentReceiver {
     public static String ACTION_UPDATE_CHANNEL  = "com.urbanairship.push.sample.ACTION_UPDATE_CHANNEL";
 
     private static final String TAG = "IntentReceiver";
-
-    // A set of actions that launch activities when a push is opened.  Update
-    // with any custom actions that also start activities when a push is opened.
-    private static String[] ACTIVITY_ACTIONS = new String[]{
-            DeepLinkAction.DEFAULT_REGISTRY_NAME,
-            OpenExternalUrlAction.DEFAULT_REGISTRY_NAME,
-            LandingPageAction.DEFAULT_REGISTRY_NAME
-    };
 
     @Override
     protected void onChannelRegistrationSucceeded(Context context, String channelId) {
@@ -72,32 +60,17 @@ public class IntentReceiver extends BaseIntentReceiver {
     @Override
     protected void onBackgroundPushReceived(Context context, PushMessage message) {
         Log.i(TAG, "Received background push message: " + message);
-
     }
 
     @Override
-    protected void onNotificationOpened(Context context, PushMessage message, int notificationId) {
+    protected boolean onNotificationOpened(Context context, PushMessage message, int notificationId) {
         Log.i(TAG, "User clicked notification. Alert: " + message.getAlert());
-
-        // Only launch the main activity if the payload does not contain any
-        // actions that might have already opened an activity
-        if (!ActionUtils.containsRegisteredActions(message.getPushBundle(), ACTIVITY_ACTIONS)) {
-            Intent launch = new Intent(Intent.ACTION_MAIN);
-            launch.setClass(context, MainActivity.class);
-            launch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(launch);
-        }
+        return false;
     }
 
     @Override
-    protected void onNotificationActionOpened(Context context, PushMessage message, int notificationId, String buttonId, boolean isForeground) {
-        // Only launch the main activity if the payload does not contain any
-        // actions that might have already opened an activity
-        if (isForeground && !ActionUtils.containsRegisteredActions(message.getPushBundle(), ACTIVITY_ACTIONS)) {
-            Intent launch = new Intent(Intent.ACTION_MAIN);
-            launch.setClass(context, MainActivity.class);
-            launch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(launch);
-        }
+    protected boolean onNotificationActionOpened(Context context, PushMessage message, int notificationId, String buttonId, boolean isForeground) {
+        Log.i(TAG, "User clicked notification button. Button ID: " + buttonId + " Alert: " + message.getAlert());
+        return false;
     }
 }
