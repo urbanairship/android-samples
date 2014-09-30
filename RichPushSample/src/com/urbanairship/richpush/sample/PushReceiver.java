@@ -85,14 +85,16 @@ public class PushReceiver extends BaseIntentReceiver {
 
     @Override
     protected boolean onNotificationActionOpened(Context context, PushMessage message, int notificationId, String buttonId, boolean isForeground) {
-        // Only launch the main activity if the payload does not contain any
-        // actions that might have already opened an activity
+        Log.i(TAG, "User clicked notification action button. Alert: " + message.getAlert());
+
         if (isForeground) {
             Intent launch = new Intent(Intent.ACTION_MAIN);
             launch.setClass(context, MainActivity.class);
             launch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(launch);
+            return true;
         }
-        return true;
+
+        return false;
     }
 }
