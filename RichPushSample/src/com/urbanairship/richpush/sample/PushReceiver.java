@@ -74,7 +74,7 @@ public class PushReceiver extends BaseIntentReceiver {
         } else {
             Logger.debug("Notified of a notification opened with id " + messageId);
             messageIntent =  new Intent(context, InboxActivity.class);
-            messageIntent.putExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY, messageId);
+            messageIntent.putExtra(RichPushApplication.EXTRA_OPEN_MESSAGE_ID, messageId);
         }
 
         messageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

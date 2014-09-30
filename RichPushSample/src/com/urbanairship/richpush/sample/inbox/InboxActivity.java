@@ -216,10 +216,10 @@ public class InboxActivity extends ActionBarActivity implements
      */
     private void showPendingMessageId() {
         String pendingMessageId = getIntent().
-                getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
+                getStringExtra(RichPushApplication.EXTRA_OPEN_MESSAGE_ID);
 
         if (!UAStringUtil.isEmpty(pendingMessageId)) {
-            getIntent().removeExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
+            getIntent().removeExtra(RichPushApplication.EXTRA_OPEN_MESSAGE_ID);
 
             RichPushInbox richPushInbox = UAirship.shared().getRichPushManager().getRichPushInbox();
             RichPushMessage message = richPushInbox.getMessage(pendingMessageId);

@@ -34,11 +34,12 @@ import com.urbanairship.richpush.sample.widget.RichPushWidgetProvider;
 
 public class RichPushApplication extends Application {
 
-    public static final String MESSAGE_ID_RECEIVED_KEY = "com.urbanairship.richpush.sample.MESSAGE_ID_RECEIVED";
+    public static final String EXTRA_OPEN_MESSAGE_ID = "com.urbanairship.richpush.sample.EXTRA_OPEN_MESSAGE_ID";
+
     public static final String HOME_ACTIVITY = "Home";
     public static final String INBOX_ACTIVITY = "Inbox";
     public static final String[] navList = new String[] {
-        HOME_ACTIVITY, INBOX_ACTIVITY
+            HOME_ACTIVITY, INBOX_ACTIVITY
     };
 
     @Override
