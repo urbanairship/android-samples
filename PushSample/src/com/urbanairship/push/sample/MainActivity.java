@@ -45,6 +45,11 @@ import com.urbanairship.util.UAStringUtil;
 
 public class MainActivity extends InstrumentedActivity {
 
+    /**
+     * Intent action sent as a local broadcast to update the channel.
+     */
+    public static String ACTION_UPDATE_CHANNEL  = "com.urbanairship.push.sample.ACTION_UPDATE_CHANNEL";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,12 +94,13 @@ public class MainActivity extends InstrumentedActivity {
         NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
 
+        // Register a local broadcast manager to listen for ACTION_UPDATE_CHANNEL
         LocalBroadcastManager locationBroadcastManager = LocalBroadcastManager.getInstance(this);
 
         // Use local broadcast manager to receive registration events to update the channel
         IntentFilter channelIdUpdateFilter;
         channelIdUpdateFilter = new IntentFilter();
-        channelIdUpdateFilter.addAction(IntentReceiver.ACTION_UPDATE_CHANNEL);
+        channelIdUpdateFilter.addAction(ACTION_UPDATE_CHANNEL);
         locationBroadcastManager.registerReceiver(channelIdUpdateReceiver, channelIdUpdateFilter);
 
         // Update the channel field
