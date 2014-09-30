@@ -18,7 +18,7 @@
     <!-- MODIFICATION REQUIRED - Replace "com.urbanairship.richpush.sample" with your package name -->
     <permission android:name="com.urbanairship.richpush.sample.permission.UA_DATA" android:protectionLevel="signature" />
     <uses-permission android:name="com.urbanairship.richpush.sample.permission.UA_DATA" />
-    <!-- The two elements above ensure that only this application has access to the Urban Airship provider -->
+    <!-- The two elements above ensure that only this application has access to the Urban Airship provider and can receive push intents -->
 
     <!-- REQUIRED PERMISSIONS for GCM -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
