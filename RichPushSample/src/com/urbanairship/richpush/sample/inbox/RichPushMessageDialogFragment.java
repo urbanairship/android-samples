@@ -35,7 +35,6 @@ import android.view.ViewGroup;
 import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.R;
-import com.urbanairship.richpush.sample.widget.RichPushWidgetUtils;
 import com.urbanairship.widget.RichPushMessageWebView;
 
 /**
@@ -80,10 +79,6 @@ public class RichPushMessageDialogFragment extends DialogFragment {
         RichPushMessageWebView messageView = (RichPushMessageWebView) view.findViewById(R.id.message_browser);
         messageView.loadRichPushMessage(message);
         message.markRead();
-
-        // Update the widget, this dialog can show a message on any activity
-        RichPushWidgetUtils.refreshWidget(this.getActivity());
-
 
         getDialog().setTitle(R.string.rich_push_message_dialog_title);
 

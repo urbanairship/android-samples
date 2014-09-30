@@ -33,7 +33,6 @@ import com.urbanairship.Logger;
 import com.urbanairship.push.BaseIntentReceiver;
 import com.urbanairship.push.PushMessage;
 import com.urbanairship.richpush.sample.inbox.InboxActivity;
-import com.urbanairship.richpush.sample.widget.RichPushWidgetUtils;
 import com.urbanairship.util.UAStringUtil;
 
 /**
@@ -41,10 +40,6 @@ import com.urbanairship.util.UAStringUtil;
  *
  */
 public class PushReceiver extends BaseIntentReceiver {
-    /**
-     * Delay to refresh widget to give time to fetch the rich push message
-     */
-    private static final long WIDGET_REFRESH_DELAY_MS = 5000; //5 Seconds
 
     private static final String TAG = "IntentReceiver";
 
@@ -61,7 +56,6 @@ public class PushReceiver extends BaseIntentReceiver {
     @Override
     protected void onPushReceived(Context context, PushMessage message, int notificationId) {
         Log.i(TAG, "Received push notification. Alert: " + message.getAlert() + ". Notification ID: " + notificationId);
-        RichPushWidgetUtils.refreshWidget(context, WIDGET_REFRESH_DELAY_MS);
     }
 
     @Override

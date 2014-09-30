@@ -36,7 +36,6 @@ import com.urbanairship.analytics.Analytics;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.R;
 import com.urbanairship.richpush.sample.preference.PushPreferencesActivity;
-import com.urbanairship.richpush.sample.widget.RichPushWidgetUtils;
 
 /**
  * Manages the message view pager and display messages
@@ -69,14 +68,6 @@ public class MessageActivity extends ActionBarActivity implements MessagePagerFr
 
         // Activity instrumentation for analytic tracking
         Analytics.activityStarted(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        // Refresh any widgets
-        RichPushWidgetUtils.refreshWidget(this);
     }
 
     @Override

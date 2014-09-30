@@ -36,7 +36,6 @@ import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.ViewBinderArrayAdapter;
-import com.urbanairship.richpush.sample.widget.RichPushWidgetUtils;
 import com.urbanairship.util.Toaster;
 
 import java.util.ArrayList;
@@ -80,9 +79,6 @@ public abstract class AbstractInboxFragment extends ListFragment
         // Listen for any rich push message changes
         UAirship.shared().getRichPushManager().addListener(this);
         richPushInbox.addListener(this);
-
-        // Refresh the widget inbox if we have one
-        RichPushWidgetUtils.refreshWidget(this.getActivity());
     }
 
     @Override
