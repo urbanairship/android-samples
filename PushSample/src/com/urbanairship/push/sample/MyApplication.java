@@ -26,9 +26,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package com.urbanairship.push.sample;
 
 import android.app.Application;
-import android.util.Log;
 
-import com.urbanairship.Logger;
 import com.urbanairship.UAirship;
 
 public class MyApplication extends Application {
@@ -37,13 +35,14 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Logger.logLevel = Log.VERBOSE;
-
         // Optionally, customize your config at runtime:
         //
+        // AirshipConfigOptions options = new AirshipConfigOptions();
         // options.inProduction = false;
         // options.developmentAppKey = "Your Development App Key";
         // options.developmentAppSecret "Your Development App Secret";
+        //
+        // UAirship.takeOff(this, options);
 
         UAirship.takeOff(this, new UAirship.OnReadyCallback() {
             @Override
