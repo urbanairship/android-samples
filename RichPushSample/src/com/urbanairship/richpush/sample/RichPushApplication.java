@@ -26,21 +26,48 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package com.urbanairship.richpush.sample;
 
 import android.app.Application;
+import android.content.Intent;
 
 import com.urbanairship.UAirship;
+import com.urbanairship.richpush.RichPushInbox;
+import com.urbanairship.richpush.sample.widget.RichPushWidgetProvider;
 
 public class RichPushApplication extends Application {
 
-    public static final String MESSAGE_ID_RECEIVED_KEY = "com.urbanairship.richpush.sample.MESSAGE_ID_RECEIVED";
+    public static final String EXTRA_OPEN_MESSAGE_ID = "com.urbanairship.richpush.sample.EXTRA_OPEN_MESSAGE_ID";
+
     public static final String HOME_ACTIVITY = "Home";
     public static final String INBOX_ACTIVITY = "Inbox";
     public static final String[] navList = new String[] {
-        HOME_ACTIVITY, INBOX_ACTIVITY
+            HOME_ACTIVITY, INBOX_ACTIVITY
     };
 
     @Override
     public void onCreate() {
-        UAirship.takeOff(this);
-        UAirship.shared().getPushManager().setNotificationFactory(new RichPushNotificationFactory(this));
+        UAirship.takeOff(this, new UAirship.OnReadyCallback() {
+            @Override
+            public void onReady(UAirship airship) {
+                // Set the custom notification factory
+                airship.getPushManager().setNotificationFactory(new RichPushNotificationFactory(RichPushApplication.this));
+
+                // Refresh the widget when the inbox changes
+                airship.getRichPushManager().getRichPushInbox().addListener(new RichPushInbox.Listener() {
+                    @Override
+                    public void onUpdateInbox() {
+                        refreshWidget();
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * Sends a request to refresh the rich push message widget
+     */
+    private void refreshWidget() {
+        Intent refreshIntent = new Intent(this, RichPushWidgetProvider.class)
+                .setAction(RichPushWidgetProvider.REFRESH_ACTION);
+
+        this.sendBroadcast(refreshIntent);
     }
 }

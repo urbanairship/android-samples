@@ -47,7 +47,7 @@ import com.urbanairship.util.UAStringUtil;
  * An empty activity used for the home.
  *
  * If activity is started with an intent that has a message id under the key
- * <code>RichPushApplication.MESSAGE_ID_RECEIVED_KEY</code> it will display
+ * <code>RichPushApplication.EXTRA_OPEN_MESSAGE_ID</code> it will display
  * the message in a dialog fragment.
  *
  */
@@ -98,9 +98,9 @@ ActionBar.OnNavigationListener {
         setNavigationToMainActivity();
 
         // Show a message dialog if the pending message id is not null
-        String pendingMessageId = getIntent().getStringExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
+        String pendingMessageId = getIntent().getStringExtra(RichPushApplication.EXTRA_OPEN_MESSAGE_ID);
         if (!UAStringUtil.isEmpty(pendingMessageId)) {
-            getIntent().removeExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY);
+            getIntent().removeExtra(RichPushApplication.EXTRA_OPEN_MESSAGE_ID);
             showRichPushMessage(pendingMessageId);
         }
     }

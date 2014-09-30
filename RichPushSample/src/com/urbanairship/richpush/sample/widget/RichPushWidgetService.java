@@ -107,7 +107,7 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // Add the message id to the intent
         Intent fillInIntent = new Intent();
         Bundle extras = new Bundle();
-        extras.putString(RichPushApplication.MESSAGE_ID_RECEIVED_KEY, message.getMessageId());
+        extras.putString(RichPushApplication.EXTRA_OPEN_MESSAGE_ID, message.getMessageId());
         fillInIntent.putExtras(extras);
         rv.setOnClickFillInIntent(R.id.widget_item, fillInIntent);
 

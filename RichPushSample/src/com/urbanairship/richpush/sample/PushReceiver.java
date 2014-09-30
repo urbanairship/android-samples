@@ -33,7 +33,6 @@ import com.urbanairship.Logger;
 import com.urbanairship.push.BaseIntentReceiver;
 import com.urbanairship.push.PushMessage;
 import com.urbanairship.richpush.sample.inbox.InboxActivity;
-import com.urbanairship.richpush.sample.widget.RichPushWidgetUtils;
 import com.urbanairship.util.UAStringUtil;
 
 /**
@@ -41,10 +40,6 @@ import com.urbanairship.util.UAStringUtil;
  *
  */
 public class PushReceiver extends BaseIntentReceiver {
-    /**
-     * Delay to refresh widget to give time to fetch the rich push message
-     */
-    private static final long WIDGET_REFRESH_DELAY_MS = 5000; //5 Seconds
 
     private static final String TAG = "IntentReceiver";
 
@@ -61,7 +56,6 @@ public class PushReceiver extends BaseIntentReceiver {
     @Override
     protected void onPushReceived(Context context, PushMessage message, int notificationId) {
         Log.i(TAG, "Received push notification. Alert: " + message.getAlert() + ". Notification ID: " + notificationId);
-        RichPushWidgetUtils.refreshWidget(context, WIDGET_REFRESH_DELAY_MS);
     }
 
     @Override
@@ -80,7 +74,7 @@ public class PushReceiver extends BaseIntentReceiver {
         } else {
             Logger.debug("Notified of a notification opened with id " + messageId);
             messageIntent =  new Intent(context, InboxActivity.class);
-            messageIntent.putExtra(RichPushApplication.MESSAGE_ID_RECEIVED_KEY, messageId);
+            messageIntent.putExtra(RichPushApplication.EXTRA_OPEN_MESSAGE_ID, messageId);
         }
 
         messageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -91,14 +85,16 @@ public class PushReceiver extends BaseIntentReceiver {
 
     @Override
     protected boolean onNotificationActionOpened(Context context, PushMessage message, int notificationId, String buttonId, boolean isForeground) {
-        // Only launch the main activity if the payload does not contain any
-        // actions that might have already opened an activity
+        Log.i(TAG, "User clicked notification action button. Alert: " + message.getAlert());
+
         if (isForeground) {
             Intent launch = new Intent(Intent.ACTION_MAIN);
             launch.setClass(context, MainActivity.class);
             launch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(launch);
+            return true;
         }
-        return true;
+
+        return false;
     }
 }

@@ -35,8 +35,6 @@ import com.urbanairship.push.PushMessage;
 
 public class IntentReceiver extends BaseIntentReceiver {
 
-    public static String ACTION_UPDATE_CHANNEL  = "com.urbanairship.push.sample.ACTION_UPDATE_CHANNEL";
-
     private static final String TAG = "IntentReceiver";
 
     @Override
@@ -44,7 +42,7 @@ public class IntentReceiver extends BaseIntentReceiver {
         Log.i(TAG, "Channel registration updated. Channel Id:" + channelId + ".");
 
         // Broadcast that the channel updated. Used to refresh the channel ID on the main activity.
-        LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(ACTION_UPDATE_CHANNEL));
+        LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_CHANNEL));
     }
 
     @Override
