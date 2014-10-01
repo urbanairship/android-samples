@@ -19,6 +19,7 @@ apply plugin: 'com.android.application'
 
 dependencies {
     compile 'com.google.android.gms:play-services:5.0.89'
+    compile 'com.android.support:support-v4:20.0'
 
     // Compile the UrbanAirship library from source
     // if it's available. Used for library development only.
