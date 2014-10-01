@@ -46,7 +46,7 @@ public class MyApplication extends Application {
 
         UAirship.takeOff(this, new UAirship.OnReadyCallback() {
             @Override
-            public void onReady(UAirship airship) {
+            public void onAirshipReady(UAirship airship) {
                 // Perform any airship configurations here
 
                 airship.getPushManager().setPushEnabled(true);

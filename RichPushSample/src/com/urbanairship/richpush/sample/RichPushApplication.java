@@ -46,7 +46,7 @@ public class RichPushApplication extends Application {
     public void onCreate() {
         UAirship.takeOff(this, new UAirship.OnReadyCallback() {
             @Override
-            public void onReady(UAirship airship) {
+            public void onAirshipReady(UAirship airship) {
                 // Set the custom notification factory
                 airship.getPushManager().setNotificationFactory(new RichPushNotificationFactory(RichPushApplication.this));
 
