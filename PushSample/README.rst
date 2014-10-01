@@ -1,39 +1,55 @@
 PushSample
 ==========
 
-Introduction
-------------
-
 PushSample is a basic implementation of the Urban Airship SDK to receive push notifications.
+
 
 Android Studio Setup
 --------------------
 
-Add Urban Airship Library SDK:
-  - Copy Urban Airship Library JAR into PushSample/libs/
+1) Update the Android SDK Manager
+    - Verify Android Support Repository and Google Repository (under Extras) are installed and up-to-date
 
-Android SDK Manager:
-  - Install updates
-  - Install Android Support Repository and Android Support Library under Extras
+2) Download the Android/Amazon library from http://urbanairship.com/resources/developer-resources
 
-Import Project:
- - Open Android Studio to welcome screen
- - Import project, Select Samples root directory
+3) Copy the urbanairship-lib-*.aar file into PushSample/aars/
+
+4) Import the project into Android Studio
+    - Open Android Studio to welcome screen
+    - Import project, select the Samples root directory
+
+5) Update AirshipConfig.properties file with your application's configuration
+    - Amazon setup docs http://docs.urbanairship.com/build/push/android.html#adm-setup
+    - GCM setup docs http://docs.urbanairship.com/build/push/android.html#gcm-setup
+
+6) Build and run the Push Sample
 
 Eclipse (ADT) Setup
 -------------------
 
-Add Urban Airship Library SDK:
-  - Copy Urban Airship Library JAR into PushSample/libs/
+1) Update the Android SDK Manager
+    - Verify Android Support Library and Google Play Services (under Extras) are installed and up-to-date
 
-Import project:
-  - Eclipse -> Import Android Project -> Samples/PushSample
+2) Download the Android/Amazon library from http://urbanairship.com/resources/developer-resources
 
-Set up Google Play services:
- - http://developer.android.com/google/play-services/setup.html#Setup
+3) Import projects
+    - Eclipse -> Import Android Project -> Samples/PushSample
+    - Eclipse -> Import Android Project -> urbanairship-lib (from download)
 
-If you have updated to ADT 22, you may need to include the Android Private Libraries:
-  - Right-click on PushSample project -> Properties > Java Build Path > Order and Export and check the Android Private Libraries
+4) Add the Urban Airship library project as a dependency
+    - Follow http://developer.android.com/tools/projects/projects-eclipse.html#ReferencingLibraryProject
+
+5) Add the v4 support library as a dependency
+    - Follow http://developer.android.com/tools/support-library/setup.html
+
+6) (GCM Only) Set up Google Play services
+    - http://developer.android.com/google/play-services/setup.html#Setup
+
+7) Update AirshipConfig.properties file with your application's configuration
+    - Amazon setup docs http://docs.urbanairship.com/build/push/android.html#adm-setup
+    - GCM setup docs http://docs.urbanairship.com/build/push/android.html#gcm-setup
+
+8) Build and run the Push Sample
 
 Further Reading
 ---------------

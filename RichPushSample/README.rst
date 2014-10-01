@@ -1,52 +1,59 @@
 RichPushSample
 ==============
 
-Introduction
-------------
-
 RichPushSample is an example implementation of Rich Push for Android, using the
-latest Urban Airship client library.  You can use this sample for playing with
+latest Urban Airship client library. You can use this sample for playing with
 Rich Push, or as a reference point for integrating Rich Push into your own project.
 
 
 Android Studio Setup
 --------------------
 
-Add Urban Airship Library SDK:
-  - Copy Urban Airship Library JAR into RichPushSample/libs/
+1) Update the Android SDK Manager
+    - Verify Android Support Repository and Google Repository (under Extras) are installed and up-to-date
 
-Android SDK Manager:
-  - Install updates
-  - Install Android Support Repository and Android Support Library under Extras
+2) Download the Android/Amazon library from http://urbanairship.com/resources/developer-resources
 
-Import Project:
- - Open Android Studio to welcome screen
- - Import project, Select Samples root directory
+3) Copy the urbanairship-lib-*.aar file into RichPushSample/aars/
 
-Add Urban Airship Android Library to 'libs' directory:
- - `(Download latest stable release) <http://com.urbanairship.filereleases.s3.amazonaws.com/ua-android-lib-latest.zip>`_
+4) Import the project into Android Studio
+    - Open Android Studio to welcome screen
+    - Import project, select the Samples root directory
+
+5) Update AirshipConfig.properties file with your application's configuration
+    - Amazon setup docs http://docs.urbanairship.com/build/push/android.html#adm-setup
+    - GCM setup docs http://docs.urbanairship.com/build/push/android.html#gcm-setup
+
+6) Build and run the Rich Push Sample
 
 
 Eclipse (ADT) Setup
 -------------------
 
-Add Urban Airship Library SDK:
-  - Copy Urban Airship Library JAR into RichPushSample/libs/
+1) Update the Android SDK Manager
+    - Verify Android Support Library and Google Play Services (under Extras) are installed and up-to-date
 
-Import project:
-  - Eclipse -> Import Android Project -> Samples/RichPushSample
+2) Download the Android/Amazon library from http://urbanairship.com/resources/developer-resources
 
-Set up Support Library:
- - `Android Support-v7 AppCompat Library <http://developer.android.com/tools/support-library/features.html#v7-appcompat>`_ **Minimum required revision: 18**
+3) Import projects
+    - Eclipse -> Import Android Project -> Samples/PushSample
+    - Eclipse -> Import Android Project -> urbanairship-lib (from download)
 
-Set up Google Play services:
- - http://developer.android.com/google/play-services/setup.html#Setup
+4) Add the Urban Airship library project as a dependency
+    - Follow http://developer.android.com/tools/projects/projects-eclipse.html#ReferencingLibraryProject
 
-Add Urban Airship Android Library to 'libs' directory:
- - `(Download latest stable release) <http://com.urbanairship.filereleases.s3.amazonaws.com/ua-android-lib-latest.zip>`_
+5) Add the v4 and v7 Support library as dependencies
+    - Follow http://developer.android.com/tools/support-library/setup.html
 
-If you have updated to ADT 22, you may need to include the Android Private Libraries:
-  - Right-click on RichPushSample project -> Properties > Java Build Path > Order and Export and check the Android Private Libraries
+6) (GCM Only) Set up Google Play services
+    - http://developer.android.com/google/play-services/setup.html#Setup
+
+7) Update AirshipConfig.properties file with your application's configuration
+    - Amazon setup docs http://docs.urbanairship.com/build/push/android.html#adm-setup
+    - GCM setup docs http://docs.urbanairship.com/build/push/android.html#gcm-setup
+
+8) Build and run the Rich Push Sample
+
 
 Further Reading
 ---------------
@@ -120,9 +127,6 @@ RichPushWidgetProvider.java
 
 RichPushWidgetService.java
    Service that provides the factory to be bound to the collection service.
-
-RichPushWidgetUtils.java
-   Utility class to help refresh the rich push inbox widget.
 
 SetAliasPreference.java
    DialogPreference to set the alias.
