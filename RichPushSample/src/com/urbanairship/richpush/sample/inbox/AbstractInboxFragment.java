@@ -30,13 +30,13 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.ViewBinderArrayAdapter;
-import com.urbanairship.util.Toaster;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -152,7 +152,7 @@ public abstract class AbstractInboxFragment extends ListFragment
     @Override
     public void onUpdateMessages(boolean success) {
         if (isManualRefreshing && !success) {
-            Toaster.longerToast("Failed to update messages!");
+            Toast.makeText(getActivity(), "Failed to update messages!", Toast.LENGTH_LONG).show();
         }
         isManualRefreshing = false;
         setListShown(true);
