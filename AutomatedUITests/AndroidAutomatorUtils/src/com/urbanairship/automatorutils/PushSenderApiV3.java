@@ -109,16 +109,15 @@ public class PushSenderApiV3 extends PushSender {
     }
 
     /**
-     * Sends a push message to an APID
-     * @param apid The specified apid to send the push message to
-     * @return A unique alert Id
+     * Sends a push message to a Channel ID
+     * @param channelId The specified channel ID to send the push message to
+     * @return A unique alert ID
      * @throws Exception
      */
-    @Override
-    public String sendPushToApid(String apid) throws Exception {
-        Log.i(TAG, "Send message to apid: " + apid);
+    public String sendPushToChannelId(String channelId) throws Exception {
+        Log.i(TAG, "Send message to channel ID: " + channelId);
         JSONObject jsonAudience = new JSONObject();
-        jsonAudience.put("apid", apid);
+        jsonAudience.put("android_channel", channelId);
         return sendMessage(PUSH_URL, "audience", jsonAudience.toString(), null, requestProperties);
     }
 }
