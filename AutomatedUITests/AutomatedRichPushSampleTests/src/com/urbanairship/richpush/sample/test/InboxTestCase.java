@@ -20,18 +20,18 @@ public class InboxTestCase extends BaseTestCase {
 
         // Enable Push
         navigateToPreferences();
-        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
+        preferences.setPreferenceCheckBoxEnabled("USER_NOTIFICATIONS_ENABLE", true);
         navigateBack();
         Thread.sleep(REGISTRATION_WAIT_TIME);
 
         // Get apid and User Id
         navigateToPreferences();
-        String apid = preferences.getPreferenceSummary("APID");
+        String channelId = preferences.getPreferenceSummary("CHANNEL_ID");
         String userId = preferences.getPreferenceSummary("USER_ID");
         navigateBack();
 
-        assertNotSame("Failed to generate APID.", apid, "");
-        assertNotSame("Failed to generate User Id.", userId, "");
+        assertNotSame("Failed to generate Channel ID.", channelId, "");
+        assertNotSame("Failed to generate User ID.", userId, "");
 
         String masterSecret = getParams().getString("MASTER_SECRET");
         String appKey = getParams().getString("APP_KEY");
@@ -47,8 +47,8 @@ public class InboxTestCase extends BaseTestCase {
 
         // Need 3 rich push messages to run test
         for (int i = 0; i < 3; i++) {
-            String id = pushSenderV3.sendPushToApid(apid);
-            assertTrue("Unable to send rich push to apid", waitForNotificationToArrive(id));
+            String id = pushSenderV3.sendPushToChannelId(channelId);
+            assertTrue("Unable to send rich push to Channel ID", waitForNotificationToArrive(id));
         }
 
         // Allow messages to be retrieved
@@ -144,10 +144,9 @@ public class InboxTestCase extends BaseTestCase {
     // Helpers
 
     void refreshInbox() throws UiObjectNotFoundException, InterruptedException {
-        UiObject moreOptionsButton = new UiObject(new UiSelector().description("More options"));
-        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, moreOptionsButton);
-        moreOptionsButton.click();
-        new UiObject(new UiSelector().text("Refresh")).click();
+        UiObject refreshButton = new UiObject(new UiSelector().description("Refresh"));
+        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, refreshButton);
+        refreshButton.click();
         getUiDevice().waitForWindowUpdate(PACKAGE_NAME, 5000);
     }
 
