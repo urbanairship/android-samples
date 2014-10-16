@@ -30,7 +30,7 @@ public class BaseTestCase extends UiAutomatorTestCase {
     static final String TEST_ALIAS_STRING = AutomatorUtils.generateUniqueAlertId();
     static final String TEST_TAG_STRING = "TEST_RICH_PUSH_SAMPLE_TAG";
 
-    RichPushSender pushSender;
+    //RichPushSender pushSender;
     RichPushSenderApiV3 pushSenderV3;
     PreferencesHelper preferences;
 
@@ -44,7 +44,7 @@ public class BaseTestCase extends UiAutomatorTestCase {
         String masterSecret = getParams().getString("MASTER_SECRET");
         String appKey = getParams().getString("APP_KEY");
 
-        pushSender = new RichPushSender(masterSecret, appKey);
+        //pushSender = new RichPushSender(masterSecret, appKey);
         pushSenderV3 = new RichPushSenderApiV3(masterSecret, appKey);
         preferences = new PreferencesHelper();
 
@@ -56,19 +56,15 @@ public class BaseTestCase extends UiAutomatorTestCase {
     }
 
     /**
-     * Cleanup - delete APID and unregister from GCM
+     * Cleanup - disable user notifications.
      */
     @Override
     public void tearDown() throws Exception {
         // Disable push
         navigateToPreferences();
-        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", false);
+        preferences.setPreferenceCheckBoxEnabled("USER_NOTIFICATIONS_ENABLE", false);
 
         navigateBack();
-        navigateToPreferences();
-
-        String apid = preferences.getPreferenceSummary("APID");
-        assertEquals("Failed to delete APID. GCM unregistration failed.", apid, "");
     }
 
 
@@ -234,10 +230,10 @@ public class BaseTestCase extends UiAutomatorTestCase {
      * @throws InterruptedException
      */
     void navigateToPreferences() throws UiObjectNotFoundException, InterruptedException {
-        UiObject moreOptionsButton = new UiObject(new UiSelector().description("More options"));
-        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, moreOptionsButton);
-        moreOptionsButton.click();
-        UiObject preferenceButton = new UiObject(new UiSelector().text("Preferences"));
+//        UiObject moreOptionsButton = new UiObject(new UiSelector().description("More options"));
+//        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, moreOptionsButton);
+//        moreOptionsButton.click();
+        UiObject preferenceButton = new UiObject(new UiSelector().description("Preferences"));
         AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, preferenceButton);
         preferenceButton.click();
 

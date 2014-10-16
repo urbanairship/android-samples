@@ -11,7 +11,7 @@ import com.urbanairship.automatorutils.AutomatorUtils;
 public class PushTestCase extends BaseTestCase {
 
     /**
-     * Test push to apid, tag, alias, and broadcast
+     * Test push to Channel ID, tag, alias, and broadcast
      * @throws Exception
      */
     public void testPush() throws Exception {
@@ -20,8 +20,8 @@ public class PushTestCase extends BaseTestCase {
         // Open preferences
         preferencesButton.click();
 
-        // Enable push
-        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
+        // Enable user notifications
+        preferences.setPreferenceCheckBoxEnabled("USER_NOTIFICATIONS_ENABLE", true);
 
         // Set alias
         preferences.setAlias(TEST_ALIAS_STRING);
@@ -38,9 +38,9 @@ public class PushTestCase extends BaseTestCase {
         // Back into preferences
         preferencesButton.click();
 
-        // Verify registration complete by checking for apid
-        String apid = preferences.getPreferenceSummary("APID");
-        assertNotSame("Failed to display the APID. GCM registration may have failed.", apid, "");
+        // Verify registration complete by checking for Channel ID
+        String channelId = preferences.getPreferenceSummary("CHANNEL_ID");
+        assertNotSame("Failed to display the Channel ID. Registration may have failed.", channelId, "");
 
         // Back to main activity
         getUiDevice().pressBack();
@@ -52,8 +52,8 @@ public class PushTestCase extends BaseTestCase {
         AutomatorUtils.openNotificationArea();
         AutomatorUtils.clearNotifications();
 
-        // Send push message to apid
-        String apidAlertId = pushSender.sendPushToApid(apid);
+        // Send push message to Channel ID
+        String channelIdAlertId = pushSender.sendPushToChannelId(channelId);
         String aliasAlertId = pushSender.sendPushToAlias(TEST_ALIAS_STRING);
         String tagAlertId = pushSender.sendPushToTag(TEST_TAG_STRING);
         String broadcastAlertId = pushSender.sendPushMessage();
@@ -61,13 +61,13 @@ public class PushTestCase extends BaseTestCase {
         AutomatorUtils.openNotificationArea();
 
         // Wait for push notifications to arrive
-        assertTrue("Failed to receive push from unicast.", waitForNotificationToArrive(apidAlertId));
+        assertTrue("Failed to receive push from unicast.", waitForNotificationToArrive(channelIdAlertId));
         assertTrue("Failed to receive push from alias.", waitForNotificationToArrive(aliasAlertId));
         assertTrue("Failed to receive push from tag.", waitForNotificationToArrive(tagAlertId));
         assertTrue("Failed to receive push from broadcast.", waitForNotificationToArrive(broadcastAlertId));
 
         // Open a notification
-        UiObject notification = new UiObject( new UiSelector().textContains(apidAlertId));
+        UiObject notification = new UiObject( new UiSelector().textContains(channelIdAlertId));
         notification.clickAndWaitForNewWindow();
 
         // Verify opening the notification opens the app

@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class RichPushTestCase extends BaseTestCase {
 
     HashMap<String, String> activityExtras;
-    String apid;
+    String channelId;
     String richPushId;
 
     @Override
@@ -23,7 +23,7 @@ public class RichPushTestCase extends BaseTestCase {
         navigateToPreferences();
 
         // Enable push, add tag, set alias
-        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
+        preferences.setPreferenceCheckBoxEnabled("USER_NOTIFICATIONS_ENABLE", true);
         preferences.setAlias(TEST_ALIAS_STRING);
         preferences.addTags(TEST_TAG_STRING);
 
@@ -32,14 +32,14 @@ public class RichPushTestCase extends BaseTestCase {
 
         navigateToPreferences();
 
-        apid = preferences.getPreferenceSummary("APID");
+        channelId = preferences.getPreferenceSummary("CHANNEL_ID");
         richPushId = preferences.getPreferenceSummary("USER_ID");
 
         // Verify our setting stuck
         assertEquals("Failed to set alias string", TEST_ALIAS_STRING, preferences.getPreferenceSummary("SET_ALIAS"));
         assertEquals("Failed to display tag string", TEST_TAG_STRING, preferences.getPreferenceSummary("ADD_TAGS"));
-        assertNotSame("Failed to generate APID.", apid, "");
-        assertNotSame("Failed to generate User Id.", richPushId, "");
+        assertNotSame("Failed to generate Channel ID.", channelId, "");
+        assertNotSame("Failed to generate User ID.", richPushId, "");
     }
 
     /**
@@ -55,20 +55,24 @@ public class RichPushTestCase extends BaseTestCase {
         AutomatorUtils.clearNotifications();
 
         // APIv1/v2: Send broadcast with extras
-        String uniqueAlertId = pushSender.sendPushMessage(activityExtras);
-        verifyRichPushNotification("Rich Push Message", uniqueAlertId, "API v1 broadcast to webview failed", ++messageCount);
+        // String uniqueAlertId = pushSender.sendPushMessage(activityExtras);
+        // verifyRichPushNotification("Rich Push Message", uniqueAlertId, "API v1 broadcast to webview failed", ++messageCount);
 
         // APIv1/v2: Send Rich Push Message to User Id
-        uniqueAlertId = pushSender.sendRichPushToUser(richPushId);
-        verifyRichPushNotification(null, uniqueAlertId, "API v1 unicast to user ID failed", ++messageCount);
+        // uniqueAlertId = pushSender.sendRichPushToUser(richPushId);
+        // verifyRichPushNotification(null, uniqueAlertId, "API v1 unicast to user ID failed", ++messageCount);
 
         // APIv3: Broadcast push with extras
-        uniqueAlertId = pushSenderV3.sendPushMessage(activityExtras);
+        String uniqueAlertId = pushSenderV3.sendPushMessage(activityExtras);
         verifyRichPushNotification("Rich Push Message", uniqueAlertId, "API v3 broadcast push failed", ++messageCount);
 
         // APIv3: Push to APID
-        uniqueAlertId = pushSenderV3.sendPushToApid(apid);
-        verifyRichPushNotification(null, uniqueAlertId, "API v3 unicast push failed", ++messageCount);
+        //uniqueAlertId = pushSenderV3.sendPushToApid(apid);
+        //verifyRichPushNotification(null, uniqueAlertId, "API v3 unicast push failed", ++messageCount);
+
+        // APIv3: Push to Channel ID
+        uniqueAlertId = pushSenderV3.sendPushToChannelId(channelId);
+        verifyRichPushNotification(null, uniqueAlertId, "API v3 unicast channel ID push failed", ++messageCount);
 
         // APIv3: Push to alias
         uniqueAlertId = pushSenderV3.sendPushToAlias(TEST_ALIAS_STRING);

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.lang.Deprecated;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
@@ -149,8 +150,10 @@ public class PushSender {
      * Sends a push message to an APID
      * @param apid The specified apid to send the push message to
      * @return A unique alert Id
+     * @deprecated As of 5.0.0. Use sendPushToChannelId instead.
      * @throws Exception
      */
+    @Deprecated
     public String sendPushToApid(String apid) throws Exception {
         Log.i(TAG, "Send message to apid: " + apid);
         return sendMessage(pushUrl, "apids", apid, null);

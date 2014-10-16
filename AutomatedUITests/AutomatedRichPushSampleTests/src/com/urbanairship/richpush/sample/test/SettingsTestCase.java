@@ -16,11 +16,11 @@ public class SettingsTestCase extends BaseTestCase {
 
         // Push Settings
 
-        // Test for parent push setting
-        verifyCheckBoxSetting("PUSH_ENABLE");
+        // Test user notifications
+        verifyCheckBoxSetting("USER_NOTIFICATIONS_ENABLE");
 
-        // The rest depend on having push enabled
-        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
+        // The rest depend on having user notifications enabled
+        preferences.setPreferenceCheckBoxEnabled("USER_NOTIFICATIONS_ENABLE", true);
 
         // Test sound, vibrate, and quiet time enable preferences
         verifyCheckBoxSetting("SOUND_ENABLE");
@@ -41,8 +41,8 @@ public class SettingsTestCase extends BaseTestCase {
         assertFalse(preferences.isPreferenceViewEnabled("QUIET_TIME_START"));
         assertFalse(preferences.isPreferenceViewEnabled("QUIET_TIME_END"));
 
-        // Disable push settings
-        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", false);
+        // Disable user notifications
+        preferences.setPreferenceCheckBoxEnabled("USER_NOTIFICATIONS_ENABLE", false);
 
         // Make sure the rest of the push preference views are disabled
         assertFalse(preferences.isPreferenceViewEnabled("SOUND_ENABLE"));
@@ -70,12 +70,12 @@ public class SettingsTestCase extends BaseTestCase {
     }
 
     /**
-     * Test disabling push does not send notifications
+     * Test disabling user notifications does not send notifications
      * @throws Exception
      */
     public void testPushDisabled() throws Exception {
         navigateToPreferences();
-        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", true);
+        preferences.setPreferenceCheckBoxEnabled("USER_NOTIFICATIONS_ENABLE", true);
 
         navigateBack();
 
@@ -84,16 +84,10 @@ public class SettingsTestCase extends BaseTestCase {
 
         navigateToPreferences();
 
-        String apid = preferences.getPreferenceSummary("APID");
-        assertNotSame("Failed to generate APID.", apid, "");
+        String channelId = preferences.getPreferenceSummary("CHANNEL_ID");
+        assertNotSame("Failed to generate Channel ID.", channelId, "");
 
-        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", false);
-
-        navigateBack();
-        navigateToPreferences();
-
-        apid = preferences.getPreferenceSummary("APID");
-        assertSame("Failed to clear the APID.", apid, "");
+        preferences.setPreferenceCheckBoxEnabled("USER_NOTIFICATIONS_ENABLE", false);
 
         navigateBack();
 

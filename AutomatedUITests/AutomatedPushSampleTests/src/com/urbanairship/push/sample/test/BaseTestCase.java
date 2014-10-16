@@ -7,6 +7,7 @@ import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 import com.urbanairship.automatorutils.AutomatorUtils;
 import com.urbanairship.automatorutils.PreferencesHelper;
 import com.urbanairship.automatorutils.PushSender;
+import com.urbanairship.automatorutils.PushSenderApiV3;
 
 /**
  * Automated testing of the Push Sample application
@@ -23,7 +24,7 @@ public class BaseTestCase extends UiAutomatorTestCase {
     static final String TEST_ALIAS_STRING = AutomatorUtils.generateUniqueAlertId();
     static final String TEST_TAG_STRING = "TEST_PUSH_SAMPLE_TAG";
 
-    PushSender pushSender;
+    PushSenderApiV3 pushSender;
     PreferencesHelper preferences;
 
 
@@ -38,7 +39,7 @@ public class BaseTestCase extends UiAutomatorTestCase {
         String appKey = getParams().getString("APP_KEY");
         String masterSecret = getParams().getString("MASTER_SECRET");
 
-        pushSender = new PushSender(masterSecret, appKey);
+        pushSender = new PushSenderApiV3(masterSecret, appKey);
         preferences = new PreferencesHelper();
 
         // Open application
@@ -46,22 +47,17 @@ public class BaseTestCase extends UiAutomatorTestCase {
     }
 
     /**
-     * Cleanup - delete APID and unregister from GCM
+     * Cleanup - disable user notifications.
      */
     @Override
     public void tearDown() throws Exception {
         // Disable push
         UiObject preferencesButton = new UiObject(new UiSelector().text("Preferences"));
         preferencesButton.click();
-        preferences.setPreferenceCheckBoxEnabled("PUSH_ENABLE", false);
+        preferences.setPreferenceCheckBoxEnabled("USER_NOTIFICATIONS_ENABLE", false);
 
         // Go out and back to apply settings
         this.getUiDevice().pressBack();
-        preferencesButton.click();
-
-        // Verify unregistration complete by checking apid
-        String apid = preferences.getPreferenceSummary("APID");
-        assertEquals("Failed to delete APID. GCM unregistration failed.", apid, "");
     }
 
     // Helpers
