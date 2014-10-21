@@ -71,4 +71,10 @@ public class IntentReceiver extends BaseIntentReceiver {
         Log.i(TAG, "User clicked notification button. Button ID: " + buttonId + " Alert: " + message.getAlert());
         return false;
     }
+
+
+    @Override
+    protected void onNotificationDismissed(Context context, PushMessage message, int notificationId) {
+        Log.i(TAG, "Notification dismissed. Alert: " + message.getAlert() + ". Notification ID: " + notificationId);
+    }
 }

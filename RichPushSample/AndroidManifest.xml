@@ -104,6 +104,7 @@
             <intent-filter>
                 <action android:name="com.urbanairship.push.CHANNEL_UPDATED" />
                 <action android:name="com.urbanairship.push.OPENED" />
+                <action android:name="com.urbanairship.push.DISMISSED" />
                 <action android:name="com.urbanairship.push.RECEIVED" />
 
                 <!-- MODIFICATION REQUIRED - Use your package name as the category -->
