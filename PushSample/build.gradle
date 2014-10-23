@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.+'
+        classpath 'com.android.tools.build:gradle:0.13.+'
     }
 }
 
@@ -18,8 +18,8 @@ repositories {
 apply plugin: 'com.android.application'
 
 dependencies {
-    compile 'com.google.android.gms:play-services:5.0.89'
-    compile 'com.android.support:support-v4:20.+'
+    compile 'com.google.android.gms:play-services:6.1.+'
+    compile 'com.android.support:support-v4:21.+'
 
     // Compile the UrbanAirship library from source
     // if it's available. Used for library development only.
@@ -32,14 +32,14 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 20
-    buildToolsVersion "20.0.0"
+    compileSdkVersion 21
+    buildToolsVersion "21.0.2"
 
     defaultConfig {
         versionCode 1
         versionName "1.0"
         minSdkVersion 9
-        targetSdkVersion 20
+        targetSdkVersion 21
     }
 
     sourceSets {
