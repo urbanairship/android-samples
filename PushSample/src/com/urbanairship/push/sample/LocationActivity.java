@@ -21,7 +21,7 @@ public class LocationActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.location);
+        setContentView(R.layout.location_activity);
 
         priorityGroup = (RadioGroup) findViewById(R.id.location_priority);
         progress = findViewById(R.id.request_progress);

@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
-              android:background="@drawable/tiledstripes"
               android:layout_width="fill_parent"
+              android:padding="16dp"
               android:layout_height="fill_parent">
 
     <TextView
         android:text="Request Priority:"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"/>
 
     <RadioGroup
         android:id="@+id/location_priority"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
+        android:layout_marginBottom="8dp"
         android:orientation="vertical">
 
         <RadioButton
@@ -49,7 +51,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Request Location"
-        android:onClick="onRequestLocationClicked"/>
+        android:onClick="onRequestLocationClicked"
+        android:layout_marginBottom="8dp"/>
 
     <LinearLayout
         android:id="@+id/request_progress"
@@ -69,6 +72,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Requesting Location"
+            android:layout_marginLeft="8dp"
             android:layout_gravity="center"
             android:id="@+id/textView"/>
 
