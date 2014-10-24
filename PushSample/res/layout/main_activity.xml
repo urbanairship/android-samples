@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Channel:"
+            android:text="@string/channel_id"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <TextView
@@ -23,7 +23,6 @@
             android:layout_marginLeft="4dp"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-
     </LinearLayout>
 
 
@@ -32,12 +31,12 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="Preferences"/>
+        android:text="@string/button_preferences"/>
 
     <Button
         android:id="@+id/location_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="View Location"/>
+        android:text="@string/button_view_location"/>
 
 </LinearLayout>

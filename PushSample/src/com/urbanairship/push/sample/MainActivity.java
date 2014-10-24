@@ -88,7 +88,7 @@ public class MainActivity extends InstrumentedActivity {
                     // Using deprecated ClipboardManager to support Gingerbread (API 10)
                     ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
                     clipboard.setText(channelID.getText());
-                    Toast.makeText(MainActivity.this, "Channel ID copied to clipboard", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, getString(R.string.toast_channel_clipboard), Toast.LENGTH_SHORT).show();
                 }
 
             }
