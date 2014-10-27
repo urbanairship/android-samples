@@ -97,4 +97,10 @@ public class PushReceiver extends BaseIntentReceiver {
 
         return false;
     }
+
+
+    @Override
+    protected void onNotificationDismissed(Context context, PushMessage message, int notificationId) {
+        Log.i(TAG, "Notification dismissed. Alert: " + message.getAlert() + ". Notification ID: " + notificationId);
+    }
 }
