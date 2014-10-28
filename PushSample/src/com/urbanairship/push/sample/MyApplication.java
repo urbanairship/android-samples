@@ -26,8 +26,10 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package com.urbanairship.push.sample;
 
 import android.app.Application;
+import android.support.v4.app.NotificationCompat;
 
 import com.urbanairship.UAirship;
+import com.urbanairship.push.notifications.DefaultNotificationFactory;
 
 public class MyApplication extends Application {
 
@@ -49,6 +51,15 @@ public class MyApplication extends Application {
             public void onAirshipReady(UAirship airship) {
                 // Perform any airship configurations here
 
+                // Create a customized default notification factory
+                DefaultNotificationFactory defaultNotificationFactory = new DefaultNotificationFactory(getApplicationContext());
+                defaultNotificationFactory.setSmallIconId(R.drawable.ic_notification);
+                defaultNotificationFactory.setColor(NotificationCompat.COLOR_DEFAULT);
+
+                // Set it
+                airship.getPushManager().setNotificationFactory(defaultNotificationFactory);
+
+                // Enable Push
                 airship.getPushManager().setPushEnabled(true);
             }
         });

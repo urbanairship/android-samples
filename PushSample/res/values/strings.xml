@@ -23,4 +23,16 @@
     <string name="set_alias_preference_title">Set Alias</string>
     <string name="add_tags_preference_title">Add Tags</string>
     <string name="duplicate_tag_warning">Tag already exists</string>
+
+
+    <string name="location_high_accuracy">High Accuracy</string>
+    <string name="location_balanced_accuracy">Balanced Power and Accuracy</string>
+    <string name="location_low_power">Low Power</string>
+    <string name="location_no_power">No Power</string>
+    <string name="button_request_location">Request Location</string>
+    <string name="location_requesting_location">Requesting Location</string>
+    <string name="channel_id">Channel:</string>
+    <string name="button_preferences">Preferences</string>
+    <string name="button_view_location">View Location</string>
+    <string name="toast_channel_clipboard">Channel ID copied to clipboard</string>
 </resources>

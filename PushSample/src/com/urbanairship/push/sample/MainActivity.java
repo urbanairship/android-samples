@@ -32,10 +32,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.ClipboardManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.urbanairship.UAirship;
 import com.urbanairship.analytics.InstrumentedActivity;
@@ -50,10 +52,12 @@ public class MainActivity extends InstrumentedActivity {
      */
     public static String ACTION_UPDATE_CHANNEL  = "com.urbanairship.push.sample.ACTION_UPDATE_CHANNEL";
 
+    private TextView channelID;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.main_activity);
 
         // Location
         Button locationButton = (Button)findViewById(R.id.location_button);
@@ -73,6 +77,21 @@ public class MainActivity extends InstrumentedActivity {
                 startActivity(new Intent(getBaseContext(), PreferencesActivity.class));
             }
 
+        });
+
+        // Channel ID
+        channelID = (TextView) findViewById(R.id.channel_id);
+        channelID.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (channelID.getText() != null) {
+                    // Using deprecated ClipboardManager to support Gingerbread (API 10)
+                    ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                    clipboard.setText(channelID.getText());
+                    Toast.makeText(MainActivity.this, getString(R.string.toast_channel_clipboard), Toast.LENGTH_SHORT).show();
+                }
+
+            }
         });
     }
 
@@ -126,9 +145,8 @@ public class MainActivity extends InstrumentedActivity {
         channelIdString = UAStringUtil.isEmpty(channelIdString) ? "" : channelIdString;
 
         // fill in channel ID text
-        EditText channelIdTextField = (EditText)findViewById(R.id.channelIdText);
-        if (!channelIdString.equals(channelIdTextField.getText())) {
-            channelIdTextField.setText(channelIdString);
+        if (!channelIdString.equals(channelID.getText())) {
+            channelID.setText(channelIdString);
         }
     }
 }
