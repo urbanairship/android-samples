@@ -35,8 +35,8 @@ import android.os.Bundle;
 import android.widget.RemoteViews;
 
 import com.urbanairship.UAirship;
+import com.urbanairship.richpush.sample.MainActivity;
 import com.urbanairship.richpush.sample.R;
-import com.urbanairship.richpush.sample.inbox.InboxActivity;
 
 /**
  * Factory class to create remote views for the widget layouts
@@ -136,7 +136,7 @@ class RemoteViewsFactory {
      * @return Pending inbox activity intent
      */
     private static PendingIntent createInboxActivityPendingIntent(Context context) {
-        Intent intent = new Intent(context, InboxActivity.class);
+        Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
@@ -150,7 +150,7 @@ class RemoteViewsFactory {
      * @return Pending broadcast intent
      */
     private static PendingIntent createMessageTemplateIntent(Context context, int appWidgetId) {
-        Intent intent = new Intent(context, InboxActivity.class);
+        Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
 
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

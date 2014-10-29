@@ -34,21 +34,23 @@ import com.urbanairship.richpush.sample.widget.RichPushWidgetProvider;
 
 public class RichPushApplication extends Application {
 
-    public static final String EXTRA_OPEN_MESSAGE_ID = "com.urbanairship.richpush.sample.EXTRA_OPEN_MESSAGE_ID";
-
-    public static final String HOME_ACTIVITY = "Home";
-    public static final String INBOX_ACTIVITY = "Inbox";
-    public static final String[] navList = new String[] {
-            HOME_ACTIVITY, INBOX_ACTIVITY
-    };
-
     @Override
     public void onCreate() {
+
+        final RichPushNotificationFactory factory = new RichPushNotificationFactory(RichPushApplication.this);
+
+        // Set the accent color
+        factory.setColor(getResources().getColor(R.color.color_primary));
+
+        // Set the notification icon
+        factory.setSmallIconId(R.drawable.ua_notification_icon);
+
+
         UAirship.takeOff(this, new UAirship.OnReadyCallback() {
             @Override
             public void onAirshipReady(UAirship airship) {
-                // Set the custom notification factory
-                airship.getPushManager().setNotificationFactory(new RichPushNotificationFactory(RichPushApplication.this));
+                // Set the factory
+                airship.getPushManager().setNotificationFactory(factory);
 
                 // Refresh the widget when the inbox changes
                 airship.getRichPushManager().getRichPushInbox().addListener(new RichPushInbox.Listener() {

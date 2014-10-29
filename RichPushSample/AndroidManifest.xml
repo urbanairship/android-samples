@@ -50,7 +50,7 @@
         android:label="@string/app_name"
         android:icon="@drawable/ua_launcher"
         android:name="com.urbanairship.richpush.sample.RichPushApplication"
-        android:theme="@style/Theme.AppCompat">
+        android:theme="@style/Theme.AppTheme">
 
         <activity android:name=".MainActivity" android:label="@string/app_name">
             <intent-filter>
@@ -59,7 +59,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.urbanairship.richpush.sample.inbox.InboxActivity" />
         <activity android:name="com.urbanairship.richpush.sample.preference.PushPreferencesActivity" />
         <activity android:name="com.urbanairship.richpush.sample.inbox.MessageActivity" />
 
@@ -143,13 +142,13 @@
         <activity
             android:name="com.urbanairship.actions.LandingPageActivity"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/LandingPage"
+            android:theme="@style/Theme.AppTheme.LandingPage"
             android:exported="false">
 
             <!-- Sample layout, remove to use the default -->
             <meta-data
                 android:name="com.urbanairship.action.LANDING_PAGE_VIEW"
-                android:resource="@layout/landing_page_activity" />
+                android:resource="@layout/activity_landing_page" />
 
             <!-- Optional: Landing page will start the parent activity if the landing
             page is the root task.  Also supports proper up navigation if the action

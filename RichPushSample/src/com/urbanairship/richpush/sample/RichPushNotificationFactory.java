@@ -45,7 +45,7 @@ import java.util.List;
 
 /**
  * A custom push notification builder to create inbox style notifications
- * for rich push messages.  In the case of standard push notifications, it will
+ * for rich push messages. In the case of standard push notifications, it will
  * fall back to the default behavior.
  */
 public class RichPushNotificationFactory extends DefaultNotificationFactory {
@@ -114,7 +114,6 @@ public class RichPushNotificationFactory extends DefaultNotificationFactory {
         if (totalUnreadCount > EXTRA_MESSAGES_TO_SHOW) {
             inboxStyle.setSummaryText(context.getString(R.string.inbox_summary, totalUnreadCount - EXTRA_MESSAGES_TO_SHOW));
         }
-
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setContentTitle(title)

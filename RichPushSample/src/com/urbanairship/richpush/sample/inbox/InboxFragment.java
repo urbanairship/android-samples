@@ -25,8 +25,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package com.urbanairship.richpush.sample.inbox;
 
-import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.PopupMenu;
@@ -36,6 +37,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
@@ -59,6 +61,7 @@ public class InboxFragment extends AbstractInboxFragment implements ActionMode.C
 
     private ActionMode actionMode;
     private Button actionSelectionButton;
+    private SwipeRefreshLayout refreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,18 +98,34 @@ public class InboxFragment extends AbstractInboxFragment implements ActionMode.C
         return DateFormat.getTimeFormat(getActivity()).format(date);
     }
 
+
+    @Override
+    public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_inbox, null);
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshMessages();
+            }
+        });
+        return view;
+    }
+
     public void bindView(final View view, final RichPushMessage message, final int position) {
-        View unreadIndicator = view.findViewById(R.id.unread_indicator);
         TextView title = (TextView) view.findViewById(R.id.title);
         TextView timeStamp = (TextView) view.findViewById(R.id.date_sent);
         final CheckBox checkBox = (CheckBox) view.findViewById(R.id.message_checkbox);
 
         if (message.isRead()) {
-            unreadIndicator.setBackgroundColor(Color.BLACK);
-            unreadIndicator.setContentDescription("Message is read");
+            view.setBackgroundResource(R.drawable.message_read_background);
+            view.setContentDescription("Read message");
+            title.setTypeface(Typeface.DEFAULT);
         } else {
-            unreadIndicator.setBackgroundColor(Color.YELLOW);
-            unreadIndicator.setContentDescription("Message is unread");
+            view.setBackgroundResource(R.drawable.message_unread_background);
+            view.setContentDescription("Unread message");
+            title.setTypeface(Typeface.DEFAULT_BOLD);
         }
 
         title.setText(message.getTitle());
@@ -120,6 +139,7 @@ public class InboxFragment extends AbstractInboxFragment implements ActionMode.C
                 onMessageSelected(message.getMessageId(), checkBox.isChecked());
             }
         });
+
         view.setFocusable(false);
         view.setFocusableInTouchMode(false);
     }
@@ -146,6 +166,27 @@ public class InboxFragment extends AbstractInboxFragment implements ActionMode.C
     }
 
     @Override
+    public void onUpdateMessages(boolean success) {
+        super.onUpdateMessages(success);
+        refreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void refreshMessages() {
+        super.refreshMessages();
+        refreshLayout.setRefreshing(true);
+    }
+
+    @Override
+    public void selectAll() {
+        super.selectAll();
+
+        if (actionMode != null) {
+            actionMode.invalidate();
+        }
+    }
+
+    @Override
     protected void onMessageSelected(String messageId, boolean isChecked) {
         super.onMessageSelected(messageId, isChecked);
         startActionModeIfNecessary();
@@ -162,10 +203,6 @@ public class InboxFragment extends AbstractInboxFragment implements ActionMode.C
         if (actionMode != null) {
             actionMode.invalidate();
         }
-    }
-
-    public ActionMode getActionMode() {
-        return actionMode;
     }
 
     @Override

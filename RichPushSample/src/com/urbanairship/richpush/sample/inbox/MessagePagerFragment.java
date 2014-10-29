@@ -38,7 +38,6 @@ import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.R;
-import com.urbanairship.richpush.sample.view.CustomViewPager;
 
 import java.util.List;
 
@@ -49,7 +48,7 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
 
     private final static String CURRENT_POSITION = "CURRENT_POSITION";
 
-    private CustomViewPager messagePager;
+    private ViewPager messagePager;
     private List<RichPushMessage> messages;
     private RichPushInbox richPushInbox;
     private MessageFragmentAdapter adapter;
@@ -71,8 +70,8 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.message_pager_fragment, container, false);
-        this.messagePager = (CustomViewPager) view.findViewById(R.id.message_pager);
+        View view = inflater.inflate(R.layout.fragment_message_pager, container, false);
+        this.messagePager = (ViewPager) view.findViewById(R.id.message_pager);
         this.adapter = new MessageFragmentAdapter(this.getChildFragmentManager());
 
         messagePager.setAdapter(adapter);
@@ -155,14 +154,6 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
         updateRichPushMessages();
     }
 
-    /**
-     * Enables or disables view pager swiping to change messages.
-     * @param enable <code>true</code> to enable paging, <code>false</code> to
-     * disable paging.
-     */
-    public void enablePaging(boolean enable) {
-        messagePager.enableTouchEvents(enable);
-    }
 
     /**
      * Sets the current message to view

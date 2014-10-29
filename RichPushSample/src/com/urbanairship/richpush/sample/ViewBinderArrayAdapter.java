@@ -69,7 +69,6 @@ public class ViewBinderArrayAdapter<T> extends BaseAdapter {
         this.items = new ArrayList<T>();
     }
 
-
     @Override
     public int getCount() {
         return items.size();
@@ -136,17 +135,6 @@ public class ViewBinderArrayAdapter<T> extends BaseAdapter {
     }
 
     /**
-     * Clears all the items in the adapter
-     */
-    public void clear() {
-        synchronized (listLock) {
-            items.clear();
-        }
-
-        notifyDataSetChanged();
-    }
-
-    /**
      * Sets the current items in the adapter to the collection.
      * @param collection Collection of items
      */
@@ -157,16 +145,4 @@ public class ViewBinderArrayAdapter<T> extends BaseAdapter {
         }
         notifyDataSetChanged();
     }
-
-    /**
-     * Adds all items in a collection to the adapter.
-     * @param collection Collection of items to add to the adapter
-     */
-    public void addAll(Collection<? extends T> collection) {
-        synchronized (listLock) {
-            items.addAll(collection);
-        }
-        notifyDataSetChanged();
-    }
-
 }

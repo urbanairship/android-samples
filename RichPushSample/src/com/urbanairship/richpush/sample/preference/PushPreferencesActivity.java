@@ -32,8 +32,6 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 
-import com.urbanairship.AirshipConfigOptions;
-import com.urbanairship.UAirship;
 import com.urbanairship.analytics.Analytics;
 import com.urbanairship.preference.UAPreferenceAdapter;
 import com.urbanairship.richpush.sample.R;
@@ -54,12 +52,9 @@ public class PushPreferencesActivity extends PreferenceActivity {
         if (Build.VERSION.SDK_INT >= 11) {
             ActionBar actionBar = getActionBar();
             if (actionBar != null) {
-                actionBar.setDisplayOptions(
-                        ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
+                actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
             }
         }
-
-        AirshipConfigOptions options = UAirship.shared().getAirshipConfigOptions();
 
         // Display the push preferences
         this.addPreferencesFromResource(R.xml.push_preferences);
@@ -68,6 +63,7 @@ public class PushPreferencesActivity extends PreferenceActivity {
 
         // Display the advanced settings
         this.addPreferencesFromResource(R.xml.advanced_preferences);
+
 
         // Creates the UAPreferenceAdapter with the entire preference screen
         preferenceAdapter = new UAPreferenceAdapter(getPreferenceScreen());
