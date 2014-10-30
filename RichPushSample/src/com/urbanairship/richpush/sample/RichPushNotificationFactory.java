@@ -92,7 +92,7 @@ public class RichPushNotificationFactory extends DefaultNotificationFactory {
         // If we do not have any unread messages (message already read or they failed to fetch)
         // show a normal notification.
         if (totalUnreadCount == 0) {
-            return createNotification(message, notificationId);
+            return super.createNotification(message, notificationId);
         }
 
         Resources res = context.getResources();
