@@ -76,7 +76,7 @@ public class PushReceiver extends BaseIntentReceiver {
             messageIntent.putExtra(MainActivity.EXTRA_NAVIGATE_ITEM, MainActivity.INBOX_ITEM);
         }
 
-        messageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        messageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         context.startActivity(messageIntent);
 
         return true;

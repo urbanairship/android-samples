@@ -102,7 +102,7 @@ class RemoteViewsFactory {
         remoteViews.setPendingIntentTemplate(R.id.message_list, createMessageTemplateIntent(context, appWidgetId));
 
         // Add a click pending intent to launch the inbox
-        remoteViews.setOnClickPendingIntent(R.id.widget_header, createInboxActivityPendingIntent(context));
+        remoteViews.setOnClickPendingIntent(R.id.widget_header, createMainActivityPendingIntent(context));
 
         return remoteViews;
     }
@@ -125,19 +125,19 @@ class RemoteViewsFactory {
         remoteViews.setTextViewText(R.id.widget_header_text, header);
 
         // Add a click pending intent to launch the inbox
-        remoteViews.setOnClickPendingIntent(R.id.widget_header, createInboxActivityPendingIntent(context));
+        remoteViews.setOnClickPendingIntent(R.id.widget_header, createMainActivityPendingIntent(context));
 
         return remoteViews;
     }
 
     /**
-     * Creates an pending activity intent to launch the inbox
+     * Creates an pending activity intent to launch the activity
      * @param context Application context
      * @return Pending inbox activity intent
      */
-    private static PendingIntent createInboxActivityPendingIntent(Context context) {
+    private static PendingIntent createMainActivityPendingIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
