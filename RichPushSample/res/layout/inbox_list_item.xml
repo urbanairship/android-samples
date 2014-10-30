@@ -20,6 +20,7 @@
 
     <TextView
         android:id="@+id/title"
+        style="@style/Theme.AppTheme.InboxTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -32,6 +33,7 @@
         android:singleLine="true"/>
 
     <TextView
+        style="@style/Theme.AppTheme.InboxDate"
         android:id="@+id/date_sent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

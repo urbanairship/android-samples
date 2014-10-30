@@ -18,6 +18,7 @@
         <TextView
             android:id="@+id/your_app_here_text"
             style="@android:style/TextAppearance.Large"
+            android:textColor="@color/primary_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
