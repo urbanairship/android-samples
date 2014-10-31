@@ -26,7 +26,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package com.urbanairship.richpush.sample;
 
 import android.app.Application;
-import android.content.Intent;
 
 import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushInbox;
@@ -56,20 +55,12 @@ public class RichPushApplication extends Application {
                 airship.getRichPushManager().getRichPushInbox().addListener(new RichPushInbox.Listener() {
                     @Override
                     public void onUpdateInbox() {
-                        refreshWidget();
+                        // Refresh the app widget
+                        RichPushWidgetProvider.refreshAppWidgets(RichPushApplication.this);
                     }
                 });
             }
         });
     }
 
-    /**
-     * Sends a request to refresh the rich push message widget
-     */
-    private void refreshWidget() {
-        Intent refreshIntent = new Intent(this, RichPushWidgetProvider.class)
-                .setAction(RichPushWidgetProvider.REFRESH_ACTION);
-
-        this.sendBroadcast(refreshIntent);
-    }
 }

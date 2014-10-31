@@ -6,7 +6,7 @@
     android:layout_height="60dp">
 
         <ImageView
-            android:id="@+id/widget_item_icon"
+            android:id="@+id/icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -17,11 +17,11 @@
             android:src="@drawable/ic_mark_unread" />
 
           <TextView
-              android:id="@+id/widget_item_text"
+              android:id="@+id/title"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_centerVertical="true"
-              android:layout_toRightOf="@+id/widget_item_icon"
+              android:layout_toRightOf="@+id/icon"
               android:gravity="left|center_vertical"
               android:lines="2"
               android:textColor="#F0F0F0"
