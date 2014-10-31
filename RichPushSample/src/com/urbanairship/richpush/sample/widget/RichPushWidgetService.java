@@ -30,14 +30,13 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushMessage;
+import com.urbanairship.richpush.sample.MainActivity;
 import com.urbanairship.richpush.sample.R;
-import com.urbanairship.richpush.sample.RichPushApplication;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -104,11 +103,11 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         rv.setTextViewText(R.id.date_sent, dateFormat.format(message.getSentDate()));
 
-        // Add the message id to the intent
-        Intent fillInIntent = new Intent();
-        Bundle extras = new Bundle();
-        extras.putString(RichPushApplication.EXTRA_OPEN_MESSAGE_ID, message.getMessageId());
-        fillInIntent.putExtras(extras);
+        // Fill the intent to launch to the message id in the inbox.
+        Intent fillInIntent = new Intent()
+                .putExtra(MainActivity.EXTRA_NAVIGATE_ITEM, MainActivity.INBOX_ITEM)
+                .putExtra(MainActivity.EXTRA_MESSAGE_ID, message.getMessageId());
+
         rv.setOnClickFillInIntent(R.id.widget_item, fillInIntent);
 
         return rv;

@@ -3,7 +3,9 @@
 
     <string name="app_name">Rich Push Sample</string>
     <string name="no_messages">No messages</string>
-    <string name="inbox_title">Your Inbox</string>
+    <string name="inbox_title">Inbox</string>
+    <string name="home_title">Home</string>
+
     <string name="add_message">Add Message</string>
     <string name="mark_read">Mark Read</string>
     <string name="mark_unread">Mark Unread</string>
@@ -40,14 +42,13 @@
     <string name="toast_format_string">%1$s!</string>
     <string name="item_format_string">%1$s</string>
     <string name="header_format_string">%1$d unread</string>
-	<string name="inbox_name">Rich Push Sample Inbox</string>
+    <string name="inbox_name">Rich Push Sample Inbox</string>
 
-	<!-- Inbox Notification -->
-	<plurals name="inbox_notification_title">
-	    <item quantity="one">1 New Message</item>
-	    <item quantity="other">%d <b>New</b> Messages</item>
-	</plurals>
-	<string name="inbox_summary">+%d more</string>
+    <!-- Inbox Notification -->
+    <plurals name="inbox_notification_title">
+        <item quantity="one">1 New Message</item>
+        <item quantity="other">%d <b>New</b> Messages</item>
+    </plurals>
 
+    <string name="inbox_summary">+%d more</string>
 </resources>
-

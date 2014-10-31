@@ -42,13 +42,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A list fragment that shows rich push messages.  Activities that attach
+ * A list fragment that shows rich push messages. Activities that attach
  * this fragment must implement AbstractInboxFragment.OnMessageListener.
  */
 public abstract class AbstractInboxFragment extends ListFragment
         implements RichPushManager.Listener,
-        RichPushInbox.Listener,
-        ViewBinderArrayAdapter.ViewBinder<RichPushMessage> {
+                   RichPushInbox.Listener,
+                   ViewBinderArrayAdapter.ViewBinder<RichPushMessage> {
 
 
     private Listener listener;
@@ -105,7 +105,6 @@ public abstract class AbstractInboxFragment extends ListFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.setEmptyText(getString(getEmptyListStringId()));
     }
 
     @Override
@@ -155,7 +154,6 @@ public abstract class AbstractInboxFragment extends ListFragment
             Toast.makeText(getActivity(), "Failed to update messages!", Toast.LENGTH_LONG).show();
         }
         isManualRefreshing = false;
-        setListShown(true);
     }
 
     @Override
@@ -179,7 +177,6 @@ public abstract class AbstractInboxFragment extends ListFragment
 
     public void refreshMessages() {
         this.isManualRefreshing = true;
-        this.setListShown(false);
         UAirship.shared().getRichPushManager().refreshMessages();
     }
 

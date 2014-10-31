@@ -28,6 +28,7 @@ package com.urbanairship.richpush.sample.inbox;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -43,12 +44,17 @@ import com.urbanairship.richpush.sample.preference.PushPreferencesActivity;
  */
 public class MessageActivity extends ActionBarActivity implements MessagePagerFragment.Listener {
 
+    private static final String TAG = "MessageActivity";
+
+    /**
+     * Required to start the activity. The ID of the message to show.
+     */
     public static final String EXTRA_MESSAGE_ID_KEY = "com.urbanairship.richpush.sample.EXTRA_MESSAGE_ID_KEY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.message_activity);
+        this.setContentView(R.layout.activity_message);
 
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.getSupportActionBar().setHomeButtonEnabled(true);
@@ -58,6 +64,12 @@ public class MessageActivity extends ActionBarActivity implements MessagePagerFr
         if (savedInstanceState == null) {
             String messageId = getIntent().getStringExtra(EXTRA_MESSAGE_ID_KEY);
             RichPushMessage message = UAirship.shared().getRichPushManager().getRichPushInbox().getMessage(messageId);
+
+            if (message == null) {
+                Log.e(TAG, "Message " + messageId + " not found. Unable to start activity.");
+                finish();
+            }
+
             pagerFragment.setCurrentMessage(message);
         }
     }

@@ -27,120 +27,82 @@ package com.urbanairship.richpush.sample;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 
-import com.urbanairship.Logger;
-import com.urbanairship.richpush.sample.inbox.InboxActivity;
 import com.urbanairship.richpush.sample.preference.PushPreferencesActivity;
-import com.urbanairship.util.UriUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * An activity that creates and launches a task stack from a deep link uri.
- *
+ * <p/>
  * The activity will operate on any URI that it is started with, only parsing
- * the URI's path and query parameters.  URI filtering should be defined in the
+ * the URI's path and query parameters. URI filtering should be defined in the
  * AndroidManifest.xml for the ParseDeepLinkActivity entry by defining an intent
  * filter.
- *
- * RichPushSample example:
- *
- * vnd.urbanairship.richpush://deeplink/home/inbox
- *
- * Will open the application to the inbox activity with the home activity in the
- * task stack.
+ * <p/>
+ * Handles URLs of the following syntax:
+ * <url> := vnd.urbanairship.richpush://deeplink/<deep-link>
+ * <deep-link> := home | preferences | inbox | inbox?<message_id>
+ * <message-id> := A rich push message ID
+ * <p/>
+ * Examples:
+ * <p/>
+ * // Deep link to inbox
+ * vnd.urbanairship.richpush://deeplink/inbox
+ * <p/>
+ * // Deep link to home
+ * vnd.urbanairship.richpush://deeplink/home
+ * <p/>
+ * // Deep link to preferences
+ * vnd.urbanairship.richpush://deeplink/preferences
+ * <p/>
+ * // Deep link to the message 'VJO7DpCEQ2i7LdqOxLbFxw'
+ * vnd.urbanairship.richpush://deeplink/inbox?message_id=VJO7DpCEQ2i7LdqOxLbFxw
  */
-public class ParseDeepLinkActivity extends Activity{
+public class ParseDeepLinkActivity extends Activity {
+
+    private static final String TAG = "ParseDeepLinkActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        List<String> deepLinks = null;
-        Bundle options = null;
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-
-        // Parse the URI for deep links and options
         if (intent != null && intent.getData() != null) {
-            Uri uri = intent.getData();
-            deepLinks = uri.getPathSegments();
-            options = parseOptions(uri);
+            Log.e(TAG, "Unable to deep link with an empty intent");
+
+            // Fall back to the main activity
+            startActivity(new Intent(this, MainActivity.class));
+
+            finish();
         }
 
-        // Create a task stack from the deep links
-        if (deepLinks != null) {
-            for (String deepLink : deepLinks) {
-                Logger.info("Parsing deep link: " + deepLink);
-                Intent route = parseDeepLink(deepLink);
-                if (route != null) {
-                    stackBuilder.addNextIntentWithParentStack(route);
-                }
+
+        // Parse the deep link
+        String path = intent.getData().getPath();
+        if ("preferences".equals(path)) {
+            startActivity(new Intent(getApplicationContext(), PushPreferencesActivity.class));
+        } else if ("home".equals(path)) {
+            startActivity(new Intent(getApplicationContext(), MainActivity.class)
+                    .putExtra(MainActivity.EXTRA_NAVIGATE_ITEM, MainActivity.HOME_ITEM));
+
+        } else if ("inbox".equals(path)) {
+            Intent launchIntent = new Intent(getApplicationContext(), MainActivity.class)
+                    .putExtra(MainActivity.EXTRA_NAVIGATE_ITEM, MainActivity.INBOX_ITEM);
+
+            // Check for an optional Message ID
+            String messageId = intent.getData().getQueryParameter("message_id");
+            if (messageId != null && !messageId.isEmpty()) {
+                launchIntent.putExtra(MainActivity.EXTRA_MESSAGE_ID, messageId);
             }
-        }
 
-        // If we failed to parse any deep links still start the app at the main
-        // activity
-        if (stackBuilder.getIntents().length == 0) {
-            stackBuilder.addNextIntent(new Intent(this, MainActivity.class));
-        }
-
-        // Launch the activities
-        if (options != null) {
-            stackBuilder.startActivities(options);
+            startActivity(launchIntent);
         } else {
-            stackBuilder.startActivities();
+            Log.e(TAG, "Unknown deep link:  " + intent.getData() + ". Falling back to main activity.");
+            startActivity(new Intent(this, MainActivity.class));
         }
+
 
         finish();
-    }
-
-    /**
-     * Parses a deep link (a path segment) to an intent that starts an activity
-     *
-     * @param deepLink The deep link
-     * @return An intent that corresponds to the deepLink, or null if no matching
-     * activity is found.
-     */
-    private Intent parseDeepLink(String deepLink) {
-        if ("preferences".equals(deepLink)) {
-            return new Intent(getApplicationContext(), PushPreferencesActivity.class);
-        } else if ("inbox".equals(deepLink)) {
-            return new Intent(getApplicationContext(), InboxActivity.class);
-        } else if ("home".equals(deepLink)) {
-            return new Intent(getApplicationContext(), MainActivity.class);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Helper method that parses the uri's query parameters as a bundle
-     * @param uri The uri to parse
-     * @return A bundle of the uri's query parameters
-     */
-    private Bundle parseOptions(Uri uri) {
-        Bundle options = new Bundle();
-        Map <String, List<String>> queryParameters = UriUtils.getQueryParameters(uri);
-
-        if (queryParameters == null) {
-            return options;
-        }
-
-        for (String key : queryParameters.keySet()) {
-            List<String> values = queryParameters.get(key);
-            if (values.size() == 1) {
-                options.putString(key, values.get(0));
-            } else if (values.size() > 1) {
-                options.putStringArrayList(key, new ArrayList<String>(values));
-            }
-        }
-
-        return options;
     }
 }

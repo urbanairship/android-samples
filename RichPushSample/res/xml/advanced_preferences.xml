@@ -18,7 +18,7 @@
 
 	    <com.urbanairship.richpush.sample.preference.AddTagsPreference
 	        android:persistent="false"
-	        android:dialogLayout="@layout/tags_dialog_layout"
+	        android:dialogLayout="@layout/dialog_add_tags"
 	        android:title="@string/add_tags_preference_title" />
 
     </PreferenceCategory>

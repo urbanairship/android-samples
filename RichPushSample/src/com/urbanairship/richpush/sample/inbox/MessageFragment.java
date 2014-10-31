@@ -83,10 +83,9 @@ public class MessageFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.message_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_message, container, false);
         progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
         browser = (RichPushMessageWebView) view.findViewById(R.id.message_view);
-
 
         if (Build.VERSION.SDK_INT >= 12) {
             browser.setAlpha(0);
@@ -102,13 +101,7 @@ public class MessageFragment extends Fragment {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-
-                if (Build.VERSION.SDK_INT >= 12) {
-                    crossFade();
-                } else {
-                    browser.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.GONE);
-                }
+                showMessage();
             }
         });
 
@@ -142,7 +135,16 @@ public class MessageFragment extends Fragment {
         }
     }
 
-    private void crossFade() {
+    /**
+     * Reveals the message.
+     */
+    private void showMessage() {
+        if (Build.VERSION.SDK_INT < 12) {
+            browser.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+            return;
+        }
+
         browser.animate()
                 .alpha(1f)
                 .setDuration(200)
