@@ -26,7 +26,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package com.urbanairship.richpush.sample.widget;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -74,6 +73,7 @@ public class RichPushWidgetProvider extends AppWidgetProvider {
      *
      * @param context The application context.
      */
+    @SuppressLint("NewApi")
     public static void refreshAppWidgets(Context context) {
 
         // Get all the widget ids for this provider
@@ -107,6 +107,7 @@ public class RichPushWidgetProvider extends AppWidgetProvider {
      * @param appWidgetId Id of the widget
      * @return RemoteViews for the layout
      */
+    @SuppressLint("NewApi")
     private RemoteViews createLayout(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         // API 16 and above supports reconfigurable layouts
         if (Build.VERSION.SDK_INT >= 16) {
@@ -138,7 +139,7 @@ public class RichPushWidgetProvider extends AppWidgetProvider {
      * @param appWidgetId id of the widget
      * @return RemoteViews for the large layout
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    @SuppressLint("NewApi")
     private RemoteViews createLargeLayout(Context context, int appWidgetId) {
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
