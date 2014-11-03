@@ -122,7 +122,8 @@ public class RichPushNotificationFactory extends DefaultNotificationFactory {
                 .setSmallIcon(R.drawable.ua_notification_icon)
                 .setNumber(totalUnreadCount)
                 .setAutoCancel(true)
-                .setStyle(inboxStyle);
+                .setStyle(inboxStyle)
+                .setDefaults(NotificationCompat.DEFAULT_SOUND | NotificationCompat.DEFAULT_VIBRATE);
 
         // Notification actions
         builder.extend(createNotificationActionsExtender(message, notificationId));
