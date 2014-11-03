@@ -175,10 +175,9 @@
                before the core receiver. This allows the application to launch any activities before Urban
                Airship performs any actions or falls back to launching the application launch intent. -->
         <receiver android:name="com.urbanairship.CoreReceiver"
-                  android:priority="-999"
                   android:exported="false">
 
-            <intent-filter>
+            <intent-filter android:priority="-999">
                 <action android:name="com.urbanairship.push.OPENED" />
 
                 <!-- MODIFICATION REQUIRED - Use your package name as the category -->
