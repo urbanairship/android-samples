@@ -25,9 +25,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package com.urbanairship.richpush.sample.widget;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.widget.RemoteViews;
@@ -48,94 +46,80 @@ import java.util.List;
 public class RichPushWidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return new StackRemoteViewsFactory(this.getApplicationContext(), intent);
-    }
-}
-
-/**
- * This is the factory that will provide data to the collection widget.
- */
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
-    private Context context;
-
-    public StackRemoteViewsFactory(Context context, Intent intent) {
-        this.context = context;
+        return new MessageRemoteViewFactory();
     }
 
-    @Override
-    public void onCreate() {
+    /**
+     * The Rich Push Message RemoteView factory
+     */
+    private class MessageRemoteViewFactory implements RemoteViewsFactory {
+        @Override
+        public void onCreate() {
 
-    }
+        }
 
-    @Override
-    public void onDestroy() {
+        @Override
+        public void onDataSetChanged() {
 
-    }
+        }
 
-    @Override
-    public int getCount() {
-        return UAirship.shared().getRichPushManager().getRichPushInbox().getCount();
-    }
+        @Override
+        public void onDestroy() {
 
-    @Override
-    @SuppressLint("NewApi")
-    public RemoteViews getViewAt(int position) {
+        }
 
-        List<RichPushMessage> messages = UAirship.shared().getRichPushManager().getRichPushInbox().getMessages();
+        @Override
+        public int getCount() {
+            return UAirship.shared().getRichPushManager().getRichPushInbox().getCount();
+        }
 
-        if (position > messages.size()) {
+        @Override
+        public RemoteViews getViewAt(int position) {
+
+            List<RichPushMessage> messages = UAirship.shared().getRichPushManager().getRichPushInbox().getMessages();
+
+            if (position > messages.size()) {
+                return null;
+            }
+
+            // Get the data for this position from the content provider
+            RichPushMessage message = messages.get(position);
+
+            RemoteViews remoteViews = new RemoteViews(getApplicationContext().getPackageName(), R.layout.widget_item);
+            remoteViews.setTextViewText(R.id.title, message.getTitle());
+
+            int iconDrawable = message.isRead() ? R.drawable.ic_mark_read : R.drawable.ic_mark_unread;
+            remoteViews.setImageViewResource(R.id.icon, iconDrawable);
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            remoteViews.setTextViewText(R.id.date_sent, dateFormat.format(message.getSentDate()));
+
+            // Fill the intent to launch to the message id
+            Intent fillInIntent = new Intent().putExtra(MainActivity.EXTRA_MESSAGE_ID, message.getMessageId());
+
+            remoteViews.setOnClickFillInIntent(R.id.widget_item, fillInIntent);
+
+            return remoteViews;
+        }
+
+        @Override
+        public RemoteViews getLoadingView() {
             return null;
         }
 
-        // Get the data for this position from the content provider
-        RichPushMessage message = messages.get(position);
+        @Override
+        public int getViewTypeCount() {
+            return 1;
+        }
 
-        // Return a proper item
-        final String formatStr = context.getResources().getString(R.string.item_format_string);
-        final int itemId = R.layout.widget_item;
-        RemoteViews rv = new RemoteViews(context.getPackageName(), itemId);
-        rv.setTextViewText(R.id.widget_item_text, String.format(formatStr, message.getTitle()));
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
 
-        int iconDrawable = message.isRead() ? R.drawable.ic_mark_read : R.drawable.ic_mark_unread;
-        rv.setImageViewResource(R.id.widget_item_icon, iconDrawable);
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        rv.setTextViewText(R.id.date_sent, dateFormat.format(message.getSentDate()));
-
-        // Fill the intent to launch to the message id in the inbox.
-        Intent fillInIntent = new Intent()
-                .putExtra(MainActivity.EXTRA_NAVIGATE_ITEM, MainActivity.INBOX_ITEM)
-                .putExtra(MainActivity.EXTRA_MESSAGE_ID, message.getMessageId());
-
-        rv.setOnClickFillInIntent(R.id.widget_item, fillInIntent);
-
-        return rv;
-    }
-    @Override
-    public RemoteViews getLoadingView() {
-        // We aren't going to return a default loading view in this sample
-        return null;
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        // Technically, we have two types of views (the dark and light background views)
-        return 2;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public boolean hasStableIds() {
-        return false;
-    }
-
-    @Override
-    public void onDataSetChanged() {
-
-    }
+        @Override
+        public boolean hasStableIds() {
+            return false;
+        }
+    };
 }

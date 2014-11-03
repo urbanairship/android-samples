@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#232323"
-    
     android:layout_margin="@dimen/widget_margin">
 
     <LinearLayout
