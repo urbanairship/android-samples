@@ -86,6 +86,7 @@ public class BaseTestCase extends UiAutomatorTestCase {
 
         UiObject notificationAlert = new UiObject(new UiSelector().textContains(uniqueAlertId));
         notificationAlert.click();
+        getUiDevice().waitForWindowUpdate(PACKAGE_NAME, 5000);
 
         UiSelector webViewSelector = new UiSelector().className("android.view.View");
         if (description != null) {
@@ -95,14 +96,32 @@ public class BaseTestCase extends UiAutomatorTestCase {
         UiObject richPushDialog = new UiObject(webViewSelector);
         assertTrue(failureMessage + ": Failed to display notification in a webview",  AutomatorUtils.waitForUiObjectsToExist(RICH_PUSH_DIALOG_WAIT_TIME, richPushDialog));
 
-        navigateBack();
         navigateToInbox();
+        refreshInbox();
+
         assertSame("Unexpected inbox count.", expectedInboxCount, getInboxCount());
     }
 
+    /**
+     * Fetches inbox messages.
+     * @throws UiObjectNotFoundException
+     * @throws InterruptedException
+     */
+    void refreshInbox() throws UiObjectNotFoundException, InterruptedException {
+        UiSelector inboxSelector = new UiSelector().className("android.view.View").instance(2);
+        UiObject inbox = new UiObject(inboxSelector);
+        inbox.swipeDown(50);
+        getUiDevice().waitForWindowUpdate(PACKAGE_NAME, 5000);
+    }
+
+    /**
+     * Get the count of messages in the inbox.
+     * @return The count of inbox messages.
+     */
     int getInboxCount() {
         try {
-            return new UiCollection(new UiSelector().className("android.widget.ListView")).getChildCount();
+            UiSelector message = new UiSelector().className("android.widget.RelativeLayout");
+            return new UiCollection(new UiSelector().className("android.widget.ListView")).getChildCount(message);
         } catch (Exception ex) {
             // must not exist yet
             return 0;
@@ -192,14 +211,14 @@ public class BaseTestCase extends UiAutomatorTestCase {
      * @throws Exception
      */
     void navigateToAppHome() throws Exception {
-        UiObject navigateUpButton = new UiObject(new UiSelector().description("Rich Push Sample, Navigate up"));
+        UiObject navigateUpButton = new UiObject(new UiSelector().description("Navigate up"));
         if (navigateUpButton.exists()) {
             navigateUpButton.click();
         }
 
-        UiObject inbox = new UiObject(new UiSelector().text("Inbox"));
-        if (inbox.exists()) {
-            UiDevice.getInstance().pressBack();
+        UiObject home = new UiObject(new UiSelector().text("Home"));
+        if (home.exists()) {
+            home.click();
         }
 
         // Wait for activity
@@ -211,14 +230,15 @@ public class BaseTestCase extends UiAutomatorTestCase {
      * @throws Exception
      */
     void navigateToInbox() throws Exception {
-        navigateToAppHome();
-        UiObject spinner = new UiObject(new UiSelector().className("android.widget.Spinner"));
-        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, spinner);
-        spinner.click();
+        UiObject navigateUpButton = new UiObject(new UiSelector().description("Navigate up"));
+        if (navigateUpButton.exists()) {
+            navigateUpButton.click();
+        }
 
         UiObject inbox = new UiObject(new UiSelector().text("Inbox"));
-        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, inbox);
-        inbox.click();
+        if (inbox.exists()) {
+            inbox.click();
+        }
 
         // Wait for activity
         UiDevice.getInstance().waitForWindowUpdate(null, WINDOW_UPDATE_WAIT_TIME);
@@ -230,9 +250,6 @@ public class BaseTestCase extends UiAutomatorTestCase {
      * @throws InterruptedException
      */
     void navigateToPreferences() throws UiObjectNotFoundException, InterruptedException {
-//        UiObject moreOptionsButton = new UiObject(new UiSelector().description("More options"));
-//        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, moreOptionsButton);
-//        moreOptionsButton.click();
         UiObject preferenceButton = new UiObject(new UiSelector().description("Preferences"));
         AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, preferenceButton);
         preferenceButton.click();
