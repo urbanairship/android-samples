@@ -40,6 +40,7 @@ public class RichPushTestCase extends BaseTestCase {
         assertEquals("Failed to display tag string", TEST_TAG_STRING, preferences.getPreferenceSummary("ADD_TAGS"));
         assertNotSame("Failed to generate Channel ID.", channelId, "");
         assertNotSame("Failed to generate User ID.", richPushId, "");
+        navigateBack();
     }
 
     /**
