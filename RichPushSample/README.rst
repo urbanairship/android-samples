@@ -5,69 +5,8 @@ RichPushSample is an example implementation of Rich Push for Android, using the
 latest Urban Airship client library. You can use this sample for playing with
 Rich Push, or as a reference point for integrating Rich Push into your own project.
 
-
-Android Studio Setup
---------------------
-
-1) Update the Android SDK Manager
-    - Verify Android Support Repository and Google Repository (under Extras) are installed and up-to-date
-
-2) Download the Android/Amazon library from http://urbanairship.com/resources/developer-resources
-
-3) Copy the urbanairship-lib-*.aar file into RichPushSample/aars/
-
-4) Import the project into Android Studio
-    - Open Android Studio to welcome screen
-    - Import project, select the Samples root directory
-
-5) Update AirshipConfig.properties file with your application's configuration
-    - Amazon setup docs http://docs.urbanairship.com/build/push/android.html#adm-setup
-    - GCM setup docs http://docs.urbanairship.com/build/push/android.html#gcm-setup
-
-6) Build and run the Rich Push Sample
-
-
-Eclipse (ADT) Setup
--------------------
-
-1) Update the Android SDK Manager
-    - Verify Android Support Library and Google Play Services (under Extras) are installed and up-to-date
-
-2) Download the Android/Amazon library from http://urbanairship.com/resources/developer-resources
-
-3) Import projects
-    - Eclipse -> Import Android Project -> Samples/PushSample
-    - Eclipse -> Import Android Project -> urbanairship-lib (from download)
-
-4) Add the Urban Airship library project as a dependency
-    - Follow http://developer.android.com/tools/projects/projects-eclipse.html#ReferencingLibraryProject
-
-5) Add the v4 and v7 Support library as dependencies
-    - Follow http://developer.android.com/tools/support-library/setup.html
-
-6) (GCM Only) Set up Google Play services
-    - http://developer.android.com/google/play-services/setup.html#Setup
-
-7) Update AirshipConfig.properties file with your application's configuration
-    - Amazon setup docs http://docs.urbanairship.com/build/push/android.html#adm-setup
-    - GCM setup docs http://docs.urbanairship.com/build/push/android.html#gcm-setup
-
-8) Build and run the Rich Push Sample
-
-
-Further Reading
----------------
-
-For more information on using Rich Push for Android see our documentation_ site.
-
-.. _documentation: http://docs.urbanairship.com
-
-
-Sample App Components
----------------------
-
 Source files
-^^^^^^^^^^^^
+------------
 
 AbstractInboxFragment.java
    An abstract class that implements the basic functionality for a rich push inbox.
@@ -136,7 +75,7 @@ ViewBinderArrayAdapter.java
 
 
 Resources
-^^^^^^^^^^^^
+---------
 
 layout/cab_selection_dropdown.xml
    The select all/deselect all action item in the Inbox CAB.
