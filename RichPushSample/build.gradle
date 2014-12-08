@@ -18,9 +18,13 @@ repositories {
 apply plugin: 'com.android.application'
 
 dependencies {
-    compile 'com.google.android.gms:play-services:6.1.+'
     compile "com.android.support:appcompat-v7:21.+"
     compile 'com.android.support:support-v4:21.+'
+
+    // Includes both gcm and fused location
+    compile 'com.google.android.gms:play-services-location:6.5.+'
+
+
 
     // Compile the UrbanAirship library from source
     // if it's available. Used for library development only.
