@@ -24,7 +24,7 @@ public class InboxTestCase extends BaseTestCase {
         navigateBack();
         Thread.sleep(REGISTRATION_WAIT_TIME);
 
-        // Get apid and User Id
+        // Get Channel ID and User ID
         navigateToPreferences();
         String channelId = preferences.getPreferenceSummary("CHANNEL_ID");
         String userId = preferences.getPreferenceSummary("USER_ID");
@@ -140,22 +140,14 @@ public class InboxTestCase extends BaseTestCase {
         assertEquals(getInboxCount(), messageIds.size());
     }
 
-
     // Helpers
 
-    void refreshInbox() throws UiObjectNotFoundException, InterruptedException {
-        UiObject refreshButton = new UiObject(new UiSelector().description("Refresh"));
-        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, refreshButton);
-        refreshButton.click();
-        getUiDevice().waitForWindowUpdate(PACKAGE_NAME, 5000);
-    }
-
     void verifyMessageIsRead(UiObject message) throws UiObjectNotFoundException {
-        assertTrue(message.getChild(new UiSelector().description("Message is read")).exists());
+        assertEquals(message.getContentDescription(), "Read message");
     }
 
     void verifyMessageIsUnread(UiObject message) throws UiObjectNotFoundException {
-        assertTrue(message.getChild(new UiSelector().description("Message is unread")).exists());
+        assertEquals(message.getContentDescription(), "Unread message");
     }
 
     void selectMessage(UiObject message) throws UiObjectNotFoundException {
@@ -163,6 +155,6 @@ public class InboxTestCase extends BaseTestCase {
     }
 
     UiObject getMessage(int position) {
-        return new UiObject(new UiSelector().description("Inbox message").index(position));
+        return new UiObject(new UiSelector().className("android.widget.RelativeLayout").index(position));
     }
 }
