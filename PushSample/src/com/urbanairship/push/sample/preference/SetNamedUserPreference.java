@@ -47,7 +47,7 @@ public class SetNamedUserPreference extends DialogPreference {
     public SetNamedUserPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        currentNamedUser = UAirship.shared().getPushManager().getNamedUserId();
+        currentNamedUser = UAirship.shared().getPushManager().getNamedUser().getId();
     }
 
     @Override
@@ -78,11 +78,7 @@ public class SetNamedUserPreference extends DialogPreference {
 
     private void setNamedUser(String namedUser) {
         currentNamedUser = UAStringUtil.isEmpty(namedUser) ? null : namedUser;
-        if (currentNamedUser == null) {
-            UAirship.shared().getPushManager().disassociateNamedUser();
-        } else {
-            UAirship.shared().getPushManager().associateNamedUser(currentNamedUser);
-        }
+        UAirship.shared().getPushManager().getNamedUser().setId(currentNamedUser);
     }
 
     @Override
