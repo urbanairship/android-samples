@@ -1,5 +1,6 @@
 /*
-Copyright 2009-2014 Urban Airship Inc. All rights reserved.
+Copyright 2009-2015 Urban Airship Inc. All rights reserved.
+
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -67,42 +68,48 @@ public class ParseDeepLinkActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent intent = getIntent();
-        if (intent != null && intent.getData() != null) {
-            Log.e(TAG, "Unable to deep link with an empty intent");
-
-            // Fall back to the main activity
-            startActivity(new Intent(this, MainActivity.class));
-
-            finish();
-        }
-
-
         // Parse the deep link
-        String path = intent.getData().getPath();
-        if ("preferences".equals(path)) {
+        String deepLink = getDeepLink();
+
+        if ("/preferences".equals(deepLink)) {
             startActivity(new Intent(getApplicationContext(), PushPreferencesActivity.class));
-        } else if ("home".equals(path)) {
+        } else if ("/home".equals(deepLink)) {
             startActivity(new Intent(getApplicationContext(), MainActivity.class)
                     .putExtra(MainActivity.EXTRA_NAVIGATE_ITEM, MainActivity.HOME_ITEM));
 
-        } else if ("inbox".equals(path)) {
+        } else if ("/inbox".equals(deepLink)) {
             Intent launchIntent = new Intent(getApplicationContext(), MainActivity.class)
                     .putExtra(MainActivity.EXTRA_NAVIGATE_ITEM, MainActivity.INBOX_ITEM);
 
             // Check for an optional Message ID
-            String messageId = intent.getData().getQueryParameter("message_id");
-            if (messageId != null && !messageId.isEmpty()) {
+            String messageId = getDeepLinkQueryParameter("message_id");
+            if (messageId != null && messageId.length() > 0) {
                 launchIntent.putExtra(MainActivity.EXTRA_MESSAGE_ID, messageId);
             }
-
             startActivity(launchIntent);
         } else {
-            Log.e(TAG, "Unknown deep link:  " + intent.getData() + ". Falling back to main activity.");
+            Log.e(TAG, "Unknown deep link: " + deepLink + ". Falling back to main activity.");
             startActivity(new Intent(this, MainActivity.class));
         }
 
-
         finish();
+    }
+
+    private String getDeepLink() {
+        Intent intent = getIntent();
+        if (intent != null && intent.getData() != null) {
+            return intent.getData().getPath();
+        }
+
+        return null;
+    }
+
+    private String getDeepLinkQueryParameter(String key) {
+        Intent intent = getIntent();
+        if (intent != null && intent.getData() != null) {
+            return intent.getData().getQueryParameter(key);
+        }
+
+        return null;
     }
 }
