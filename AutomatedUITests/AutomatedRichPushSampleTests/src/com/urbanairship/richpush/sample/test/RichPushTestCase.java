@@ -22,9 +22,10 @@ public class RichPushTestCase extends BaseTestCase {
 
         navigateToPreferences();
 
-        // Enable push, add tag, set alias
+        // Enable push, add tag, set alias, set named user
         preferences.setPreferenceCheckBoxEnabled("USER_NOTIFICATIONS_ENABLE", true);
         preferences.setAlias(TEST_ALIAS_STRING);
+        preferences.setNamedUser(TEST_NAMED_USER_STRING);
         preferences.addTags(TEST_TAG_STRING);
 
         navigateBack();
@@ -37,6 +38,7 @@ public class RichPushTestCase extends BaseTestCase {
 
         // Verify our setting stuck
         assertEquals("Failed to set alias string", TEST_ALIAS_STRING, preferences.getPreferenceSummary("SET_ALIAS"));
+        assertEquals("Failed to set named user string", TEST_NAMED_USER_STRING, preferences.getPreferenceSummary("SET_NAMED_USER"));
         assertEquals("Failed to display tag string", TEST_TAG_STRING, preferences.getPreferenceSummary("ADD_TAGS"));
         assertNotSame("Failed to generate Channel ID.", channelId, "");
         assertNotSame("Failed to generate User ID.", richPushId, "");
@@ -78,6 +80,10 @@ public class RichPushTestCase extends BaseTestCase {
         // APIv3: Push to alias
         uniqueAlertId = pushSenderV3.sendPushToAlias(TEST_ALIAS_STRING);
         verifyRichPushNotification(null, uniqueAlertId, "API v3 alias push failed", ++messageCount);
+
+        // APIv3: Push to named user
+        uniqueAlertId = pushSenderV3.sendPushToNamedUser(TEST_NAMED_USER_STRING);
+        verifyRichPushNotification(null, uniqueAlertId, "API v3 named user push failed", ++messageCount);
 
         // APIv3: Push to tag
         uniqueAlertId = pushSenderV3.sendPushToTag(TEST_TAG_STRING);

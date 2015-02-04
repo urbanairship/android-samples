@@ -11,7 +11,7 @@ import com.urbanairship.automatorutils.AutomatorUtils;
 public class PushTestCase extends BaseTestCase {
 
     /**
-     * Test push to Channel ID, tag, alias, and broadcast
+     * Test push to Channel ID, tag, alias, named user and broadcast
      * @throws Exception
      */
     public void testPush() throws Exception {
@@ -26,6 +26,10 @@ public class PushTestCase extends BaseTestCase {
         // Set alias
         preferences.setAlias(TEST_ALIAS_STRING);
         assertEquals("Failed to set alias string", TEST_ALIAS_STRING, preferences.getPreferenceSummary("SET_ALIAS"));
+
+        // Set named user
+        preferences.setNamedUser(TEST_NAMED_USER_STRING);
+        assertEquals("Failed to set named user string", TEST_NAMED_USER_STRING, preferences.getPreferenceSummary("SET_NAMED_USER"));
 
         // Add a tag
         preferences.addTags(TEST_TAG_STRING);
@@ -55,6 +59,7 @@ public class PushTestCase extends BaseTestCase {
         // Send push message to Channel ID
         String channelIdAlertId = pushSender.sendPushToChannelId(channelId);
         String aliasAlertId = pushSender.sendPushToAlias(TEST_ALIAS_STRING);
+        String namedUserAlertId = pushSender.sendPushToNamedUser(TEST_NAMED_USER_STRING);
         String tagAlertId = pushSender.sendPushToTag(TEST_TAG_STRING);
         String broadcastAlertId = pushSender.sendPushMessage();
 
@@ -63,6 +68,7 @@ public class PushTestCase extends BaseTestCase {
         // Wait for push notifications to arrive
         assertTrue("Failed to receive push from unicast.", waitForNotificationToArrive(channelIdAlertId));
         assertTrue("Failed to receive push from alias.", waitForNotificationToArrive(aliasAlertId));
+        assertTrue("Failed to receive push from named user.", waitForNotificationToArrive(namedUserAlertId));
         assertTrue("Failed to receive push from tag.", waitForNotificationToArrive(tagAlertId));
         assertTrue("Failed to receive push from broadcast.", waitForNotificationToArrive(broadcastAlertId));
 
