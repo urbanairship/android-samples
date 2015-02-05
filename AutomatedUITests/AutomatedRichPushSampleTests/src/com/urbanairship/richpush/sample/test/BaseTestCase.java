@@ -28,6 +28,7 @@ public class BaseTestCase extends UiAutomatorTestCase {
     static final String APP_NAME = "Rich Push Sample";
     static final String PACKAGE_NAME = "com.urbanairship.richpush.sample";
     static final String TEST_ALIAS_STRING = AutomatorUtils.generateUniqueAlertId();
+    static final String TEST_NAMED_USER_STRING = AutomatorUtils.generateUniqueAlertId();
     static final String TEST_TAG_STRING = "TEST_RICH_PUSH_SAMPLE_TAG";
 
     //RichPushSender pushSender;

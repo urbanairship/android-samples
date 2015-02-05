@@ -77,7 +77,7 @@ public class PushSender {
 
     /**
      * Builds the message to be sent
-     * @param recipientString The string to append based on the type of push (user, alias, tag)
+     * @param recipientString The string to append based on the type of push (user, alias, named user, tag)
      * @param recipientValueString The value of the recipientString based on the type
      * @param activity The specified activity to send the push message to
      * @param uniqueAlertId The string used to identify push messages
