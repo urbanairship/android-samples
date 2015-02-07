@@ -16,6 +16,10 @@
 	        android:persistent="false"
 	        android:title="@string/set_alias_preference_title" />
 
+        <com.urbanairship.richpush.sample.preference.SetNamedUserPreference
+            android:persistent="false"
+            android:title="@string/set_named_user_preference_title" />
+
 	    <com.urbanairship.richpush.sample.preference.AddTagsPreference
 	        android:persistent="false"
 	        android:dialogLayout="@layout/dialog_add_tags"

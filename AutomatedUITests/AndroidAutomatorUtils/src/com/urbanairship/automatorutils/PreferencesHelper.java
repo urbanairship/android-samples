@@ -17,7 +17,7 @@ public class PreferencesHelper {
 
     private static int KEYBOARD_WAIT_TIME = 3000;  // 3 seconds
     private static int UI_OBJECTS_WAIT_TIME = 2000;  // 2 seconds
-    private static int SET_ALIAS_TEXT_WAIT_TIME = 3000;  // 3 seconds
+    private static int SET_TEXT_WAIT_TIME = 3000;  // 3 seconds
 
     private UiSelector getPreferenceSummarySelector(String description) {
         return new UiSelector().description(description)
@@ -169,8 +169,59 @@ public class PreferencesHelper {
         Thread.sleep(KEYBOARD_WAIT_TIME);
 
         // Set the alias
-        AutomatorUtils.waitForUiObjectsToExist(SET_ALIAS_TEXT_WAIT_TIME, setAliasText);
+        AutomatorUtils.waitForUiObjectsToExist(SET_TEXT_WAIT_TIME, setAliasText);
         setAliasText.setText(alias);
+
+        // save
+        UiObject okButton = new UiObject(new UiSelector().text("OK"));
+        okButton.click();
+    }
+
+    /**
+     * Set a named user
+     * @param namedUser The string to set to
+     * @throws UiObjectNotFoundException
+     * @throws InterruptedException
+     */
+    public void setNamedUser(String namedUser) throws UiObjectNotFoundException, InterruptedException {
+        // Test set named user
+        // Scroll to the preference if its not visible in the list
+        scrollPreferenceIntoView("SET_NAMED_USER");
+
+        UiObject setNamedUser = new UiObject(new UiSelector().description("SET_NAMED_USER"));
+        UiObject namedUserStringDisplayed = new UiObject(new UiSelector().text(namedUser));
+        boolean namedUserExist = false;
+        if (namedUserStringDisplayed.exists()) {
+            namedUserExist = true;
+        }
+
+        setNamedUser.click();
+        UiObject namedUserEditText = new UiObject(new UiSelector().text(namedUser));
+        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, namedUserEditText);
+
+        // Check if a named user already exist
+        if (namedUserExist) {
+            namedUserEditText.click();
+            UiObject deleteNamedUser = new UiObject(new UiSelector().text("Delete"));
+            if (deleteNamedUser.exists()) {
+                // Named user exist, so clear it
+                deleteNamedUser.click();
+                UiObject okButton = new UiObject(new UiSelector().text("OK"));
+                okButton.click();
+                setNamedUser.click();
+            }
+        }
+
+        UiObject setNamedUserText = new UiObject(new UiSelector().className("android.widget.EditText"));
+        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, setNamedUserText);
+        setNamedUserText.click();
+
+        // Wait for keyboard to pop up
+        Thread.sleep(KEYBOARD_WAIT_TIME);
+
+        // Set the named user
+        AutomatorUtils.waitForUiObjectsToExist(SET_TEXT_WAIT_TIME, setNamedUserText);
+        setNamedUserText.setText(namedUser);
 
         // save
         UiObject okButton = new UiObject(new UiSelector().text("OK"));

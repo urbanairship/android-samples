@@ -109,6 +109,19 @@ public class PushSenderApiV3 extends PushSender {
     }
 
     /**
+     * Sends a push message to a named user
+     * @param namedUser The specified named user to send the push message to
+     * @return A unique alert ID
+     * @throws Exception
+     */
+    public String sendPushToNamedUser(String namedUser) throws Exception {
+        Log.i(TAG, "Send message to named user: " + namedUser);
+        JSONObject jsonAudience = new JSONObject();
+        jsonAudience.put("named_user", namedUser);
+        return sendMessage(PUSH_URL, "audience", jsonAudience.toString(), null, requestProperties);
+    }
+
+    /**
      * Sends a push message to a Channel ID
      * @param channelId The specified channel ID to send the push message to
      * @return A unique alert ID
