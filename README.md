@@ -39,7 +39,7 @@ Push Sample:
     4) Add the Urban Airship library project as a dependency
         - Follow http://developer.android.com/tools/projects/projects-eclipse.html#ReferencingLibraryProject
 
-    5) Add the v4 support library as a dependency
+    5) Add the v4 support library and the v7 cardview library as a dependency
         - Follow http://developer.android.com/tools/support-library/setup.html
 
     6) (GCM Only) Set up Google Play services
@@ -63,7 +63,7 @@ Rich Push Sample:
     4) Add the Urban Airship library project as a dependency
         - Follow http://developer.android.com/tools/projects/projects-eclipse.html#ReferencingLibraryProject
 
-    5) Add the v4 and v7 Support library as dependencies
+    5) Add the v4 support library, v7 appcompat library, and the v7 cardview library as dependencies
         - Follow http://developer.android.com/tools/support-library/setup.html
 
     6) (GCM Only) Set up Google Play services
