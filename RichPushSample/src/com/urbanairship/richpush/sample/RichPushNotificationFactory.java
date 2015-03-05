@@ -99,7 +99,7 @@ public class RichPushNotificationFactory extends DefaultNotificationFactory {
         Resources res = context.getResources();
         String title = res.getQuantityString(R.plurals.inbox_notification_title, totalUnreadCount, totalUnreadCount);
 
-        Bitmap largeIcon = BitmapFactory.decodeResource(res, R.drawable.ua_launcher);
+        Bitmap largeIcon = BitmapFactory.decodeResource(res, R.drawable.ic_launcher);
 
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle()
                 .addLine(Html.fromHtml("<b>" + incomingAlert + "</b>"));
@@ -120,7 +120,7 @@ public class RichPushNotificationFactory extends DefaultNotificationFactory {
                 .setContentTitle(title)
                 .setContentText(message.getAlert())
                 .setLargeIcon(largeIcon)
-                .setSmallIcon(R.drawable.ua_notification_icon)
+                .setSmallIcon(R.drawable.ic_notification)
                 .setNumber(totalUnreadCount)
                 .setAutoCancel(true)
                 .setStyle(inboxStyle)

@@ -48,7 +48,7 @@
 
     <application
         android:label="@string/app_name"
-        android:icon="@drawable/ua_launcher"
+        android:icon="@drawable/ic_launcher"
         android:name="com.urbanairship.richpush.sample.RichPushApplication"
         android:theme="@style/Theme.AppTheme">
 

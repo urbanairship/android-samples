@@ -43,7 +43,7 @@ public class RichPushApplication extends Application {
         factory.setColor(getResources().getColor(R.color.color_primary));
 
         // Set the notification icon
-        factory.setSmallIconId(R.drawable.ua_notification_icon);
+        factory.setSmallIconId(R.drawable.ic_notification);
 
 
         UAirship.takeOff(this, new UAirship.OnReadyCallback() {
