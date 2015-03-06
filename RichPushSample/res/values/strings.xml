@@ -18,6 +18,7 @@
     <string name="inbox_refresh_failed_dialog_title">Unable to retrieve new messages</string>
     <string name="inbox_refresh_failed_dialog_message">Please try again later</string>
     <string name="location_preference_category_title">Location Preferences</string>
+    <string name="analytics_preference_category_title">Analytics Preferences</string>
     <string name="quiet_time_enable_preference_title">Enable Quiet Time</string>
     <string name="quiet_time_start_preference_title">Quiet Time Start</string>
     <string name="quiet_time_end_preference_title">Quiet Time End</string>
@@ -26,6 +27,7 @@
     <string name="vibrate_preference_title">Enable Vibrate</string>
     <string name="location_preference_title">Enable Location Updates</string>
     <string name="background_location_preference_title">Allow Background Location</string>
+    <string name="analytics_preference_title">Enable Analytics</string>
     <string name="advanced_preference_category_title">Advanced</string>
     <string name="channel_id_preference_title">Channel ID</string>
     <string name="user_id_preference_title">User ID</string>
