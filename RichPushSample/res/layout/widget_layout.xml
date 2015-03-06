@@ -20,7 +20,7 @@
             android:padding="12dp"
             android:scaleType="fitStart"
             android:adjustViewBounds="true"
-            android:src="@drawable/ua_launcher" />
+            android:src="@mipmap/ic_launcher" />
         <TextView
             android:id="@+id/widget_header_text"
             android:layout_width="wrap_content"
