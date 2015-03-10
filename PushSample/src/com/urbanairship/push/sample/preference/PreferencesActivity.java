@@ -53,8 +53,11 @@ public class PreferencesActivity extends PreferenceActivity {
         // Display the push preferences
         this.addPreferencesFromResource(R.xml.push_preferences);
 
+        // Display the location preferences
         this.addPreferencesFromResource(R.xml.location_preferences);
 
+        // Display the analytics preferences
+        this.addPreferencesFromResource(R.xml.analytics_preferences);
 
         // Display the advanced settings
         this.addPreferencesFromResource(R.xml.advanced_preferences);

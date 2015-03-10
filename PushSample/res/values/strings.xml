@@ -10,6 +10,7 @@
     <string name="push_preference_category_title">Push Preferences</string>
     <string name="rich_push_message_dialog_title">Rich Push Message</string>
     <string name="location_preference_category_title">Location Preferences</string>
+    <string name="analytics_preference_category_title">Analytics Preferences</string>
     <string name="quiet_time_enable_preference_title">Enable Quiet Time</string>
     <string name="quiet_time_start_preference_title">Quiet Time Start</string>
     <string name="quiet_time_end_preference_title">Quiet Time End</string>
@@ -19,6 +20,7 @@
     <string name="channel_id_preference_title">Channel ID</string>
     <string name="location_preference_title">Enable Location Updates</string>
     <string name="background_location_preference_title">Allow Background Location</string>
+    <string name="analytics_preference_title">Enable Analytics</string>
     <string name="advanced_preference_category_title">Advanced</string>
     <string name="set_alias_preference_title">Set Alias</string>
     <string name="set_named_user_preference_title">Set Named User</string>
