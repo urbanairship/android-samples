@@ -27,7 +27,7 @@
     <string name="vibrate_preference_title">Enable Vibrate</string>
     <string name="location_preference_title">Enable Location Updates</string>
     <string name="background_location_preference_title">Allow Background Location</string>
-    <string name="analytics_preference_title">Enable Analytics</string>
+    <string name="analytics_preference_title">Send usage data</string>
     <string name="advanced_preference_category_title">Advanced</string>
     <string name="channel_id_preference_title">Channel ID</string>
     <string name="user_id_preference_title">User ID</string>
