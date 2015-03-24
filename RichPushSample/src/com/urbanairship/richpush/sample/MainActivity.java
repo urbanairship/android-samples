@@ -27,6 +27,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -43,6 +44,7 @@ import android.widget.ListView;
 
 import com.urbanairship.analytics.Analytics;
 import com.urbanairship.google.PlayServicesUtils;
+import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.inbox.InboxFragment;
 import com.urbanairship.richpush.sample.inbox.MessageActivity;
@@ -183,6 +185,13 @@ public class MainActivity extends ActionBarActivity implements InboxFragment.Lis
             getIntent().removeExtra(EXTRA_MESSAGE_ID);
             showRichPushMessage(pendingMessageId);
         }
+
+        // Handle the "com.urbanairship.VIEW_RICH_PUSH_INBOX" intent action.
+        if (RichPushInbox.VIEW_INBOX_INTENT_ACTION.equals(getIntent().getAction())) {
+            navigate(INBOX_ITEM);
+            // Clear the action so we don't handle it again
+            getIntent().setAction(null);
+        }
     }
 
     @Override
@@ -256,8 +265,12 @@ public class MainActivity extends ActionBarActivity implements InboxFragment.Lis
      * @param messageId The ID of the Rich Push message to show.
      */
     private void showRichPushMessage(String messageId) {
-        Intent intent = new Intent(this, MessageActivity.class);
-        intent.putExtra(MessageActivity.EXTRA_MESSAGE_ID_KEY, messageId);
+
+        // Use the com.urbanairship.VIEW_RICH_PUSH_MESSAGE that is also used by the open_mc_action
+        Intent intent = new Intent(this, MessageActivity.class)
+                .setAction(RichPushInbox.VIEW_MESSAGE_INTENT_ACTION)
+                .setData(Uri.fromParts(RichPushInbox.MESSAGE_DATA_SCHEME, messageId, null));
+
         this.startActivity(intent);
     }
 }

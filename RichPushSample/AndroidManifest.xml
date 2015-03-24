@@ -57,10 +57,30 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- The open inbox action will attempt to start an activity with
+            "com.urbanairship.VIEW_RICH_PUSH_INBOX" filter when requesting to view the inbox.-->
+            <intent-filter>
+                <action android:name="com.urbanairship.VIEW_RICH_PUSH_INBOX" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
 
         <activity android:name="com.urbanairship.richpush.sample.preference.PushPreferencesActivity" />
-        <activity android:name="com.urbanairship.richpush.sample.inbox.MessageActivity" />
+
+        <activity android:name="com.urbanairship.richpush.sample.inbox.MessageActivity"
+                  android:exported="false">
+
+            <!-- The open inbox action will attempt to start an activity with
+            "com.urbanairship.VIEW_RICH_PUSH_MESSAGE" filter when requesting to view a message. The
+            message ID is set on the intent's data in the form of "message:<MESSAGE_ID>" -->
+            <intent-filter>
+                <action android:name="com.urbanairship.VIEW_RICH_PUSH_MESSAGE" />
+                <data android:scheme="message"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+        </activity>
 
         <!-- Optional: This is an example of one of the many ways to handle deep
         linking in the application.  To use with your application, update the data

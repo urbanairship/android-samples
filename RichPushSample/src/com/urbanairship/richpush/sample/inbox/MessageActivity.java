@@ -35,6 +35,7 @@ import android.view.MenuItem;
 
 import com.urbanairship.UAirship;
 import com.urbanairship.analytics.Analytics;
+import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.R;
 import com.urbanairship.richpush.sample.preference.PushPreferencesActivity;
@@ -47,10 +48,6 @@ public class MessageActivity extends ActionBarActivity implements MessagePagerFr
 
     private static final String TAG = "MessageActivity";
 
-    /**
-     * Required to start the activity. The ID of the message to show.
-     */
-    public static final String EXTRA_MESSAGE_ID_KEY = "com.urbanairship.richpush.sample.EXTRA_MESSAGE_ID_KEY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +60,14 @@ public class MessageActivity extends ActionBarActivity implements MessagePagerFr
         MessagePagerFragment pagerFragment = (MessagePagerFragment) getSupportFragmentManager().findFragmentById(R.id.pager);
 
         if (savedInstanceState == null) {
-            String messageId = getIntent().getStringExtra(EXTRA_MESSAGE_ID_KEY);
+            String messageId = null;
+
+            // Handle the "com.urbanairship.VIEW_RICH_PUSH_MESSAGE" intent action with the message
+            // id encoded in the intent's data in the form of "message:<MESSAGE_ID>
+            if (getIntent() != null && getIntent().getData() != null && RichPushInbox.VIEW_MESSAGE_INTENT_ACTION.equals(getIntent().getAction())) {
+                messageId = getIntent().getData().getSchemeSpecificPart();
+            }
+
             RichPushMessage message = UAirship.shared().getRichPushManager().getRichPushInbox().getMessage(messageId);
 
             if (message == null) {
