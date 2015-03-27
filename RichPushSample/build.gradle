@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.0.0'
@@ -8,7 +8,7 @@ buildscript {
 }
 
 repositories {
-    mavenCentral()
+    jcenter()
 
     flatDir {
         dirs 'aars'
@@ -18,9 +18,9 @@ repositories {
 apply plugin: 'com.android.application'
 
 dependencies {
-    compile 'com.android.support:cardview-v7:21.+'
-    compile "com.android.support:appcompat-v7:21.+"
-    compile 'com.android.support:support-v4:21.+'
+    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.android.support:cardview-v7:22.0.0'
+    compile 'com.android.support:support-v4:22.0.0'
 
     // Allows Urban Airship location services to use Fused Location
     compile 'com.google.android.gms:play-services-location:7.0.0'
@@ -39,14 +39,14 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
 
     defaultConfig {
         versionCode 1
         versionName "1.0"
-        minSdkVersion 9
-        targetSdkVersion 21
+        minSdkVersion 10
+        targetSdkVersion 22
     }
 
     sourceSets {
