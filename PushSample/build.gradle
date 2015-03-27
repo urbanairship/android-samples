@@ -21,8 +21,11 @@ dependencies {
     compile 'com.android.support:cardview-v7:21.+'
     compile 'com.android.support:support-v4:21.+'
 
-    // Includes both gcm and fused location
-    compile 'com.google.android.gms:play-services-location:6.5.+'
+    // Allows Urban Airship location services to use Fused Location
+    compile 'com.google.android.gms:play-services-location:7.0.0'
+
+    // Required for Push
+    compile 'com.google.android.gms:play-services-gcm:7.0.0'
 
     // Compile the UrbanAirship library from source
     // if it's available. Used for library development only.
