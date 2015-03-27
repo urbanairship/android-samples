@@ -5,9 +5,9 @@
           android:versionCode="1"
           android:versionName="1.0">
 
-    <!-- minSdkVersion sets runtime compatibility ("will run on API level 9") -->
+    <!-- minSdkVersion sets runtime compatibility ("will run on API level 10") -->
     <!-- targetSdkVersion should be set to the latest version tested, to disable compatibility modes -->
-    <uses-sdk android:minSdkVersion="6" android:targetSdkVersion="19" />
+    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="22" />
 
     <!-- REQUIRED for Urban Airship -->
     <uses-permission android:name="android.permission.INTERNET" />
