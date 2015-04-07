@@ -21,7 +21,7 @@ public class PushTestCase extends BaseTestCase {
         preferencesButton.click();
 
         // Enable user notifications
-        preferences.setPreferenceCheckBoxEnabled("USER_NOTIFICATIONS_ENABLE", true);
+        preferences.setPreferenceCheckBoxEnabled("USER_NOTIFICATIONS_ENABLED", true);
 
         // Set alias
         preferences.setAlias(TEST_ALIAS_STRING);
