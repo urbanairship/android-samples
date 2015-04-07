@@ -23,7 +23,7 @@ public class RichPushTestCase extends BaseTestCase {
         navigateToPreferences();
 
         // Enable push, add tag, set alias, set named user
-        preferences.setPreferenceCheckBoxEnabled("USER_NOTIFICATIONS_ENABLE", true);
+        preferences.setPreferenceCheckBoxEnabled("USER_NOTIFICATIONS_ENABLED", true);
         preferences.setAlias(TEST_ALIAS_STRING);
         preferences.setNamedUser(TEST_NAMED_USER_STRING);
         preferences.addTags(TEST_TAG_STRING);

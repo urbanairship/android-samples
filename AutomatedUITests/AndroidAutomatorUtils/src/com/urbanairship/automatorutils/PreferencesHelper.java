@@ -271,6 +271,9 @@ public class PreferencesHelper {
         // Save first tag
         okButton = new UiObject(new UiSelector().text("OK"));
         okButton.click();
+
+        // Scroll to the end to see tags
+        scrollToEnd();
     }
 
     /**
@@ -283,5 +286,16 @@ public class PreferencesHelper {
         UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
         AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, listView);
         listView.scrollIntoView(getPreferenceTitleSelector(setting));
+    }
+
+    /**
+     * Scrolls to the end of the scrollable layout
+     * @throws UiObjectNotFoundException
+     * @throws InterruptedException
+     */
+    private void scrollToEnd() throws UiObjectNotFoundException, InterruptedException {
+        UiScrollable listView = new UiScrollable(new UiSelector().className("android.widget.ListView"));
+        AutomatorUtils.waitForUiObjectsToExist(UI_OBJECTS_WAIT_TIME, listView);
+        listView.scrollToEnd(50);
     }
 }

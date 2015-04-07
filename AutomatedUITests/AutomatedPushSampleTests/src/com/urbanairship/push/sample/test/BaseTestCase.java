@@ -18,7 +18,7 @@ public class BaseTestCase extends UiAutomatorTestCase {
     static int REGISTRATION_WAIT_TIME = 30000; // 30 seconds
 
     // Time to wait for notifications to appear in milliseconds.
-    static int NOTIFICATION_WAIT_TIME = 90000; // 90 seconds - push to tags is slower than to user
+    static int NOTIFICATION_WAIT_TIME = 120000; // 120 seconds - push to tags is slower than to user
     static final String APP_NAME = "Push Sample";
     static final String PACKAGE_NAME = "com.urbanairship.push.sample";
     static final String TEST_ALIAS_STRING = AutomatorUtils.generateUniqueAlertId();
@@ -55,7 +55,7 @@ public class BaseTestCase extends UiAutomatorTestCase {
         // Disable push
         UiObject preferencesButton = new UiObject(new UiSelector().text("Preferences"));
         preferencesButton.click();
-        preferences.setPreferenceCheckBoxEnabled("USER_NOTIFICATIONS_ENABLE", false);
+        preferences.setPreferenceCheckBoxEnabled("USER_NOTIFICATIONS_ENABLED", false);
 
         // Go out and back to apply settings
         this.getUiDevice().pressBack();

@@ -63,7 +63,7 @@ public class BaseTestCase extends UiAutomatorTestCase {
     public void tearDown() throws Exception {
         // Disable push
         navigateToPreferences();
-        preferences.setPreferenceCheckBoxEnabled("USER_NOTIFICATIONS_ENABLE", false);
+        preferences.setPreferenceCheckBoxEnabled("USER_NOTIFICATIONS_ENABLED", false);
 
         navigateBack();
     }

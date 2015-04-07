@@ -20,7 +20,7 @@ public class InboxTestCase extends BaseTestCase {
 
         // Enable Push
         navigateToPreferences();
-        preferences.setPreferenceCheckBoxEnabled("USER_NOTIFICATIONS_ENABLE", true);
+        preferences.setPreferenceCheckBoxEnabled("USER_NOTIFICATIONS_ENABLED", true);
         navigateBack();
         Thread.sleep(REGISTRATION_WAIT_TIME);
 
