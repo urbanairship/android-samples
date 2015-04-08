@@ -1,41 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <string name="app_name">Push Sample</string>
-  <string name="short_app_name">PushSample</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <string name="app_name" tools:ignore="MissingTranslation">Push Sample</string>
+  <string name="short_app_name" tools:ignore="MissingTranslation,UnusedResources">PushSample</string>
 
-  <string name="app_description">
+  <string name="app_description" tools:ignore="MissingTranslation,UnusedResources">
       © 2014 Urban Airship, Inc. All Rights Reserved.\n\n
   </string>
 
-    <string name="push_preference_category_title">Push Preferences</string>
-    <string name="rich_push_message_dialog_title">Rich Push Message</string>
-    <string name="location_preference_category_title">Location Preferences</string>
-    <string name="analytics_preference_category_title">Analytics Preferences</string>
-    <string name="quiet_time_enable_preference_title">Enable Quiet Time</string>
-    <string name="quiet_time_start_preference_title">Quiet Time Start</string>
-    <string name="quiet_time_end_preference_title">Quiet Time End</string>
-    <string name="push_preference_title">Enable Push</string>
-    <string name="sound_preference_title">Enable Sound</string>
-    <string name="vibrate_preference_title">Enable Vibrate</string>
-    <string name="channel_id_preference_title">Channel ID</string>
-    <string name="location_preference_title">Enable Location Updates</string>
-    <string name="background_location_preference_title">Allow Background Location</string>
-    <string name="analytics_preference_title">Send usage data</string>
-    <string name="advanced_preference_category_title">Advanced</string>
-    <string name="set_alias_preference_title">Set Alias</string>
-    <string name="set_named_user_preference_title">Set Named User</string>
-    <string name="add_tags_preference_title">Add Tags</string>
-    <string name="duplicate_tag_warning">Tag already exists</string>
+    <string name="push_preference_category_title" tools:ignore="MissingTranslation">Push Preferences</string>
+    <string name="rich_push_message_dialog_title" tools:ignore="MissingTranslation,UnusedResources">Rich Push Message</string>
+    <string name="location_preference_category_title" tools:ignore="MissingTranslation">Location Preferences</string>
+    <string name="analytics_preference_category_title" tools:ignore="MissingTranslation">Analytics Preferences</string>
+    <string name="quiet_time_enable_preference_title" tools:ignore="MissingTranslation">Enable Quiet Time</string>
+    <string name="quiet_time_start_preference_title" tools:ignore="MissingTranslation">Quiet Time Start</string>
+    <string name="quiet_time_end_preference_title" tools:ignore="MissingTranslation">Quiet Time End</string>
+    <string name="push_preference_title" tools:ignore="MissingTranslation">Enable Push</string>
+    <string name="sound_preference_title" tools:ignore="MissingTranslation">Enable Sound</string>
+    <string name="vibrate_preference_title" tools:ignore="MissingTranslation">Enable Vibrate</string>
+    <string name="channel_id_preference_title" tools:ignore="MissingTranslation">Channel ID</string>
+    <string name="location_preference_title" tools:ignore="MissingTranslation">Enable Location Updates</string>
+    <string name="background_location_preference_title" tools:ignore="MissingTranslation">Allow Background Location</string>
+    <string name="analytics_preference_title" tools:ignore="MissingTranslation">Send usage data</string>
+    <string name="advanced_preference_category_title" tools:ignore="MissingTranslation">Advanced</string>
+    <string name="set_alias_preference_title" tools:ignore="MissingTranslation">Set Alias</string>
+    <string name="set_named_user_preference_title" tools:ignore="MissingTranslation">Set Named User</string>
+    <string name="add_tags_preference_title" tools:ignore="MissingTranslation">Add Tags</string>
+    <string name="delete_tag" tools:ignore="MissingTranslation">DELETE_TAG</string>
+    <string name="add_tag" tools:ignore="MissingTranslation">ADD_TAG</string>
+    <string name="duplicate_tag_warning" tools:ignore="MissingTranslation">Tag already exists</string>
 
-
-    <string name="location_high_accuracy">High Accuracy</string>
-    <string name="location_balanced_accuracy">Balanced Power and Accuracy</string>
-    <string name="location_low_power">Low Power</string>
-    <string name="location_no_power">No Power</string>
-    <string name="button_request_location">Request Location</string>
-    <string name="location_requesting_location">Requesting Location</string>
-    <string name="channel_id">Channel:</string>
-    <string name="button_preferences">Preferences</string>
-    <string name="button_view_location">View Location</string>
-    <string name="toast_channel_clipboard">Channel ID copied to clipboard</string>
+    <string name="location_request_priority" tools:ignore="MissingTranslation">Request Priority:</string>
+    <string name="location_high_accuracy" tools:ignore="MissingTranslation">High Accuracy</string>
+    <string name="location_balanced_accuracy" tools:ignore="MissingTranslation">Balanced Power and Accuracy</string>
+    <string name="location_low_power" tools:ignore="MissingTranslation">Low Power</string>
+    <string name="location_no_power" tools:ignore="MissingTranslation">No Power</string>
+    <string name="button_request_location" tools:ignore="MissingTranslation">Request Location</string>
+    <string name="location_requesting_location" tools:ignore="MissingTranslation">Requesting Location</string>
+    <string name="channel_id" tools:ignore="MissingTranslation">Channel:</string>
+    <string name="button_preferences" tools:ignore="MissingTranslation">Preferences</string>
+    <string name="button_view_location" tools:ignore="MissingTranslation">View Location</string>
+    <string name="toast_channel_clipboard" tools:ignore="MissingTranslation">Channel ID copied to clipboard</string>
 </resources>

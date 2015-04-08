@@ -33,8 +33,6 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 
-import com.urbanairship.AirshipConfigOptions;
-import com.urbanairship.UAirship;
 import com.urbanairship.analytics.Analytics;
 import com.urbanairship.preference.UAPreferenceAdapter;
 import com.urbanairship.push.sample.R;
@@ -43,12 +41,11 @@ public class PreferencesActivity extends PreferenceActivity {
 
     private UAPreferenceAdapter preferenceAdapter;
 
+    @SuppressWarnings("deprecation")
     @Override
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        AirshipConfigOptions options = UAirship.shared().getAirshipConfigOptions();
 
         // Display the push preferences
         this.addPreferencesFromResource(R.xml.push_preferences);

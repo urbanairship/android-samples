@@ -56,9 +56,8 @@ import java.util.Set;
  */
 public class AddTagsPreference extends DialogPreference  {
 
-    private ListView listView;
-    private List<String> tags = new ArrayList<String>();
-    private Set<String>  currentTags;
+    private final List<String> tags = new ArrayList<>();
+    private final Set<String>  currentTags;
     private TagsAdapter adapter;
 
     public AddTagsPreference(Context context, AttributeSet attrs) {
@@ -73,7 +72,7 @@ public class AddTagsPreference extends DialogPreference  {
         tags.addAll(currentTags);
 
         View view = super.onCreateDialogView();
-        listView = (ListView) view.findViewById(R.id.tags_list);
+        ListView listView = (ListView) view.findViewById(R.id.tags_list);
         adapter = new TagsAdapter(getContext(), R.layout.tag_preference_item);
         listView.setAdapter(adapter);
 
@@ -155,8 +154,9 @@ public class AddTagsPreference extends DialogPreference  {
 
     private class TagsAdapter extends ArrayAdapter<String> {
 
-        private int layout;
+        private final int layout;
 
+        @SuppressWarnings("SameParameterValue")
         public TagsAdapter(Context context, int layout) {
             super(context, layout, tags);
 
@@ -165,8 +165,7 @@ public class AddTagsPreference extends DialogPreference  {
 
         private View createView(ViewGroup parent) {
             LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = layoutInflater.inflate(layout, parent, false);
-            return view;
+            return layoutInflater.inflate(layout, parent, false);
         }
 
         @Override

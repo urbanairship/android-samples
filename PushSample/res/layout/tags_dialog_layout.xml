@@ -16,6 +16,7 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/new_tag_button"
 	        android:layout_toLeftOf="@+id/new_tag_button" />
 	    
 	    <ImageButton
@@ -23,7 +24,9 @@
 	        android:src="@android:drawable/ic_input_add"
 	        android:layout_width="wrap_content"
 	    	android:layout_height="wrap_content"
-	    	android:layout_alignParentRight="true" />
+            android:contentDescription="@string/add_tag"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
     
     </RelativeLayout>
     

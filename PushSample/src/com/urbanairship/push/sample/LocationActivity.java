@@ -14,9 +14,9 @@ import com.urbanairship.location.LocationRequestOptions;
 
 public class LocationActivity extends Activity {
 
-    PendingResult<Location> pendingRequest;
-    RadioGroup priorityGroup;
-    View progress;
+    private PendingResult<Location> pendingRequest;
+    private RadioGroup priorityGroup;
+    private View progress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,6 +51,7 @@ public class LocationActivity extends Activity {
     }
 
 
+    @SuppressWarnings("UnusedParameters")
     public void onRequestLocationClicked(View view) {
         if (pendingRequest != null) {
             pendingRequest.cancel();
@@ -62,6 +63,7 @@ public class LocationActivity extends Activity {
                 .setPriority(getPriority())
                 .create();
 
+        //noinspection unchecked
         pendingRequest = UAirship.shared().getLocationManager().requestSingleLocation(options);
 
         pendingRequest.onResult(new PendingResult.ResultCallback<Location>() {
@@ -79,7 +81,7 @@ public class LocationActivity extends Activity {
     }
 
     private String formatLocation(Location location) {
-        return String.format("provider: %s lat: %s, lon: %s, accy: %s",
+        return String.format("provider: %s lat: %s, lon: %s, accuracy: %s",
                 location.getProvider(),
                 location.getLatitude(),
                 location.getLongitude(),
