@@ -285,13 +285,13 @@ public class InboxFragment extends AbstractInboxFragment implements ActionMode.C
         Logger.debug("onActionItemClicked");
         switch (item.getItemId()) {
             case R.id.mark_read:
-                getRichPushInbox().markMessagesRead(new HashSet<String>(getSelectedMessages()));
+                getRichPushInbox().markMessagesRead(new HashSet<>(getSelectedMessages()));
                 break;
             case R.id.mark_unread:
-                getRichPushInbox().markMessagesUnread(new HashSet<String>(getSelectedMessages()));
+                getRichPushInbox().markMessagesUnread(new HashSet<>(getSelectedMessages()));
                 break;
             case R.id.delete:
-                getRichPushInbox().deleteMessages(new HashSet<String>(getSelectedMessages()));
+                getRichPushInbox().deleteMessages(new HashSet<>(getSelectedMessages()));
                 break;
             default:
                 return false;

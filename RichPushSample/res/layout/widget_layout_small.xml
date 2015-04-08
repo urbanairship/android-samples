@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#232323"
@@ -14,6 +15,7 @@
         
         <ImageView
             android:id="@+id/widget_title_icon"
+            android:contentDescription="@string/widget_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="12dp"
@@ -29,6 +31,7 @@
             android:text="@string/inbox_name"
             android:textAllCaps="true"
             android:textColor="#F8F8F8"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            tools:ignore="UnusedAttribute"/>
     </LinearLayout>
 </LinearLayout>

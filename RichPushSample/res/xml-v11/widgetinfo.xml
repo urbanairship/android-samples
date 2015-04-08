@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider
   xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   android:minWidth="280dp"
   android:minHeight="180dp"
   android:updatePeriodMillis="1800000"
@@ -10,5 +11,6 @@
   android:minResizeHeight="40dp"
   android:widgetCategory="home_screen|keyguard"
   
-  android:previewImage="@drawable/widget_preview">
+  android:previewImage="@drawable/widget_preview"
+  tools:ignore="UnusedAttribute">
 </appwidget-provider>

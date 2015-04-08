@@ -35,7 +35,7 @@ import com.urbanairship.richpush.RichPushMessage;
 import java.util.List;
 
 /**
- * Pager adapter that manages the message fragments.  Activities that attach
+ * Pager adapter that manages the message fragments. Activities that attach
  * this fragment must implement MessageFragmentAdapter.Listener.
  */
 public class MessageFragmentAdapter extends FragmentStatePagerAdapter {

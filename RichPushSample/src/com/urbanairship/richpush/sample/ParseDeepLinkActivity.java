@@ -71,25 +71,30 @@ public class ParseDeepLinkActivity extends Activity {
         // Parse the deep link
         String deepLink = getDeepLink();
 
-        if ("/preferences".equals(deepLink)) {
-            startActivity(new Intent(getApplicationContext(), PushPreferencesActivity.class));
-        } else if ("/home".equals(deepLink)) {
-            startActivity(new Intent(getApplicationContext(), MainActivity.class)
-                    .putExtra(MainActivity.EXTRA_NAVIGATE_ITEM, MainActivity.HOME_ITEM));
+        switch (deepLink) {
+            case "/preferences":
+                startActivity(new Intent(getApplicationContext(), PushPreferencesActivity.class));
+                break;
+            case "/home":
+                startActivity(new Intent(getApplicationContext(), MainActivity.class)
+                        .putExtra(MainActivity.EXTRA_NAVIGATE_ITEM, MainActivity.HOME_ITEM));
 
-        } else if ("/inbox".equals(deepLink)) {
-            Intent launchIntent = new Intent(getApplicationContext(), MainActivity.class)
-                    .putExtra(MainActivity.EXTRA_NAVIGATE_ITEM, MainActivity.INBOX_ITEM);
+                break;
+            case "/inbox":
+                Intent launchIntent = new Intent(getApplicationContext(), MainActivity.class)
+                        .putExtra(MainActivity.EXTRA_NAVIGATE_ITEM, MainActivity.INBOX_ITEM);
 
-            // Check for an optional Message ID
-            String messageId = getDeepLinkQueryParameter("message_id");
-            if (messageId != null && messageId.length() > 0) {
-                launchIntent.putExtra(MainActivity.EXTRA_MESSAGE_ID, messageId);
-            }
-            startActivity(launchIntent);
-        } else {
-            Log.e(TAG, "Unknown deep link: " + deepLink + ". Falling back to main activity.");
-            startActivity(new Intent(this, MainActivity.class));
+                // Check for an optional Message ID
+                String messageId = getDeepLinkQueryParameter("message_id");
+                if (messageId != null && messageId.length() > 0) {
+                    launchIntent.putExtra(MainActivity.EXTRA_MESSAGE_ID, messageId);
+                }
+                startActivity(launchIntent);
+                break;
+            default:
+                Log.e(TAG, "Unknown deep link: " + deepLink + ". Falling back to main activity.");
+                startActivity(new Intent(this, MainActivity.class));
+                break;
         }
 
         finish();

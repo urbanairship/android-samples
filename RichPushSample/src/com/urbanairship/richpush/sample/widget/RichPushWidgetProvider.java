@@ -46,7 +46,7 @@ import com.urbanairship.richpush.sample.R;
  */
 public class RichPushWidgetProvider extends AppWidgetProvider {
 
-    private static int LARGE_LAYOUT_MIN_HEIGHT = 100;
+    private static final int LARGE_LAYOUT_MIN_HEIGHT = 100;
 
     @SuppressLint("NewApi")
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -140,6 +140,7 @@ public class RichPushWidgetProvider extends AppWidgetProvider {
      * @param appWidgetId id of the widget
      * @return RemoteViews for the large layout
      */
+    @SuppressWarnings("deprecation")
     @SuppressLint("NewApi")
     private RemoteViews createLargeLayout(Context context, int appWidgetId) {
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);

@@ -6,6 +6,8 @@
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_accent</item>
+        <item name="actionModeBackground">@color/color_primary_dark</item>
+        <item name="actionBarPopupTheme">@color/color_accent</item>
     </style>
 
     <style name="Theme.AppTheme.NavigationDrawer">

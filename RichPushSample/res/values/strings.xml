@@ -1,51 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <string name="app_name">Rich Push Sample</string>
-    <string name="no_messages">No messages</string>
-    <string name="inbox_title">Inbox</string>
-    <string name="home_title">Home</string>
+    <string name="app_name" tools:ignore="MissingTranslation">Rich Push Sample</string>
+    <string name="no_messages" tools:ignore="MissingTranslation,UnusedResources">No messages</string>
+    <string name="inbox_title" tools:ignore="MissingTranslation,UnusedResources">Inbox</string>
+    <string name="home_title" tools:ignore="MissingTranslation,UnusedResources">Home</string>
 
-    <string name="add_message">Add Message</string>
-    <string name="mark_read">Mark Read</string>
-    <string name="mark_unread">Mark Unread</string>
-    <string name="delete">Delete</string>
-    <string name="ok">OK</string>
-    <string name="preferences">Preferences</string>
-    <string name="refresh">Refresh</string>
-    <string name="push_preference_category_title">Push Preferences</string>
-    <string name="rich_push_message_dialog_title">Rich Push Message</string>
-    <string name="inbox_refresh_failed_dialog_title">Unable to retrieve new messages</string>
-    <string name="inbox_refresh_failed_dialog_message">Please try again later</string>
-    <string name="location_preference_category_title">Location Preferences</string>
-    <string name="analytics_preference_category_title">Analytics Preferences</string>
-    <string name="quiet_time_enable_preference_title">Enable Quiet Time</string>
-    <string name="quiet_time_start_preference_title">Quiet Time Start</string>
-    <string name="quiet_time_end_preference_title">Quiet Time End</string>
-    <string name="push_preference_title">Enable Push</string>
-    <string name="sound_preference_title">Enable Sound</string>
-    <string name="vibrate_preference_title">Enable Vibrate</string>
-    <string name="location_preference_title">Enable Location Updates</string>
-    <string name="background_location_preference_title">Allow Background Location</string>
-    <string name="analytics_preference_title">Send usage data</string>
-    <string name="advanced_preference_category_title">Advanced</string>
-    <string name="channel_id_preference_title">Channel ID</string>
-    <string name="user_id_preference_title">User ID</string>
-    <string name="set_alias_preference_title">Set Alias</string>
-    <string name="set_named_user_preference_title">Set Named User</string>
-    <string name="add_tags_preference_title">Add Tags</string>
-    <string name="duplicate_tag_warning">Tag already exists</string>
-    <string name="menu_deselect_all">Deselect all</string>
-    <string name="menu_select_all">Select all</string>
-    <string name="cab_selection">%d Selected</string>
-    <string name="your_app_here">Your App Here</string>
+    <string name="add_message" tools:ignore="MissingTranslation,UnusedResources">Add Message</string>
+    <string name="mark_read" tools:ignore="MissingTranslation,UnusedResources">Mark Read</string>
+    <string name="mark_unread" tools:ignore="MissingTranslation,UnusedResources">Mark Unread</string>
+    <string name="delete" tools:ignore="MissingTranslation,UnusedResources">Delete</string>
+    <string name="ok" tools:ignore="MissingTranslation,UnusedResources">OK</string>
+    <string name="preferences" tools:ignore="MissingTranslation,UnusedResources">Preferences</string>
+    <string name="refresh" tools:ignore="MissingTranslation,UnusedResources">Refresh</string>
+    <string name="push_preference_category_title" tools:ignore="MissingTranslation,UnusedResources">Push Preferences</string>
+    <string name="inbox_message" tools:ignore="MissingTranslation,UnusedResources">Inbox message</string>
+    <string name="inbox_refresh_failed_dialog_title" tools:ignore="MissingTranslation,UnusedResources">Unable to retrieve new messages</string>
+    <string name="inbox_refresh_failed_dialog_message" tools:ignore="MissingTranslation,UnusedResources">Please try again later</string>
+    <string name="location_preference_category_title" tools:ignore="MissingTranslation,UnusedResources">Location Preferences</string>
+    <string name="analytics_preference_category_title" tools:ignore="MissingTranslation,UnusedResources">Analytics Preferences</string>
+    <string name="quiet_time_enable_preference_title" tools:ignore="MissingTranslation,UnusedResources">Enable Quiet Time</string>
+    <string name="quiet_time_start_preference_title" tools:ignore="MissingTranslation,UnusedResources">Quiet Time Start</string>
+    <string name="quiet_time_end_preference_title" tools:ignore="MissingTranslation,UnusedResources">Quiet Time End</string>
+    <string name="push_preference_title" tools:ignore="MissingTranslation,UnusedResources">Enable Push</string>
+    <string name="sound_preference_title" tools:ignore="MissingTranslation,UnusedResources">Enable Sound</string>
+    <string name="vibrate_preference_title" tools:ignore="MissingTranslation,UnusedResources">Enable Vibrate</string>
+    <string name="location_preference_title" tools:ignore="MissingTranslation,UnusedResources">Enable Location Updates</string>
+    <string name="background_location_preference_title" tools:ignore="MissingTranslation,UnusedResources">Allow Background Location</string>
+    <string name="analytics_preference_title" tools:ignore="MissingTranslation,UnusedResources">Send usage data</string>
+    <string name="advanced_preference_category_title" tools:ignore="MissingTranslation,UnusedResources">Advanced</string>
+    <string name="channel_id_preference_title" tools:ignore="MissingTranslation,UnusedResources">Channel ID</string>
+    <string name="user_id_preference_title" tools:ignore="MissingTranslation,UnusedResources">User ID</string>
+    <string name="set_alias_preference_title" tools:ignore="MissingTranslation,UnusedResources">Set Alias</string>
+    <string name="set_named_user_preference_title" tools:ignore="MissingTranslation,UnusedResources">Set Named User</string>
+    <string name="add_tags_preference_title" tools:ignore="MissingTranslation,UnusedResources">Add Tags</string>
+    <string name="duplicate_tag_warning" tools:ignore="MissingTranslation,UnusedResources">Tag already exists</string>
+    <string name="menu_deselect_all" tools:ignore="MissingTranslation,UnusedResources">Deselect all</string>
+    <string name="menu_select_all" tools:ignore="MissingTranslation,UnusedResources">Select all</string>
+    <string name="cab_selection" tools:ignore="MissingTranslation,UnusedResources">%d Selected</string>
+    <string name="your_app_here" tools:ignore="MissingTranslation,UnusedResources">Your App Here</string>
+    <string name="close" tools:ignore="MissingTranslation,UnusedResources">close</string>
+    <string name="splash_logo" tools:ignore="MissingTranslation,UnusedResources">splash logo</string>
 
     <!-- Widget Values -->
-    <string name="empty_view_text">No messages found...</string>
-    <string name="toast_format_string">%1$s!</string>
-    <string name="item_format_string">%1$s</string>
-    <string name="header_format_string">%1$d unread</string>
-    <string name="inbox_name">Rich Push Sample Inbox</string>
+    <string name="empty_view_text" tools:ignore="MissingTranslation,UnusedResources">No messages found…</string>
+    <string name="toast_format_string" tools:ignore="MissingTranslation,UnusedResources">%1$s!</string>
+    <string name="item_format_string" tools:ignore="MissingTranslation,UnusedResources">%1$s</string>
+    <string name="header_format_string" tools:ignore="MissingTranslation,UnusedResources">%1$d unread</string>
+    <string name="inbox_name" tools:ignore="MissingTranslation,UnusedResources">Rich Push Sample Inbox</string>
+    <string name="widget_item" tools:ignore="MissingTranslation,UnusedResources">widget item</string>
+    <string name="widget_layout" tools:ignore="MissingTranslation,UnusedResources">widget layout</string>
 
     <!-- Inbox Notification -->
     <plurals name="inbox_notification_title">
@@ -53,5 +57,5 @@
         <item quantity="other">%d <b>New</b> Messages</item>
     </plurals>
 
-    <string name="inbox_summary">+%d more</string>
+    <string name="inbox_summary" tools:ignore="MissingTranslation,UnusedResources">+%d more</string>
 </resources>

@@ -16,13 +16,16 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/new_tag_button"
 	        android:layout_toLeftOf="@+id/new_tag_button" />
 	    
 	    <ImageButton
 	        android:id="@+id/new_tag_button"
 	        android:src="@android:drawable/ic_input_add"
+            android:contentDescription="@string/add_tags_preference_title"
 	        android:layout_width="wrap_content"
 	    	android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
 	    	android:layout_alignParentRight="true" />
     
     </RelativeLayout>

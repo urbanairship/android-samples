@@ -41,6 +41,7 @@ public class PushPreferencesActivity extends PreferenceActivity {
 
     private UAPreferenceAdapter preferenceAdapter;
 
+    @SuppressWarnings("deprecation")
     @Override
     @SuppressLint("NewApi")
     protected void onCreate(Bundle savedInstanceState) {

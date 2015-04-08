@@ -54,7 +54,7 @@ public abstract class AbstractInboxFragment extends ListFragment
 
     private Listener listener;
     protected ViewBinderArrayAdapter<RichPushMessage> adapter;
-    private List<String> selectedMessageIds = new ArrayList<String>();
+    private final List<String> selectedMessageIds = new ArrayList<>();
     private List<RichPushMessage> messages;
     private RichPushInbox richPushInbox;
     private boolean isManualRefreshing = false;
@@ -96,7 +96,7 @@ public abstract class AbstractInboxFragment extends ListFragment
         super.onCreate(savedInstanceState);
 
         // Set the InboxMessageAdapter
-        this.adapter = new ViewBinderArrayAdapter<RichPushMessage>(getActivity(), getRowLayoutId(), this);
+        this.adapter = new ViewBinderArrayAdapter<>(getActivity(), getRowLayoutId(), this);
         this.setListAdapter(adapter);
         setRetainInstance(true);
 

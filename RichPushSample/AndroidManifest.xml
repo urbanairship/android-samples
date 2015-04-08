@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:amazon="http://schemas.amazon.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           package="com.urbanairship.richpush.sample"
           android:versionCode="1"
           android:versionName="1.0">
@@ -50,6 +51,7 @@
         android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher"
         android:name="com.urbanairship.richpush.sample.RichPushApplication"
+        android:allowBackup="true"
         android:theme="@style/Theme.AppTheme">
 
         <activity android:name=".MainActivity" android:label="@string/app_name">
@@ -163,7 +165,8 @@
             android:name="com.urbanairship.actions.LandingPageActivity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/Theme.AppTheme.LandingPage"
-            android:exported="false">
+            android:exported="false"
+            tools:ignore="UnusedAttribute">
 
             <!-- Sample layout, remove to use the default -->
             <meta-data

@@ -109,7 +109,7 @@ public class MainActivity extends ActionBarActivity implements InboxFragment.Lis
         drawerLayout.setDrawerListener(drawerToggle);
 
         // Actual navigation
-        navigationList.setAdapter(new ArrayAdapter<String>(
+        navigationList.setAdapter(new ArrayAdapter<>(
                 this,
                 R.layout.navigation_item,
                 new String[] {
