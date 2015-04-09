@@ -71,6 +71,11 @@ public class ParseDeepLinkActivity extends Activity {
         // Parse the deep link
         String deepLink = getDeepLink();
 
+        if (deepLink == null) {
+            // Fall back to main activity
+            startActivity(new Intent(this, MainActivity.class));
+        }
+
         switch (deepLink) {
             case "/preferences":
                 startActivity(new Intent(getApplicationContext(), PushPreferencesActivity.class));

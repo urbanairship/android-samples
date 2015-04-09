@@ -109,6 +109,10 @@ public class ParseDeepLinkActivity extends Activity{
      * activity is found.
      */
     private Intent parseDeepLink(String deepLink) {
+        if (deepLink == null) {
+            return null;
+        }
+
         switch (deepLink) {
             case "preferences":
                 return new Intent(getApplicationContext(), PreferencesActivity.class);
