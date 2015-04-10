@@ -30,7 +30,6 @@ dependencies {
     // Compile the UrbanAirship library from source
     // if it's available. Used for library development only.
     if (project.hasProperty('librarySourceProject')) {
-        //noinspection GroovyAssignabilityCheck
         compile project(librarySourceProject)
     } else {
         // The aar folder is defined in the top level build.gradle
@@ -42,7 +41,6 @@ android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
 
-    //noinspection GroovyMissingReturnStatement
     defaultConfig {
         versionCode 1
         versionName "1.0"

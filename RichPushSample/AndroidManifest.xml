@@ -165,8 +165,7 @@
             android:name="com.urbanairship.actions.LandingPageActivity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/Theme.AppTheme.LandingPage"
-            android:exported="false"
-            tools:ignore="UnusedAttribute">
+            android:exported="false">
 
             <!-- Sample layout, remove to use the default -->
             <meta-data

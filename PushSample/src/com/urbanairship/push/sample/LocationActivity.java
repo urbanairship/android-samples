@@ -63,7 +63,6 @@ public class LocationActivity extends Activity {
                 .setPriority(getPriority())
                 .create();
 
-        //noinspection unchecked
         pendingRequest = UAirship.shared().getLocationManager().requestSingleLocation(options);
 
         pendingRequest.onResult(new PendingResult.ResultCallback<Location>() {

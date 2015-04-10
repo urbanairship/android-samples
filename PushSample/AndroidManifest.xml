@@ -127,15 +127,10 @@
 
         <!-- REQUIRED for Landing Pages
         MODIFICATION REQUIRED:
-            - Set or Remove the parent activity
             - For more customization details, see com.urbanairship.actions.LandingPageActivity -->
         <activity
             android:name="com.urbanairship.actions.LandingPageActivity"
             android:exported="false">
-
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.urbanairship.push.sample.MainActivity" />
 
             <intent-filter>
                 <action android:name="com.urbanairship.actions.SHOW_LANDING_PAGE_INTENT_ACTION" />
