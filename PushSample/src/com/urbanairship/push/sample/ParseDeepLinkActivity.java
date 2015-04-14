@@ -109,14 +109,19 @@ public class ParseDeepLinkActivity extends Activity{
      * activity is found.
      */
     private Intent parseDeepLink(String deepLink) {
-        if ("preferences".equals(deepLink)) {
-            return new Intent(getApplicationContext(), PreferencesActivity.class);
-        } else if ("home".equals(deepLink)) {
-            return new Intent(getApplicationContext(), MainActivity.class);
-        } else if ("location".equals(deepLink)) {
-            return new Intent(getApplicationContext(), LocationActivity.class);
-        } else {
+        if (deepLink == null) {
             return null;
+        }
+
+        switch (deepLink) {
+            case "preferences":
+                return new Intent(getApplicationContext(), PreferencesActivity.class);
+            case "home":
+                return new Intent(getApplicationContext(), MainActivity.class);
+            case "location":
+                return new Intent(getApplicationContext(), LocationActivity.class);
+            default:
+                return null;
         }
     }
 
@@ -138,7 +143,7 @@ public class ParseDeepLinkActivity extends Activity{
             if (values.size() == 1) {
                 options.putString(key, values.get(0));
             } else if (values.size() > 1) {
-                options.putStringArrayList(key, new ArrayList<String>(values));
+                options.putStringArrayList(key, new ArrayList<>(values));
             }
         }
 

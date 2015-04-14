@@ -67,7 +67,7 @@ public class ViewBinderArrayAdapter<T> extends BaseAdapter {
         this.context = context;
         this.layout = layout;
         this.viewBinder = viewBinder;
-        this.items = new ArrayList<T>();
+        this.items = new ArrayList<>();
     }
 
     @Override

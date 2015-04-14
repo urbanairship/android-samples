@@ -56,9 +56,8 @@ import java.util.Set;
  */
 public class AddTagsPreference extends DialogPreference  {
 
-    private ListView listView;
-    private List<String> tags = new ArrayList<String>();
-    private Set<String>  currentTags;
+    private final List<String> tags = new ArrayList<>();
+    private final Set<String>  currentTags;
     private TagsAdapter adapter;
 
     public AddTagsPreference(Context context, AttributeSet attrs) {
@@ -73,8 +72,8 @@ public class AddTagsPreference extends DialogPreference  {
         tags.addAll(currentTags);
 
         View view = super.onCreateDialogView();
-        listView = (ListView) view.findViewById(R.id.tags_list);
-        adapter = new TagsAdapter(getContext(), R.layout.tag_preference_item);
+        ListView listView = (ListView) view.findViewById(R.id.tags_list);
+        adapter = new TagsAdapter(getContext());
         listView.setAdapter(adapter);
 
         final EditText editText = (EditText) view.findViewById(R.id.new_tag_text);
@@ -155,18 +154,17 @@ public class AddTagsPreference extends DialogPreference  {
 
     private class TagsAdapter extends ArrayAdapter<String> {
 
-        private int layout;
+        private final int layout;
 
-        public TagsAdapter(Context context, int layout) {
-            super(context, layout, tags);
+        public TagsAdapter(Context context) {
+            super(context, R.layout.tag_preference_item, tags);
 
-            this.layout = layout;
+            this.layout = R.layout.tag_preference_item;
         }
 
         private View createView(ViewGroup parent) {
             LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = layoutInflater.inflate(layout, parent, false);
-            return view;
+            return layoutInflater.inflate(layout, parent, false);
         }
 
         @Override

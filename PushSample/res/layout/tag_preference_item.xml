@@ -10,6 +10,7 @@
         android:layout_height="match_parent"
         android:background="@null"
         android:src="@android:drawable/ic_menu_delete"
+        android:contentDescription="@string/delete_tag"
         android:id="@+id/delete_tag_button" />
 
     <TextView
@@ -18,6 +19,7 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </LinearLayout>

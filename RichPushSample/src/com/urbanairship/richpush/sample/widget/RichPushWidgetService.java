@@ -122,5 +122,5 @@ public class RichPushWidgetService extends RemoteViewsService {
         public boolean hasStableIds() {
             return false;
         }
-    };
+    }
 }

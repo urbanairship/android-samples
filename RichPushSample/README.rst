@@ -14,22 +14,14 @@ AbstractInboxFragment.java
 AddTagsPreference.java
    DialogPreference to add the tags.
 
-CustomSlidingPaneLayout.java
-   Sliding pane layout that only allows sliding if the slide gesture originates from a gutter.
-
-CustomViewPager.java
-   A ViewPager that allows touch events to be enabled and disabled.
-
-InboxActivity.java
-   * Displays the InboxFragment.
-   * If application is on a phone, will show just the InboxFragment and launch MessageActivity when a message is selected.
-   * If application is on a tablet, will show the InboxFragment as a pane on the left and the MessagePagerFragment as a pane on the right.
+HomeFragment.java
+   Simple place holder fragment for the home screen of the application.
 
 InboxFragment.java
    An AbstractInboxFragment that shows the inbox with an action mode.
 
-InboxNotificationBuilder.java
-   A custom push notification builder to create inbox style notifications for rich push messages.
+MainActivity.java
+   The main application activity.
 
 MessageActivity.java
    A simple Activity that displays a MessagePagerFragment.  This is only used on phones.
@@ -37,11 +29,11 @@ MessageActivity.java
 MessageFragment.java
    A Fragment that contains a WebView that displays the contents of the RichPushMessage.
 
-MessagePagerFragment.java
-   A Fragment that shows MessageFragments in a view pager.
-
 MessageFragmentAdapter.java
    A FragmentAdapter for a ViewPager that displays rich push messages.
+
+MessagePagerFragment.java
+   A Fragment that shows MessageFragments in a view pager.
 
 ParseDeepLinkActivity.java
    An activity that handles parsing deep links.
@@ -55,11 +47,8 @@ PushReceiver.java
 RichPushApplication.java
    The main Rich Push application.
 
-RichPushMessageDialogFragment.java
-   Dialog Fragment that displays a rich push message. This is used to display a message in a dialog in the MainActivity.
-
-RemoteViewsFactory.java
-   Factory class to create remote views for the widget layouts.
+RichPushNotificationFactory.java
+   A custom push notification builder to create inbox style notifications for rich push messages.
 
 RichPushWidgetProvider.java
    The widget provider for the rich push inbox.
@@ -70,6 +59,9 @@ RichPushWidgetService.java
 SetAliasPreference.java
    DialogPreference to set the alias.
 
+SetNamedUserPreference.java
+   DialogPreference to set the named user.
+
 ViewBinderArrayAdapter.java
    A generic base adapter that binds items to views using the ViewBinder interface.
 
@@ -77,38 +69,41 @@ ViewBinderArrayAdapter.java
 Resources
 ---------
 
+layout/activity_landing_page.xml
+   Custom landing page layout.
+
+layout/activity_main.xml
+   Layout for the MainActivity.
+
+layout/activity_message.xml
+   Layout for the MessageActivity.
+
 layout/cab_selection_dropdown.xml
    The select all/deselect all action item in the Inbox CAB.
 
-layout/inbox_activity.xml
-   Layout for the inbox activity.
+layout/dialog_add_tags.xml
+   Layout for add tags dialog.
+
+layout/fragment_home.xml
+   Layout for the HomeFragment.
+
+layout/fragment_inbox.xml
+   Layout for the InboxFragment.
+
+layout/fragment_message.xml
+   Layout for MessageFragments.
+
+layout/fragment_message_pager.xml
+   Layout for the MessagePagerFragment.
 
 layout/inbox_list_item.xml
    Layout for the inbox line items.
 
-layout/landing_page_activity
-   Custom landing page layout.
-
-layout/main_activity.xml
-   Layout for MainActivity.
-
-layout/message_activity.xml
-   Layout for MessageActivity.
-
-layout/message_dialog.xml
-   Layout for the RichPushMessageDialogFragment.
-
-layout/message_fragment.xml
-   Layout for MessageFragments.
-
-layout/message_pager_fragment.xml
-   Layout for the MessagePagerFragment.
+layout/navigation_item.xml
+   Layout for the navigation items.
 
 layout/tag_preference_item.xml
    Layout for the tag preference.
-
-layout/tags_dialog_layout.xml
-   Layout for the dialog to set or delete tags.
 
 layout/widget_item.xml
    Layout for an inbox line item in the large widget layout.
@@ -119,14 +114,8 @@ layout/widget_layout_small.xml
 layout/widget_layout.xml
    The large widget inbox layout with a list of messages.
 
-layout-sw600dp/inbox_activity.xml
-   InboxFragment layout for large screen devices (600dp and higher).
-
 menu/inbox_actions_menu.xml
    Menu of items that appear in the action bar when a message is selected in the InboxActivity.
-
-menu/inbox_menu.xml
-   Menu of items that appear along the top of the action bar when no message is selected in the InboxActivity.
 
 menu/main_menu.xml
    Menu items that appear in the action bar in the MainActivity.
@@ -137,6 +126,9 @@ menu/message_activity.xml
 menu/selection.xml
    Menu items that appears for the select/deselect all action item.
 
+values/colors.xml
+   Defines the default colors for the app.
+
 values/dimens.xml
    Defines the default layout dimensions for the widget margin.
 
@@ -146,8 +138,14 @@ values-v14/dimens.xml
 values/strings.xml
    Defines all the string resources.
 
+values/styles.xml
+   Defines the application's style.
+
 xml/advanced_preferences.xml
    Defines the preferences for APID, Rich Push User, setting tags and aliases.
+
+xml/analytics_preferences.xml
+   Defines the preferences for sending usage data.
 
 xml/location_preferences.xml
    Defines the preferences for location settings.

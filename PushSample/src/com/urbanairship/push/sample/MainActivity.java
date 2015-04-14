@@ -51,7 +51,7 @@ public class MainActivity extends InstrumentedActivity {
     /**
      * Intent action sent as a local broadcast to update the channel.
      */
-    public static String ACTION_UPDATE_CHANNEL  = "com.urbanairship.push.sample.ACTION_UPDATE_CHANNEL";
+    public static final String ACTION_UPDATE_CHANNEL  = "com.urbanairship.push.sample.ACTION_UPDATE_CHANNEL";
 
     private TextView channelID;
 
@@ -83,6 +83,7 @@ public class MainActivity extends InstrumentedActivity {
         // Channel ID
         channelID = (TextView) findViewById(R.id.channel_id);
         channelID.setOnClickListener(new OnClickListener() {
+            @SuppressWarnings("deprecation")
             @Override
             public void onClick(View v) {
                 if (channelID.getText() != null) {
@@ -134,7 +135,7 @@ public class MainActivity extends InstrumentedActivity {
         locationBroadcastManager.unregisterReceiver(channelIdUpdateReceiver);
     }
 
-    private BroadcastReceiver channelIdUpdateReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver channelIdUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             updateChannelIdField();

@@ -15,6 +15,7 @@
         
         <ImageView
             android:id="@+id/widget_title_icon"
+            android:contentDescription="@string/widget_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="12dp"
@@ -33,7 +34,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_gravity="center" >
         <ListView
