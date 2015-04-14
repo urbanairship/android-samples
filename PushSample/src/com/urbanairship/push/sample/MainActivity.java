@@ -46,7 +46,6 @@ import com.urbanairship.google.PlayServicesUtils;
 import com.urbanairship.push.sample.preference.PreferencesActivity;
 import com.urbanairship.util.UAStringUtil;
 
-@SuppressWarnings("deprecation")
 public class MainActivity extends InstrumentedActivity {
 
     /**
@@ -84,6 +83,7 @@ public class MainActivity extends InstrumentedActivity {
         // Channel ID
         channelID = (TextView) findViewById(R.id.channel_id);
         channelID.setOnClickListener(new OnClickListener() {
+            @SuppressWarnings("deprecation")
             @Override
             public void onClick(View v) {
                 if (channelID.getText() != null) {

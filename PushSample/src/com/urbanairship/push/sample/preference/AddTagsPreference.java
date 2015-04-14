@@ -73,7 +73,7 @@ public class AddTagsPreference extends DialogPreference  {
 
         View view = super.onCreateDialogView();
         ListView listView = (ListView) view.findViewById(R.id.tags_list);
-        adapter = new TagsAdapter(getContext(), R.layout.tag_preference_item);
+        adapter = new TagsAdapter(getContext());
         listView.setAdapter(adapter);
 
         final EditText editText = (EditText) view.findViewById(R.id.new_tag_text);
@@ -156,11 +156,10 @@ public class AddTagsPreference extends DialogPreference  {
 
         private final int layout;
 
-        @SuppressWarnings("SameParameterValue")
-        public TagsAdapter(Context context, int layout) {
-            super(context, layout, tags);
+        public TagsAdapter(Context context) {
+            super(context, R.layout.tag_preference_item, tags);
 
-            this.layout = layout;
+            this.layout = R.layout.tag_preference_item;
         }
 
         private View createView(ViewGroup parent) {
