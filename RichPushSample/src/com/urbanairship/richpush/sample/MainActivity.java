@@ -47,7 +47,6 @@ import com.urbanairship.google.PlayServicesUtils;
 import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.inbox.InboxFragment;
-import com.urbanairship.richpush.sample.inbox.MessageActivity;
 import com.urbanairship.richpush.sample.preference.PushPreferencesActivity;
 import com.urbanairship.util.UAStringUtil;
 
@@ -265,11 +264,10 @@ public class MainActivity extends ActionBarActivity implements InboxFragment.Lis
      * @param messageId The ID of the Rich Push message to show.
      */
     private void showRichPushMessage(String messageId) {
-
         // Use the com.urbanairship.VIEW_RICH_PUSH_MESSAGE that is also used by the open_mc_action
-        Intent intent = new Intent(this, MessageActivity.class)
-                .setAction(RichPushInbox.VIEW_MESSAGE_INTENT_ACTION)
-                .setData(Uri.fromParts(RichPushInbox.MESSAGE_DATA_SCHEME, messageId, null));
+        Intent intent = new Intent(RichPushInbox.VIEW_MESSAGE_INTENT_ACTION)
+                .setData(Uri.fromParts(RichPushInbox.MESSAGE_DATA_SCHEME, messageId, null))
+                .setPackage(getPackageName());
 
         this.startActivity(intent);
     }
