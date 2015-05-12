@@ -172,17 +172,11 @@
                 android:name="com.urbanairship.action.LANDING_PAGE_VIEW"
                 android:resource="@layout/activity_landing_page" />
 
-            <!-- Optional: Landing page will start the parent activity if the landing
-            page is the root task.  Also supports proper up navigation if the action
-            bar is supported -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.urbanairship.richpush.sample.MainActivity" />
-
             <intent-filter>
                 <action android:name="com.urbanairship.actions.SHOW_LANDING_PAGE_INTENT_ACTION" />
                 <data android:scheme="http" />
                 <data android:scheme="https" />
+                <data android:scheme="message" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

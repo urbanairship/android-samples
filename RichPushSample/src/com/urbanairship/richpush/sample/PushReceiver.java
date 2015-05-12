@@ -27,10 +27,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package com.urbanairship.richpush.sample;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
-import com.urbanairship.Logger;
 import com.urbanairship.push.BaseIntentReceiver;
 import com.urbanairship.push.PushMessage;
 
@@ -66,29 +64,17 @@ public class PushReceiver extends BaseIntentReceiver {
     protected boolean onNotificationOpened(Context context, PushMessage message, int notificationId) {
         Log.i(TAG, "User clicked notification. Alert: " + message.getAlert());
 
-        Intent messageIntent = new Intent(context, MainActivity.class);
-
-        String messageId = message.getRichPushMessageId();
-        if (messageId != null && !messageId.isEmpty()) {
-            Logger.debug("Notified of a notification opened with ID " + messageId);
-
-            // Launch the main activity to the message in the inbox
-            messageIntent.putExtra(MainActivity.EXTRA_MESSAGE_ID, messageId);
-            messageIntent.putExtra(MainActivity.EXTRA_NAVIGATE_ITEM, MainActivity.INBOX_ITEM);
-        }
-
-        messageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        context.startActivity(messageIntent);
-
-        return true;
+        // Return false to allow UA to launch the launcher activity
+        return false;
     }
 
     @Override
     protected boolean onNotificationActionOpened(Context context, PushMessage message, int notificationId, String buttonId, boolean isForeground) {
         Log.i(TAG, "User clicked notification action button. Alert: " + message.getAlert());
+
+        // Return false to allow UA to launch the launcher activity
         return false;
     }
-
 
     @Override
     protected void onNotificationDismissed(Context context, PushMessage message, int notificationId) {
