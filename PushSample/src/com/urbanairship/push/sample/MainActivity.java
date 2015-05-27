@@ -26,6 +26,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package com.urbanairship.push.sample;
 
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -41,12 +42,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.urbanairship.UAirship;
-import com.urbanairship.analytics.InstrumentedActivity;
+import com.urbanairship.analytics.Analytics;
 import com.urbanairship.google.PlayServicesUtils;
 import com.urbanairship.push.sample.preference.PreferencesActivity;
 import com.urbanairship.util.UAStringUtil;
 
-public class MainActivity extends InstrumentedActivity {
+public class MainActivity extends Activity {
 
     /**
      * Intent action sent as a local broadcast to update the channel.
@@ -105,6 +106,9 @@ public class MainActivity extends InstrumentedActivity {
         if (PlayServicesUtils.isGooglePlayStoreAvailable()) {
             PlayServicesUtils.handleAnyPlayServicesError(this);
         }
+
+        // Required for analytics
+        Analytics.activityStarted(this);
     }
 
     @Override
@@ -133,6 +137,14 @@ public class MainActivity extends InstrumentedActivity {
         super.onPause();
         LocalBroadcastManager locationBroadcastManager = LocalBroadcastManager.getInstance(this);
         locationBroadcastManager.unregisterReceiver(channelIdUpdateReceiver);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // Required for analytics
+        Analytics.activityStopped(this);
     }
 
     private final BroadcastReceiver channelIdUpdateReceiver = new BroadcastReceiver() {

@@ -56,7 +56,7 @@ import java.util.Map;
  * main activity on the task stack.
  *
  */
-public class ParseDeepLinkActivity extends Activity{
+public class ParseDeepLinkActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
