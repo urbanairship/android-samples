@@ -68,7 +68,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.urbanairship.push.sample.preference.PreferencesActivity" />
+        <activity android:name="com.urbanairship.push.sample.preference.PreferencesActivity">
+            <!-- Lollipop only - Allows the settings to be accessed quickly from long clicking a notification
+           or through the application's notification settings. -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+        </activity>
+
         <activity android:name="com.urbanairship.push.sample.LocationActivity" />
 
         <activity android:name="com.urbanairship.CoreActivity"/>
