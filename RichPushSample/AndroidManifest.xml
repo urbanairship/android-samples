@@ -68,7 +68,14 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.urbanairship.richpush.sample.preference.PushPreferencesActivity" />
+        <activity android:name="com.urbanairship.richpush.sample.preference.PushPreferencesActivity">
+            <!-- Lollipop only - Allows the settings to be accessed quickly from long clicking a notification
+            or through the application's notification settings. -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+        </activity>
 
         <activity android:name="com.urbanairship.richpush.sample.inbox.MessageActivity"
                   android:exported="false">
