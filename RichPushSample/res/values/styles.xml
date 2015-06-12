@@ -2,10 +2,11 @@
 <resources>
 
     <style name="Theme.AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Set AppCompat’s color theming attrs -->
+        <!-- Set AppCompat’s color attrs -->
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_accent</item>
+
         <item name="actionModeBackground">@color/color_primary_dark</item>
         <item name="actionBarPopupTheme">@color/color_accent</item>
     </style>

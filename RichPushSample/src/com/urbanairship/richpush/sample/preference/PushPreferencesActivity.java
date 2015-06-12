@@ -27,36 +27,25 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package com.urbanairship.richpush.sample.preference;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
-import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
+import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import com.urbanairship.analytics.Analytics;
 import com.urbanairship.preference.UAPreferenceAdapter;
 import com.urbanairship.richpush.sample.R;
 
-public class PushPreferencesActivity extends PreferenceActivity {
+public class PushPreferencesActivity extends AppCompatPreferenceActivity {
 
     private UAPreferenceAdapter preferenceAdapter;
 
-    @SuppressWarnings("deprecation")
     @Override
     @SuppressLint("NewApi")
+    @SuppressWarnings("deprecation")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Set the actionBar to have up navigation if HoneyComb or higher.
-        // PreferenceFragment or PreferenceActivity is not available in the support
-        // library.  ActionBarSherlock provides a PreferenceActivity if you absolutely
-        // need an action bar in the preferences on older devices.
-        if (Build.VERSION.SDK_INT >= 11) {
-            ActionBar actionBar = getActionBar();
-            if (actionBar != null) {
-                actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
-            }
-        }
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
 
         // Display the push preferences
         this.addPreferencesFromResource(R.xml.push_preferences);
@@ -69,7 +58,6 @@ public class PushPreferencesActivity extends PreferenceActivity {
 
         // Display the advanced settings
         this.addPreferencesFromResource(R.xml.advanced_preferences);
-
 
         // Creates the UAPreferenceAdapter with the entire preference screen
         preferenceAdapter = new UAPreferenceAdapter(getPreferenceScreen());
@@ -102,4 +90,5 @@ public class PushPreferencesActivity extends PreferenceActivity {
         // Apply any changed UA preferences from the preference screen
         preferenceAdapter.applyUrbanAirshipPreferences();
     }
+
 }

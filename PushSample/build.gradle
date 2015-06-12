@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.2.+'
+        classpath 'com.android.tools.build:gradle:1.2.3'
     }
 }
 
@@ -18,14 +18,14 @@ repositories {
 apply plugin: 'com.android.application'
 
 dependencies {
-    compile 'com.android.support:cardview-v7:22.0.0'
-    compile 'com.android.support:support-v4:22.0.0'
+    compile 'com.android.support:cardview-v7:22.2.0'
+    compile 'com.android.support:support-v4:22.2.0'
 
     // Allows Urban Airship location services to use Fused Location
-    compile 'com.google.android.gms:play-services-location:7.0.0'
+    compile 'com.google.android.gms:play-services-location:7.5.0'
 
     // Required for Push
-    compile 'com.google.android.gms:play-services-gcm:7.0.0'
+    compile 'com.google.android.gms:play-services-gcm:7.5.0'
 
     // Compile the UrbanAirship library from source
     // if it's available. Used for library development only.

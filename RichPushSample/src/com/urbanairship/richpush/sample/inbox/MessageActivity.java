@@ -28,7 +28,7 @@ package com.urbanairship.richpush.sample.inbox;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,7 +44,7 @@ import com.urbanairship.richpush.sample.preference.PushPreferencesActivity;
  * Manages the message view pager and display messages
  *
  */
-public class MessageActivity extends ActionBarActivity implements MessagePagerFragment.Listener {
+public class MessageActivity extends AppCompatActivity implements MessagePagerFragment.Listener {
 
     private static final String TAG = "MessageActivity";
 
