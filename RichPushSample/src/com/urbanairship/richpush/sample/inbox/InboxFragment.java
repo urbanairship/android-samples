@@ -29,7 +29,7 @@ package com.urbanairship.richpush.sample.inbox;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.PopupMenu;
 import android.text.format.DateFormat;
@@ -162,7 +162,7 @@ public class InboxFragment extends AbstractInboxFragment implements ActionMode.C
         if (actionMode != null && checkedIds.isEmpty()) {
             actionMode.finish();
         } else if (actionMode == null && !checkedIds.isEmpty()) {
-            actionMode = ((ActionBarActivity) this.getActivity()).startSupportActionMode(this);
+            actionMode = ((AppCompatActivity) this.getActivity()).startSupportActionMode(this);
         }
     }
 
