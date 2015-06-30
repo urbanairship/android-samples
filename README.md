@@ -9,15 +9,11 @@ Android Studio Setup
 1) Update the Android SDK Manager
     - Verify Android Support Repository and Google Repository (under Extras) are installed and up-to-date
 
-2) Download the Android/Amazon library from http://urbanairship.com/resources/developer-resources
-
-3) Copy the urbanairship-lib-*.aar file into RichPushSample/aars/ and PushSample/aars/
-
-4) Import the project into Android Studio
+2) Import the project into Android Studio
     - Open Android Studio to welcome screen
     - Import project, select the `samples` root directory, not the individual samples directories.
 
-5) Update each sample's AirshipConfig.properties file with your application's configuration
+3) Update each sample's AirshipConfig.properties file with your application's configuration
     - Amazon setup docs http://docs.urbanairship.com/build/push/android.html#adm-setup
     - GCM setup docs http://docs.urbanairship.com/build/push/android.html#gcm-setup
 

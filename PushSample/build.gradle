@@ -9,9 +9,8 @@ buildscript {
 
 repositories {
     jcenter()
-
-    flatDir {
-        dirs 'aars'
+    maven {
+        url  "http://dl.bintray.com/urbanairship/android"
     }
 }
 
@@ -32,8 +31,7 @@ dependencies {
     if (project.hasProperty('librarySourceProject')) {
         compile project(librarySourceProject)
     } else {
-        // The aar folder is defined in the top level build.gradle
-        compile 'com.urbanairship:urbanairship-lib:+@aar'
+        compile 'com.urbanairship.android:urbanairship-sdk:6.1.+'
     }
 }
 
