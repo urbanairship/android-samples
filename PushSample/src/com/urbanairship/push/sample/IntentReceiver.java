@@ -64,15 +64,19 @@ public class IntentReceiver extends BaseIntentReceiver {
     @Override
     protected boolean onNotificationOpened(Context context, PushMessage message, int notificationId) {
         Log.i(TAG, "User clicked notification. Alert: " + message.getAlert());
+
+        // Return false here to allow Urban Airship to auto launch the launcher activity
         return false;
     }
 
     @Override
     protected boolean onNotificationActionOpened(Context context, PushMessage message, int notificationId, String buttonId, boolean isForeground) {
         Log.i(TAG, "User clicked notification button. Button ID: " + buttonId + " Alert: " + message.getAlert());
+
+        // Return false here to allow Urban Airship to auto launch the launcher
+        // activity for foreground notification action buttons
         return false;
     }
-
 
     @Override
     protected void onNotificationDismissed(Context context, PushMessage message, int notificationId) {
