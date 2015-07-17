@@ -46,6 +46,7 @@ android {
         versionName "1.0"
         minSdkVersion 10
         targetSdkVersion 22
+        applicationId "com.urbanairship.richpush.sample"
     }
 
     sourceSets {

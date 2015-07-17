@@ -45,6 +45,8 @@ Push Sample:
         - Amazon setup docs http://docs.urbanairship.com/build/push/android.html#adm-setup
         - GCM setup docs http://docs.urbanairship.com/build/push/android.html#gcm-setup
 
+    8) Replace AndroidManifest.xml with Eclipse_AndroidManifest.xml
+
 Rich Push Sample:
 
     1) Update the Android SDK Manager
@@ -68,6 +70,8 @@ Rich Push Sample:
     7) Update AirshipConfig.properties file with your application's configuration
         - Amazon setup docs http://docs.urbanairship.com/build/push/android.html#adm-setup
         - GCM setup docs http://docs.urbanairship.com/build/push/android.html#gcm-setup
+
+    8) Replace AndroidManifest.xml with Eclipse_AndroidManifest.xml
 
 
 Further Reading
