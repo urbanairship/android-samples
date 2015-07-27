@@ -79,31 +79,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Optional: Customize the LandingPageActivity to use a custom view and style. Make sure to
-        replace the entry in the Urban Airship SDK by including `tools:node="replace" in the activity entry -->
-        <activity
-            android:name="com.urbanairship.actions.LandingPageActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AppTheme.LandingPage"
-            tools:node="replace">
-
-            <!-- Sample layout, remove to use the default -->
-            <meta-data
-                android:name="com.urbanairship.action.LANDING_PAGE_VIEW"
-                android:resource="@layout/activity_landing_page"/>
-
-            <intent-filter>
-                <action android:name="com.urbanairship.actions.SHOW_LANDING_PAGE_INTENT_ACTION"/>
-
-                <data android:scheme="http"/>
-                <data android:scheme="https"/>
-                <data android:scheme="message"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-
-        </activity>
-
         <!-- Optional: Receives push and registration events from the Urban Airship SDK. -->
         <receiver
             android:name="com.urbanairship.richpush.sample.PushReceiver"
