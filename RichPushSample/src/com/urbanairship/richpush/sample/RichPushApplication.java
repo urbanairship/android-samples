@@ -36,6 +36,7 @@ public class RichPushApplication extends Application {
 
     @Override
     public void onCreate() {
+        super.onCreate();
 
         final RichPushNotificationFactory factory = new RichPushNotificationFactory(RichPushApplication.this);
 
