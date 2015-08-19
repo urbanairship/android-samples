@@ -24,7 +24,7 @@ Sample applications that show case the Urban Airship SDK.
 1) Update the Android SDK Manager
 - Verify Android Support Library and Google Play Services (under Extras) are installed and up-to-date
 
-2) Download the Android/Amazon library from [Developer Resources](http://urbanairship.com/resources/developer-resources)
+2) Download the Android/Amazon library from [Bintray](https://bintray.com/urbanairship/android)
 
 3) Import projects
 - Eclipse -> Import Android Project -> Samples/PushSample
@@ -50,7 +50,7 @@ Sample applications that show case the Urban Airship SDK.
 1) Update the Android SDK Manager
 - Verify Android Support Library and Google Play Services (under Extras) are installed and up-to-date
 
-2) Download the Android/Amazon library from [Developer Resources](http://urbanairship.com/resources/developer-resources)
+2) Download the Android/Amazon library from [Bintray](https://bintray.com/urbanairship/android)
 
 3) Import projects
 - Eclipse -> Import Android Project -> Samples/RichPushSample
