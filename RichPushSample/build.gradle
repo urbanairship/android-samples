@@ -33,7 +33,7 @@ dependencies {
     if (project.hasProperty('librarySourceProject')) {
         compile project(librarySourceProject)
     } else {
-        compile 'com.urbanairship.android:urbanairship-sdk:6.1.+'
+        compile 'com.urbanairship.android:urbanairship-sdk:6.2.+'
     }
 }
 
@@ -59,6 +59,11 @@ android {
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
         }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 }
 
