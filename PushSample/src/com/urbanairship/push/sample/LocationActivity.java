@@ -1,8 +1,12 @@
 package com.urbanairship.push.sample;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -17,6 +21,7 @@ public class LocationActivity extends Activity {
     private PendingResult<Location> pendingRequest;
     private RadioGroup priorityGroup;
     private View progress;
+    static final int PERMISSIONS_REQUEST_LOCATION = 100;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,9 +55,7 @@ public class LocationActivity extends Activity {
         }
     }
 
-
-    @SuppressWarnings("UnusedParameters")
-    public void onRequestLocationClicked(View view) {
+    public void requestLocation() {
         if (pendingRequest != null) {
             pendingRequest.cancel();
         }
@@ -79,6 +82,31 @@ public class LocationActivity extends Activity {
         });
     }
 
+    @SuppressWarnings("UnusedParameters")
+    public void onRequestLocationClicked(View view) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, PERMISSIONS_REQUEST_LOCATION);
+        } else {
+            requestLocation();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_LOCATION: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, now request location.
+                    requestLocation();
+                } else {
+                    // permission denied, let them know location permissions is required.
+                    Toast.makeText(getApplicationContext(), "Enable location permissions and try again.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
     private String formatLocation(Location location) {
         return String.format("provider: %s lat: %s, lon: %s, accuracy: %s",
                 location.getProvider(),
@@ -89,8 +117,10 @@ public class LocationActivity extends Activity {
 
     /**
      * Gets the LocationRequestOptions priority from the radio group.
+     *
      * @return The location request options priority.
      */
+    @LocationRequestOptions.Priority
     private int getPriority() {
         switch (priorityGroup.getCheckedRadioButtonId()) {
             case R.id.priority_high_accuracy:

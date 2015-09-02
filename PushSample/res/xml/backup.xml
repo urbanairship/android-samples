@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Exclude Urban Airship's shared preferences. -->
+    <exclude domain="sharedpref" path="com.urbanairship.preferences"/>
+    <exclude domain="sharedpref" path="com.urbanairship.notificationidgenerator"/>
+
+    <!-- Exclude Urban Airship's preferences, richpush and analytics databases. -->
+    <exclude domain="database" path="ua_preferences.db"/>
+    <exclude domain="database" path="ua_richpush.db"/>
+    <exclude domain="database" path="ua_analytics.db"/>
+</full-backup-content>
