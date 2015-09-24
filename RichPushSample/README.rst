@@ -75,9 +75,6 @@ layout/activity_landing_page.xml
 layout/activity_main.xml
    Layout for the MainActivity.
 
-layout/activity_message.xml
-   Layout for the MessageActivity.
-
 layout/cab_selection_dropdown.xml
    The select all/deselect all action item in the Inbox CAB.
 
