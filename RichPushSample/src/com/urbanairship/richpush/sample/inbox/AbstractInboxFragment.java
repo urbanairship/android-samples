@@ -26,7 +26,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package com.urbanairship.richpush.sample.inbox;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
@@ -60,10 +60,10 @@ public abstract class AbstractInboxFragment extends ListFragment
     private boolean isManualRefreshing = false;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            this.listener = (Listener) activity;
+            this.listener = (Listener) context;
         } catch (ClassCastException e) {
             throw new IllegalStateException("Activities using AbstractInboxFragment must implement " +
                     "the AbstractInboxFragment.Listener interface.");

@@ -42,7 +42,7 @@ import com.urbanairship.Logger;
 import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushMessage;
 import com.urbanairship.richpush.sample.R;
-import com.urbanairship.widget.RichPushMessageWebView;
+import com.urbanairship.widget.UAWebView;
 import com.urbanairship.widget.UAWebViewClient;
 
 /**
@@ -52,7 +52,7 @@ import com.urbanairship.widget.UAWebViewClient;
 public class MessageFragment extends Fragment {
 
     private static final String MESSAGE_ID_KEY = "com.urbanairship.richpush.URL_KEY";
-    private RichPushMessageWebView browser;
+    private UAWebView webView;
     private ProgressBar progressBar;
     private RichPushMessage message;
 
@@ -86,19 +86,19 @@ public class MessageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_message, container, false);
         progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-        browser = (RichPushMessageWebView) view.findViewById(R.id.message_view);
+        webView = (UAWebView) view.findViewById(R.id.message_view);
 
         if (Build.VERSION.SDK_INT >= 12) {
-            browser.setAlpha(0);
+            webView.setAlpha(0);
         } else {
-            browser.setVisibility(View.INVISIBLE);
+            webView.setVisibility(View.INVISIBLE);
         }
 
         // Set a custom RichPushWebViewClient view client to listen for the page finish
         // Note: UAWebViewClient is required to load the proper auth and to
         // inject the Urban Airship Javascript interface.  When overriding any methods
         // make sure to call through to the super's implementation.
-        browser.setWebViewClient(new UAWebViewClient() {
+        webView.setWebViewClient(new UAWebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
@@ -114,7 +114,7 @@ public class MessageFragment extends Fragment {
         super.onStart();
         if (message != null) {
             Logger.info("Loading message: " + message.getMessageId());
-            browser.loadRichPushMessage(message);
+            webView.loadRichPushMessage(message);
         }
     }
 
@@ -123,7 +123,7 @@ public class MessageFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (Build.VERSION.SDK_INT >= 11) {
-            browser.onResume();
+            webView.onResume();
         }
     }
 
@@ -132,7 +132,7 @@ public class MessageFragment extends Fragment {
     public void onPause() {
         super.onPause();
         if (Build.VERSION.SDK_INT >= 11) {
-            browser.onPause();
+            webView.onPause();
         }
     }
 
@@ -141,12 +141,12 @@ public class MessageFragment extends Fragment {
      */
     private void showMessage() {
         if (Build.VERSION.SDK_INT < 12) {
-            browser.setVisibility(View.VISIBLE);
+            webView.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
             return;
         }
 
-        browser.animate()
+        webView.animate()
                 .alpha(1f)
                 .setDuration(200)
                 .setListener(null);
