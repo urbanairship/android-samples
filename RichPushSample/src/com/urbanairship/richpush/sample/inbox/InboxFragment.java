@@ -254,6 +254,10 @@ public class InboxFragment extends AbstractInboxFragment implements ActionMode.C
 
         for (String id : getSelectedMessages()) {
             RichPushMessage message = getRichPushInbox().getMessage(id);
+            if (message == null) {
+                continue;
+            }
+
             if (message.isRead()) {
                 selectionContainsRead = true;
             } else {

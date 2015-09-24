@@ -27,7 +27,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package com.urbanairship.richpush.sample.inbox;
 
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -47,20 +47,35 @@ import java.util.List;
  */
 public class MessagePagerFragment extends Fragment implements RichPushInbox.Listener {
 
-    private final static String CURRENT_POSITION = "CURRENT_POSITION";
+    private final static String MESSAGE_ID = "CURRENT_MESSAGE_ID";
 
     private ViewPager messagePager;
     private List<RichPushMessage> messages;
     private RichPushInbox richPushInbox;
     private MessageFragmentAdapter adapter;
     private Listener listener;
+    private String currentMessageId;
+
+    /**
+     * Creates a new instance of MessagePagerFragment.
+     * @param messageId The initial message ID to view.
+     * @return MessagePagerFragment instance.
+     */
+    public static MessagePagerFragment newInstance(String messageId) {
+        Bundle args = new Bundle();
+        args.putString(MESSAGE_ID, messageId);
+
+        MessagePagerFragment fragment = new MessagePagerFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     /**
      * Listener for the message pager fragment.  Hosting activities must implement
      * the listener or a IllegalStateException will be thrown.
      */
     public interface Listener {
-        public void onMessageChanged(int position, RichPushMessage message);
+        void onMessageChanged(RichPushMessage message);
     }
 
     @Override
@@ -76,29 +91,31 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
         this.adapter = new MessageFragmentAdapter(this.getChildFragmentManager());
 
         messagePager.setAdapter(adapter);
-        updateRichPushMessages();
 
-        this.messagePager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
+        this.messagePager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                messageChanged(position);
+                RichPushMessage message = messages.get(position);
+                if (message != null) {
+                    setCurrentMessage(message.getMessageId());
+                }
             }
         });
 
-        // Restore the last position if available
-        int position = savedInstanceState == null ? 0 : savedInstanceState.getInt(CURRENT_POSITION, 0);
-        messagePager.setCurrentItem(position, false);
-
-        messageChanged(position);
+        if (savedInstanceState == null) {
+            currentMessageId = getArguments().getString(MESSAGE_ID);
+        } else {
+            currentMessageId = savedInstanceState.getString(MESSAGE_ID);
+        }
 
         return view;
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            this.listener = (Listener) activity;
+            this.listener = (Listener) context;
         } catch (ClassCastException e) {
             throw new IllegalStateException("Activities using MessagePagerFragment must implement " +
                     "the MessagePagerFragment.Listener interface.");
@@ -108,7 +125,7 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(CURRENT_POSITION, messagePager.getCurrentItem());
+        outState.putString(MESSAGE_ID, currentMessageId);
     }
 
     @Override
@@ -134,20 +151,11 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
      * with the inbox fragment and message view pager if available
      */
     private void updateRichPushMessages() {
-        // Store the current message id so we can restore the same position in the message list
-        String currentMessageID = null;
-        if (messages != null && messages.size() > messagePager.getCurrentItem()) {
-            currentMessageID = messages.get(messagePager.getCurrentItem()).getMessageId();
-        }
-
         this.messages = UAirship.shared().getRichPushManager().getRichPushInbox().getMessages();
         adapter.setRichPushMessages(messages);
 
         // Restore the position in the message list if the message still exists
-        RichPushMessage message = UAirship.shared().getRichPushManager().getRichPushInbox().getMessage(currentMessageID);
-        if (message != null) {
-            setCurrentMessage(message);
-        }
+        setCurrentMessage(currentMessageId);
     }
 
     @Override
@@ -155,36 +163,23 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
         updateRichPushMessages();
     }
 
-
     /**
      * Sets the current message to view
-     * @param message The message to view
+     * @param messageId The message's ID to view
      */
-    public void setCurrentMessage(RichPushMessage message) {
+    private void setCurrentMessage(String messageId) {
+        RichPushMessage message = richPushInbox.getMessage(messageId);
+
         if (message == null) {
             return;
         }
 
-        int position = messages.indexOf(message);
-        if (position != -1) {
-            messagePager.setCurrentItem(position, false);
-        }
-    }
+        message.markRead();
+        currentMessageId = message.getMessageId();
+        listener.onMessageChanged(message);
 
-    /**
-     * Called when the view pager changes messages.
-     *
-     * @param position The new message position.
-     */
-    private void messageChanged(int position) {
-        if (position >= messages.size()) {
-            return;
-        }
-
-        RichPushMessage message = messages.get(position);
-        if (message != null) {
-            message.markRead();
-            listener.onMessageChanged(position, message);
+        if (messagePager.getCurrentItem() != messages.indexOf(message)) {
+            messagePager.setCurrentItem(messages.indexOf(message), false);
         }
     }
 }
