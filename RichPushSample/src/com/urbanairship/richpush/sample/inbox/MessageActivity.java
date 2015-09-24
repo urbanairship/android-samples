@@ -29,11 +29,9 @@ package com.urbanairship.richpush.sample.inbox;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.urbanairship.UAirship;
 import com.urbanairship.analytics.Analytics;
 import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushMessage;
@@ -47,19 +45,20 @@ import com.urbanairship.richpush.sample.preference.PushPreferencesActivity;
 public class MessageActivity extends AppCompatActivity implements MessagePagerFragment.Listener {
 
     private static final String TAG = "MessageActivity";
+    private static final String FRAGMENT_TAG = "MessagePagerFragment";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.activity_message);
 
-        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        this.getSupportActionBar().setHomeButtonEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
 
-        MessagePagerFragment pagerFragment = (MessagePagerFragment) getSupportFragmentManager().findFragmentById(R.id.pager);
 
-        if (savedInstanceState == null) {
+        if (getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG) == null) {
             String messageId = null;
 
             // Handle the "com.urbanairship.VIEW_RICH_PUSH_MESSAGE" intent action with the message
@@ -68,14 +67,11 @@ public class MessageActivity extends AppCompatActivity implements MessagePagerFr
                 messageId = getIntent().getData().getSchemeSpecificPart();
             }
 
-            RichPushMessage message = UAirship.shared().getRichPushManager().getRichPushInbox().getMessage(messageId);
-
-            if (message == null) {
-                Log.e(TAG, "Message " + messageId + " not found. Unable to start activity.");
-                finish();
-            }
-
-            pagerFragment.setCurrentMessage(message);
+            MessagePagerFragment pagerFragment = MessagePagerFragment.newInstance(messageId);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(android.R.id.content, pagerFragment, FRAGMENT_TAG)
+                    .commit();
         }
     }
 
@@ -116,8 +112,8 @@ public class MessageActivity extends AppCompatActivity implements MessagePagerFr
 
     @Override
     public void onMessageChanged(int position, RichPushMessage message) {
-        if (message != null) {
-            this.getSupportActionBar().setTitle(message.getTitle());
+        if (message != null && getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(message.getTitle());
         }
     }
 }
