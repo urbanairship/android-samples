@@ -111,7 +111,7 @@ public class MessageActivity extends AppCompatActivity implements MessagePagerFr
     }
 
     @Override
-    public void onMessageChanged(int position, RichPushMessage message) {
+    public void onMessageChanged(RichPushMessage message) {
         if (message != null && getSupportActionBar() != null) {
             getSupportActionBar().setTitle(message.getTitle());
         }

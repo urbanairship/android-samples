@@ -75,7 +75,7 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
      * the listener or a IllegalStateException will be thrown.
      */
     public interface Listener {
-        void onMessageChanged(int position, RichPushMessage message);
+        void onMessageChanged(RichPushMessage message);
     }
 
     @Override
@@ -95,7 +95,10 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
         this.messagePager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                messageChanged(position);
+                RichPushMessage message = messages.get(position);
+                if (message != null) {
+                    setCurrentMessage(message.getMessageId());
+                }
             }
         });
 
@@ -160,39 +163,23 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
         updateRichPushMessages();
     }
 
-
     /**
      * Sets the current message to view
      * @param messageId The message's ID to view
      */
-    public void setCurrentMessage(String messageId) {
+    private void setCurrentMessage(String messageId) {
         RichPushMessage message = richPushInbox.getMessage(messageId);
 
         if (message == null) {
             return;
         }
 
-        int position = messages.indexOf(message);
-        if (position != -1) {
-            messagePager.setCurrentItem(position, false);
-        }
-    }
+        message.markRead();
+        currentMessageId = message.getMessageId();
+        listener.onMessageChanged(message);
 
-    /**
-     * Called when the view pager changes messages.
-     *
-     * @param position The new message position.
-     */
-    private void messageChanged(int position) {
-        if (position >= messages.size()) {
-            return;
-        }
-
-        RichPushMessage message = messages.get(position);
-        if (message != null) {
-            message.markRead();
-            listener.onMessageChanged(position, message);
-            currentMessageId = message.getMessageId();
+        if (messagePager.getCurrentItem() != messages.indexOf(message)) {
+            messagePager.setCurrentItem(messages.indexOf(message), false);
         }
     }
 }
