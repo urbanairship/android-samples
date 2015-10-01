@@ -75,7 +75,7 @@ public class InboxFragment extends AbstractInboxFragment implements ActionMode.C
         startActionModeIfNecessary();
 
         // Dismiss any notifications if available
-        RichPushNotificationFactory.dismissInboxNotification();
+        RichPushNotificationFactory.dismissInboxNotification(getActivity());
     }
 
     @Override

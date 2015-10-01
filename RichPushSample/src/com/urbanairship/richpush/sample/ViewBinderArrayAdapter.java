@@ -46,7 +46,7 @@ public class ViewBinderArrayAdapter<T> extends BaseAdapter {
     /**
      * View binder interface
      */
-    public static interface ViewBinder<T> {
+    public interface ViewBinder<T> {
         void bindView(View view, T item, int position);
     }
 
