@@ -27,12 +27,11 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package com.urbanairship.richpush.sample;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.text.Html;
 
 import com.urbanairship.UAirship;
@@ -99,11 +98,8 @@ public class RichPushNotificationFactory extends DefaultNotificationFactory {
         Resources res = context.getResources();
         String title = res.getQuantityString(R.plurals.inbox_notification_title, totalUnreadCount, totalUnreadCount);
 
-        Bitmap largeIcon = BitmapFactory.decodeResource(res, R.mipmap.ic_launcher);
-
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle()
                 .addLine(Html.fromHtml("<b>" + incomingAlert + "</b>"));
-
 
         // Add any extra messages to the notification style
         int extraMessages = Math.min(EXTRA_MESSAGES_TO_SHOW, totalUnreadCount);
@@ -119,8 +115,8 @@ public class RichPushNotificationFactory extends DefaultNotificationFactory {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setContentTitle(title)
                 .setContentText(message.getAlert())
-                .setLargeIcon(largeIcon)
-                .setSmallIcon(R.drawable.ic_notification)
+                .setLargeIcon(BitmapFactory.decodeResource(res, getLargeIcon()))
+                .setSmallIcon(getSmallIconId())
                 .setNumber(totalUnreadCount)
                 .setAutoCancel(true)
                 .setStyle(inboxStyle)
@@ -133,12 +129,11 @@ public class RichPushNotificationFactory extends DefaultNotificationFactory {
     }
 
     /**
-     * Dismisses the inbox style notification if it exists
+     * Dismisses the inbox style notification if it exists.
+     *
+     * @param context The application context.
      */
-    public static void dismissInboxNotification() {
-        NotificationManager manager = (NotificationManager) UAirship.shared().
-                getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-
-        manager.cancel(INBOX_NOTIFICATION_ID);
+    public static void dismissInboxNotification(Context context) {
+        NotificationManagerCompat.from(context).cancel(INBOX_NOTIFICATION_ID);
     }
 }

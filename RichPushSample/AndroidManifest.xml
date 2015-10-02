@@ -12,8 +12,7 @@
         android:name="com.urbanairship.richpush.sample.RichPushApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.AppTheme"
-        android:fullBackupContent="@xml/backup">
+        android:theme="@style/Theme.AppTheme">
 
         <activity
             android:name=".MainActivity"

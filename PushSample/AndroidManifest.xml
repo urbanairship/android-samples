@@ -10,8 +10,7 @@
     <application
         android:name="com.urbanairship.push.sample.MyApplication"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:fullBackupContent="@xml/backup">
+        android:label="@string/app_name">
 
         <activity
             android:name="com.urbanairship.push.sample.MainActivity"
