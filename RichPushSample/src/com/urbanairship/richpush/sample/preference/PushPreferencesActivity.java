@@ -32,12 +32,10 @@ import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import com.urbanairship.analytics.Analytics;
-import com.urbanairship.preference.UAPreferenceAdapter;
 import com.urbanairship.richpush.sample.R;
 
 public class PushPreferencesActivity extends AppCompatPreferenceActivity {
 
-    private UAPreferenceAdapter preferenceAdapter;
 
     @Override
     @SuppressLint("NewApi")
@@ -59,8 +57,6 @@ public class PushPreferencesActivity extends AppCompatPreferenceActivity {
         // Display the advanced settings
         this.addPreferencesFromResource(R.xml.advanced_preferences);
 
-        // Creates the UAPreferenceAdapter with the entire preference screen
-        preferenceAdapter = new UAPreferenceAdapter(getPreferenceScreen());
     }
 
     @Override
@@ -86,9 +82,6 @@ public class PushPreferencesActivity extends AppCompatPreferenceActivity {
 
         // Activity instrumentation for analytic tracking
         Analytics.activityStopped(this);
-
-        // Apply any changed UA preferences from the preference screen
-        preferenceAdapter.applyUrbanAirshipPreferences();
     }
 
 }
