@@ -34,12 +34,9 @@ import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 
 import com.urbanairship.analytics.Analytics;
-import com.urbanairship.preference.UAPreferenceAdapter;
 import com.urbanairship.push.sample.R;
 
 public class PreferencesActivity extends PreferenceActivity {
-
-    private UAPreferenceAdapter preferenceAdapter;
 
     @SuppressWarnings("deprecation")
     @Override
@@ -58,10 +55,6 @@ public class PreferencesActivity extends PreferenceActivity {
 
         // Display the advanced settings
         this.addPreferencesFromResource(R.xml.advanced_preferences);
-
-        // Creates the UAPreferenceAdapter with the entire preference screen
-        preferenceAdapter = new UAPreferenceAdapter(getPreferenceScreen());
-
 
 
         // Set the actionBar to have up navigation if HoneyComb or higher.
@@ -101,8 +94,5 @@ public class PreferencesActivity extends PreferenceActivity {
 
         // Activity instrumentation for analytic tracking
         Analytics.activityStopped(this);
-
-        // Apply any changed UA preferences from the preference screen
-        preferenceAdapter.applyUrbanAirshipPreferences();
     }
 }
