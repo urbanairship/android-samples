@@ -2,7 +2,6 @@ package com.urbanairship.push.sample;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -13,14 +12,15 @@ import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.urbanairship.PendingResult;
+import com.urbanairship.Cancelable;
 import com.urbanairship.UAirship;
 import com.urbanairship.analytics.Analytics;
+import com.urbanairship.location.LocationCallback;
 import com.urbanairship.location.LocationRequestOptions;
 
 public class LocationActivity extends Activity {
 
-    private PendingResult<Location> pendingRequest;
+    private Cancelable pendingRequest;
     private RadioGroup priorityGroup;
     private View progress;
     static final int PERMISSIONS_REQUEST_LOCATION = 100;
@@ -68,9 +68,7 @@ public class LocationActivity extends Activity {
                 .setPriority(getPriority())
                 .create();
 
-        pendingRequest = UAirship.shared().getLocationManager().requestSingleLocation(options);
-
-        pendingRequest.onResult(new PendingResult.ResultCallback<Location>() {
+        pendingRequest = UAirship.shared().getLocationManager().requestSingleLocation(new LocationCallback() {
             @Override
             public void onResult(Location location) {
                 progress.setVisibility(View.INVISIBLE);
@@ -81,7 +79,7 @@ public class LocationActivity extends Activity {
                     Toast.makeText(getApplicationContext(), "Failed to get location", Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        }, options);
     }
 
     @SuppressWarnings("UnusedParameters")
