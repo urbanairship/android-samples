@@ -70,6 +70,11 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
         return fragment;
     }
 
+    @Override
+    public void onInboxUpdated() {
+        updateRichPushMessages();
+    }
+
     /**
      * Listener for the message pager fragment.  Hosting activities must implement
      * the listener or a IllegalStateException will be thrown.
@@ -81,7 +86,7 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.richPushInbox = UAirship.shared().getRichPushManager().getRichPushInbox();
+        this.richPushInbox = UAirship.shared().getInbox();
     }
 
     @Override
@@ -146,22 +151,19 @@ public class MessagePagerFragment extends Fragment implements RichPushInbox.List
         // Remove listeners for message changes
         richPushInbox.removeListener(this);
     }
+
     /**
      * Grabs the latest messages from the rich push inbox, and syncs them
      * with the inbox fragment and message view pager if available
      */
     private void updateRichPushMessages() {
-        this.messages = UAirship.shared().getRichPushManager().getRichPushInbox().getMessages();
+        this.messages = UAirship.shared().getInbox().getMessages();
         adapter.setRichPushMessages(messages);
 
         // Restore the position in the message list if the message still exists
         setCurrentMessage(currentMessageId);
     }
 
-    @Override
-    public void onUpdateInbox() {
-        updateRichPushMessages();
-    }
 
     /**
      * Sets the current message to view
