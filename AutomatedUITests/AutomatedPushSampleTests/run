@@ -1,8 +1,0 @@
-#!/bin/bash -ex
-
-adb shell pm clear com.urbanairship.push.sample
-ant build
-
-adb push bin/PushSampleUITests.jar /data/local/tmp
-adb shell uiautomator runtest PushSampleUITests.jar -c com.urbanairship.push.sample.test.PushTestCase -e APP_KEY $1 -e MASTER_SECRET $2
-adb shell uiautomator runtest PushSampleUITests.jar -c com.urbanairship.push.sample.test.SettingsTestCase -e APP_KEY $1 -e MASTER_SECRET $2
