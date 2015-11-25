@@ -163,8 +163,8 @@ public class InboxFragment extends AbstractInboxFragment implements ActionMode.C
     }
 
     @Override
-    public void onUpdateMessages(boolean success) {
-        super.onUpdateMessages(success);
+    protected void onManualRefreshFinished(boolean success) {
+        super.onManualRefreshFinished(success);
         refreshLayout.setRefreshing(false);
     }
 
@@ -310,8 +310,9 @@ public class InboxFragment extends AbstractInboxFragment implements ActionMode.C
         }
     }
 
-    public void onUpdateInbox() {
-        super.onUpdateInbox();
+    @Override
+    public void onInboxUpdated() {
+        super.onInboxUpdated();
         if (actionMode != null) {
             actionMode.invalidate();
         }

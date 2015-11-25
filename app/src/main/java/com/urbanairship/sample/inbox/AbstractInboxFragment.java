@@ -34,9 +34,9 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.urbanairship.Cancelable;
 import com.urbanairship.UAirship;
 import com.urbanairship.richpush.RichPushInbox;
-import com.urbanairship.richpush.RichPushManager;
 import com.urbanairship.richpush.RichPushMessage;
 
 import java.util.ArrayList;
@@ -47,8 +47,7 @@ import java.util.List;
  * this fragment must implement AbstractInboxFragment.OnMessageListener.
  */
 public abstract class AbstractInboxFragment extends ListFragment
-        implements RichPushManager.Listener,
-                   RichPushInbox.Listener,
+        implements RichPushInbox.Listener,
                    ViewBinderArrayAdapter.ViewBinder<RichPushMessage> {
 
 
@@ -57,27 +56,7 @@ public abstract class AbstractInboxFragment extends ListFragment
     private List<RichPushMessage> messages;
     private RichPushInbox richPushInbox;
     private boolean isManualRefreshing = false;
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        // Set latest messages
-        updateRichPushMessages();
-
-        // Listen for any rich push message changes
-        UAirship.shared().getRichPushManager().addListener(this);
-        richPushInbox.addListener(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        // Remove listeners for message changes
-        UAirship.shared().getRichPushManager().removeListener(this);
-        richPushInbox.removeListener(this);
-    }
+    private Cancelable fetchMessagesOperation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,7 +67,30 @@ public abstract class AbstractInboxFragment extends ListFragment
         this.setListAdapter(adapter);
         setRetainInstance(true);
 
-        this.richPushInbox = UAirship.shared().getRichPushManager().getRichPushInbox();
+        this.richPushInbox = UAirship.shared().getInbox();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Set latest messages
+        updateRichPushMessages();
+
+        // Listen for any rich push message changes
+        richPushInbox.addListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        // Remove listeners for message changes
+        richPushInbox.removeListener(this);
+
+        if (fetchMessagesOperation != null) {
+            fetchMessagesOperation.cancel();
+        }
     }
 
     @Override
@@ -145,21 +147,16 @@ public abstract class AbstractInboxFragment extends ListFragment
     public abstract int getEmptyListStringId();
 
     @Override
-    public void onUpdateMessages(boolean success) {
-        if (isManualRefreshing && !success) {
+    public void onInboxUpdated() {
+        updateRichPushMessages();
+
+    }
+
+    protected void onManualRefreshFinished(boolean successful) {
+        if (isManualRefreshing && !successful) {
             Toast.makeText(getActivity(), "Failed to update messages!", Toast.LENGTH_LONG).show();
         }
         isManualRefreshing = false;
-    }
-
-    @Override
-    public void onUpdateUser(boolean success) {
-        // no-op
-    }
-
-    @Override
-    public void onUpdateInbox() {
-        updateRichPushMessages();
     }
 
     /**
@@ -173,7 +170,16 @@ public abstract class AbstractInboxFragment extends ListFragment
 
     public void refreshMessages() {
         this.isManualRefreshing = true;
-        UAirship.shared().getRichPushManager().refreshMessages();
+        if (fetchMessagesOperation != null) {
+            fetchMessagesOperation.cancel();
+        }
+
+        fetchMessagesOperation = richPushInbox.fetchMessages(new RichPushInbox.FetchMessagesCallback() {
+            @Override
+            public void onFinished(boolean success) {
+                onManualRefreshFinished(success);
+            }
+        });
     }
 
     /**

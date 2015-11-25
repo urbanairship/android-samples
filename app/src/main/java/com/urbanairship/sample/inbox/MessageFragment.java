@@ -74,7 +74,7 @@ public class MessageFragment extends Fragment {
         setHasOptionsMenu(true);
 
         String messageId = getArguments().getString(MESSAGE_ID_KEY);
-        message = UAirship.shared().getRichPushManager().getRichPushInbox().getMessage(messageId);
+        message = UAirship.shared().getInbox().getMessage(messageId);
 
         if (message == null) {
             Logger.info("Couldn't retrieve message for ID: " + messageId);
