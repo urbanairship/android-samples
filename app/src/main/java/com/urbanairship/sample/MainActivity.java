@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         // Handle any Google Play services errors
-        if (PlayServicesUtils.isGooglePlayStoreAvailable()) {
+        if (PlayServicesUtils.isGooglePlayStoreAvailable(this)) {
             PlayServicesUtils.handleAnyPlayServicesError(this);
         }
 
