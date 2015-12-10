@@ -1,6 +1,6 @@
 # Urban Airship Samples
 
-Sample applications that show case the Urban Airship SDK.
+Sample applications that showcase the Urban Airship SDK.
 
 ## Android Studio Setup
 
@@ -45,7 +45,7 @@ Sample applications that show case the Urban Airship SDK.
 
 8) Replace AndroidManifest.xml with Eclipse_AndroidManifest.xml
 
-### Rich Push Sample:
+### Message Center Sample:
 
 1) Update the Android SDK Manager
 - Verify Android Support Library and Google Play Services (under Extras) are installed and up-to-date
@@ -73,4 +73,4 @@ Sample applications that show case the Urban Airship SDK.
 
 ## Further Reading
 
-For more information on using Rich Push for Android see the [tutorial](http://docs.urbanairship.com/topic-guides/android-rp-tutorial.html)
+For more information on using Message Center for Android see the [tutorial](http://docs.urbanairship.com/topic-guides/android-rp-tutorial.html)
