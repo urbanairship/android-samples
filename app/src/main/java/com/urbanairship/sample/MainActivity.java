@@ -13,19 +13,23 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.urbanairship.analytics.EventService;
 import com.urbanairship.google.PlayServicesUtils;
 import com.urbanairship.richpush.RichPushInbox;
-import com.urbanairship.sample.inbox.InboxFragment;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
     /**
-     * Remember the position of the selected item for the navigation drawer.
+     * Remember the ID of the selected item for the navigation drawer.
      */
-    private static final String NAV_POSITION = "nav_position";
+    private static final String NAV_ID = "NAV_ID";
 
+    /**
+     * Remember the last title of the activity.
+     */
+    private static final String TITLE = "TITLE";
 
     private DrawerLayout drawer;
     private int currentNavPosition = -1;
@@ -56,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if (savedInstanceState != null) {
-            navigate(savedInstanceState.getInt(NAV_POSITION));
+            navigate(savedInstanceState.getInt(NAV_ID));
+            setTitle(savedInstanceState.getString(TITLE));
         } else {
             navigation.setCheckedItem(R.id.nav_home);
             navigate(R.id.nav_home);
@@ -66,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(NAV_POSITION, currentNavPosition);
+        outState.putInt(NAV_ID, currentNavPosition);
+        outState.putString(TITLE, String.valueOf(getTitle()));
     }
 
     @Override
@@ -85,6 +91,11 @@ public class MainActivity extends AppCompatActivity {
             // Clear the action so we don't handle it again
             getIntent().setAction(null);
         }
+
+        Intent intent = new Intent(getApplicationContext(), EventService.class)
+                .setAction(EventService.ACTION_SEND);
+
+        startService(intent);
     }
 
     @Override
@@ -123,6 +134,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void navigate(int id) {
+        currentNavPosition = id;
+
+        if (getSupportFragmentManager().findFragmentByTag("content_frag" + id) != null) {
+            return;
+        }
+
         Fragment fragment;
         switch (id) {
             case R.id.nav_home:
@@ -131,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.nav_message_center:
                 setTitle(R.string.inbox_title);
-                fragment = new InboxFragment();
+                fragment = new CustomInboxFragment();
                 break;
             case R.id.nav_location:
                 setTitle(R.string.location_title);
@@ -145,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
         currentNavPosition = id;
 
         getSupportFragmentManager().beginTransaction()
-                                   .replace(R.id.content_frame, fragment, "content_frag")
+                                   .replace(R.id.content_frame, fragment, "content_frag" + id)
                                    .commit();
 
         drawer.closeDrawer(GravityCompat.START);
