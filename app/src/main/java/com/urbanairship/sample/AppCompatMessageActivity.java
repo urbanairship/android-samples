@@ -24,56 +24,58 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.urbanairship.sample.inbox;
+package com.urbanairship.sample;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.urbanairship.richpush.MessagePagerFragment;
 import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushMessage;
-import com.urbanairship.sample.R;
-import com.urbanairship.sample.SettingsActivity;
-
 
 /**
- * Manages the message view pager and display messages
- *
+ * MessageActivity that displays the {@link MessagePagerFragment} in a {@link AppCompatActivity} to
+ * inherit the application's theme.
  */
-public class MessageActivity extends AppCompatActivity implements MessagePagerFragment.Listener {
+public class AppCompatMessageActivity extends AppCompatActivity  {
 
-    private static final String TAG = "MessageActivity";
     private static final String FRAGMENT_TAG = "MessagePagerFragment";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeButtonEnabled(true);
-        }
-
-
-        if (getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG) == null) {
+        MessagePagerFragment pagerFragment = (MessagePagerFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+        if (pagerFragment == null) {
             String messageId = null;
 
             // Handle the "com.urbanairship.VIEW_RICH_PUSH_MESSAGE" intent action with the message
-            // id encoded in the intent's data in the form of "message:<MESSAGE_ID>
+            // ID encoded in the intent's data in the form of "message:<MESSAGE_ID>
             if (getIntent() != null && getIntent().getData() != null && RichPushInbox.VIEW_MESSAGE_INTENT_ACTION.equals(getIntent().getAction())) {
                 messageId = getIntent().getData().getSchemeSpecificPart();
             }
 
-            MessagePagerFragment pagerFragment = MessagePagerFragment.newInstance(messageId);
+            pagerFragment = MessagePagerFragment.newInstance(messageId);
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(android.R.id.content, pagerFragment, FRAGMENT_TAG)
                     .commit();
         }
+
+        pagerFragment.setOnMessageChangedListener(new MessagePagerFragment.OnMessageChangedListener() {
+            @Override
+            public void onMessageChanged(RichPushMessage message) {
+                if (Build.VERSION.SDK_INT >= 14 && getActionBar() != null) {
+                    getActionBar().setTitle(message.getTitle());
+                }
+            }
+        });
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
@@ -84,9 +86,6 @@ public class MessageActivity extends AppCompatActivity implements MessagePagerFr
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            case android.R.id.home:
-                this.finish();
-                return true;
             case R.id.action_settings:
                 this.startActivity(new Intent(this, SettingsActivity.class));
                 return true;
@@ -94,10 +93,4 @@ public class MessageActivity extends AppCompatActivity implements MessagePagerFr
         return false;
     }
 
-    @Override
-    public void onMessageChanged(RichPushMessage message) {
-        if (message != null && getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(message.getTitle());
-        }
-    }
 }
