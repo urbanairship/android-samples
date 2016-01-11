@@ -24,85 +24,28 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package com.urbanairship.sample;
 
-import android.content.Context;
-import android.graphics.Typeface;
-import android.text.format.DateFormat;
-import android.view.ActionMode;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.CheckBox;
-import android.widget.TextView;
 
-import com.urbanairship.richpush.InboxMultiChoiceModeListener;
 import com.urbanairship.richpush.InboxFragment;
-import com.urbanairship.richpush.InboxViewAdapter;
-import com.urbanairship.richpush.RichPushMessage;
+import com.urbanairship.richpush.InboxMultiChoiceModeListener;
 
-import java.util.Date;
-
+/**
+ * {@link InboxFragment} that enables multiple selection
+ */
 public class CustomInboxFragment extends InboxFragment {
-    private final static long ONE_DAY_MS = 24 * 60 * 60 * 1000;
-
-    protected InboxViewAdapter createMessageViewAdapter() {
-        return new CustomViewAdapter(getContext());
-    }
 
     @Override
-    protected void onAbsListViewCreated(AbsListView absListView) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
         // Enable selection
-        absListView.setMultiChoiceModeListener(new InboxMultiChoiceModeListener(this) {
+        getAbsListView().setMultiChoiceModeListener(new InboxMultiChoiceModeListener(this));
+        getAbsListView().setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
 
-            @Override
-            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-                super.onItemCheckedStateChanged(mode, position, id, checked);
-
-                // Notify the data set changed to update the checkbox
-                getAdapter().notifyDataSetChanged();
-            }
-        });
-
-        absListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+        return view;
     }
-
-    private class CustomViewAdapter extends InboxViewAdapter {
-        public CustomViewAdapter(Context context) {
-            super(context, R.layout.item_mc);
-        }
-
-        protected void bindView(View view, RichPushMessage message, final int position) {
-            TextView title = (TextView) view.findViewById(R.id.title);
-            TextView timeStamp = (TextView) view.findViewById(R.id.date_sent);
-            final CheckBox checkBox = (CheckBox) view.findViewById(R.id.message_checkbox);
-
-            if (message.isRead()) {
-                view.setContentDescription("Read message");
-                title.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-            } else {
-                view.setContentDescription("Unread message");
-                title.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-            }
-
-            title.setText(message.getTitle());
-
-            Date date = message.getSentDate();
-            long age = System.currentTimeMillis() - date.getTime();
-
-            // Only show the date if older then 1 day
-            if (age > ONE_DAY_MS) {
-                timeStamp.setText(DateFormat.getDateFormat(getActivity()).format(date));
-            } else {
-                timeStamp.setText(DateFormat.getTimeFormat(getActivity()).format(date));
-            }
-
-            checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getAbsListView().setItemChecked(position, checkBox.isChecked());
-                }
-            });
-
-            checkBox.setChecked(getAbsListView().isItemChecked(position));
-        }
-    }
-
 }
