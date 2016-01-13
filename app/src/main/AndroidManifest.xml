@@ -57,6 +57,7 @@
             android:exported="false"
             android:parentActivityName=".MainActivity">
 
+
             <!-- The open inbox action will attempt to start an activity with
             "com.urbanairship.VIEW_RICH_PUSH_MESSAGE" filter when requesting to view a message. The
             message ID is set on the intent's data in the form of "message:<MESSAGE_ID>" -->
