@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Sample</string>
-    <string name="inbox_title">Message Center</string>
+    <string name="message_center_title">Message Center</string>
     <string name="home_title">Home</string>
     <string name="location_title">Location</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -12,9 +12,6 @@
 
     <string name="ok">OK</string>
     <string name="push_preference_category_title">Push Preferences</string>
-    <string name="inbox_message">Inbox message</string>
-    <string name="inbox_refresh_failed_dialog_title">Unable to retrieve new messages</string>
-    <string name="inbox_refresh_failed_dialog_message">Please try again later</string>
     <string name="location_preference_category_title">Location Preferences</string>
     <string name="analytics_preference_category_title">Analytics Preferences</string>
     <string name="quiet_time_enable_preference_title">Enable Quiet Time</string>

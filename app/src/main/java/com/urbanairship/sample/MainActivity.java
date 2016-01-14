@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                 fragment = new HomeFragment();
                 break;
             case R.id.nav_message_center:
-                setTitle(R.string.inbox_title);
+                setTitle(R.string.message_center_title);
                 fragment = new CustomInboxFragment();
                 break;
             case R.id.nav_location:

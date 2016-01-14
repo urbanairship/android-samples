@@ -30,20 +30,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 
-import com.urbanairship.richpush.InboxFragment;
-import com.urbanairship.richpush.InboxMultiChoiceModeListener;
+import com.urbanairship.messagecenter.MessageListFragment;
+import com.urbanairship.messagecenter.MessageMultiChoiceModeListener;
 
 /**
- * {@link InboxFragment} that enables multiple selection
+ * {@link com.urbanairship.messagecenter.MessageListFragment} that enables multiple selection
  */
-public class CustomInboxFragment extends InboxFragment {
+public class CustomInboxFragment extends MessageListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         // Enable selection
-        getAbsListView().setMultiChoiceModeListener(new InboxMultiChoiceModeListener(this));
+        getAbsListView().setMultiChoiceModeListener(new MessageMultiChoiceModeListener(this));
         getAbsListView().setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
 
         return view;

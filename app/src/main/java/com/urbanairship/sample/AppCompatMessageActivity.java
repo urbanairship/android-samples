@@ -33,7 +33,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.urbanairship.richpush.MessagePagerFragment;
+import com.urbanairship.messagecenter.MessagePagerFragment;
 import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushMessage;
 
