@@ -13,8 +13,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.urbanairship.analytics.EventService;
 import com.urbanairship.google.PlayServicesUtils;
+import com.urbanairship.messagecenter.MessageCenterFragment;
 import com.urbanairship.richpush.RichPushInbox;
 
 public class MainActivity extends AppCompatActivity {
@@ -91,11 +91,6 @@ public class MainActivity extends AppCompatActivity {
             // Clear the action so we don't handle it again
             getIntent().setAction(null);
         }
-
-        Intent intent = new Intent(getApplicationContext(), EventService.class)
-                .setAction(EventService.ACTION_SEND);
-
-        startService(intent);
     }
 
     @Override
@@ -148,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.nav_message_center:
                 setTitle(R.string.message_center_title);
-                fragment = new CustomInboxFragment();
+                fragment = new MessageCenterFragment();
                 break;
             case R.id.nav_location:
                 setTitle(R.string.location_title);
