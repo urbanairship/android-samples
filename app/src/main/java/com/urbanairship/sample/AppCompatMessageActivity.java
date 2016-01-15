@@ -27,53 +27,56 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package com.urbanairship.sample;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.urbanairship.messagecenter.MessagePagerFragment;
+import com.urbanairship.UAirship;
+import com.urbanairship.messagecenter.MessageFragment;
 import com.urbanairship.richpush.RichPushInbox;
 import com.urbanairship.richpush.RichPushMessage;
 
 /**
- * MessageActivity that displays the {@link MessagePagerFragment} in a {@link AppCompatActivity} to
+ * MessageActivity that displays the {@link MessageFragment} in a {@link AppCompatActivity} to
  * inherit the application's theme.
  */
 public class AppCompatMessageActivity extends AppCompatActivity  {
 
-    private static final String FRAGMENT_TAG = "MessagePagerFragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        MessagePagerFragment pagerFragment = (MessagePagerFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
-        if (pagerFragment == null) {
-            String messageId = null;
+        if (getActionBar() != null) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+            getActionBar().setHomeButtonEnabled(true);
+        }
 
-            // Handle the "com.urbanairship.VIEW_RICH_PUSH_MESSAGE" intent action with the message
-            // ID encoded in the intent's data in the form of "message:<MESSAGE_ID>
-            if (getIntent() != null && getIntent().getData() != null && RichPushInbox.VIEW_MESSAGE_INTENT_ACTION.equals(getIntent().getAction())) {
-                messageId = getIntent().getData().getSchemeSpecificPart();
-            }
+        String messageId = null;
 
-            pagerFragment = MessagePagerFragment.newInstance(messageId);
+        // Handle the "com.urbanairship.VIEW_RICH_PUSH_MESSAGE" intent action with the message
+        // ID encoded in the intent's data in the form of "message:<MESSAGE_ID>
+        if (getIntent() != null && getIntent().getData() != null && RichPushInbox.VIEW_MESSAGE_INTENT_ACTION.equals(getIntent().getAction())) {
+            messageId = getIntent().getData().getSchemeSpecificPart();
+        }
+
+        RichPushMessage message = UAirship.shared().getInbox().getMessage(messageId);
+        if (message == null) {
+            finish();
+            return;
+        }
+
+
+        setTitle(message.getTitle());
+
+        if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(android.R.id.content, pagerFragment, FRAGMENT_TAG)
+                    .add(android.R.id.content, MessageFragment.newInstance(messageId))
                     .commit();
         }
 
-        pagerFragment.setOnMessageChangedListener(new MessagePagerFragment.OnMessageChangedListener() {
-            @Override
-            public void onMessageChanged(RichPushMessage message) {
-                if (Build.VERSION.SDK_INT >= 14 && getActionBar() != null) {
-                    getActionBar().setTitle(message.getTitle());
-                }
-            }
-        });
     }
 
 
@@ -86,6 +89,10 @@ public class AppCompatMessageActivity extends AppCompatActivity  {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
+            case android.R.id.home:
+                navigateUpTo(new Intent(this, MainActivity.class));
+                return true;
+
             case R.id.action_settings:
                 this.startActivity(new Intent(this, SettingsActivity.class));
                 return true;
