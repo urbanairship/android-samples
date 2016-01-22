@@ -54,7 +54,6 @@ import com.urbanairship.util.UAStringUtil;
  */
 public class HomeFragment extends Fragment {
 
-
     private TextView channelID;
     private Button shareButton;
     private Button copyButton;
