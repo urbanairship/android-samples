@@ -42,14 +42,19 @@ public class SampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        // Optionally, customize your config at runtime:
-        //
-        // AirshipConfigOptions options = new AirshipConfigOptions();
-        // options.inProduction = false;
-        // options.developmentAppKey = "Your Development App Key";
-        // options.developmentAppSecret "Your Development App Secret";
-        //
-        // UAirship.takeOff(this, options);
+        /*
+          Optionally, customize your config at runtime:
+
+          AirshipConfigOptions options = new AirshipConfigOptions.Builder()
+                .setInProduction(!BuildConfig.DEBUG)
+                .setDevelopmentAppKey("Your Development App Key")
+                .setDevelopmentAppSecret("Your Development App Secret")
+                .setProductionAppKey("Your Production App Key")
+                .setProductionAppSecret("Your Production App Secret")
+                .build();
+
+          UAirship.takeOff(this, options);
+         */
 
         UAirship.takeOff(this, new UAirship.OnReadyCallback() {
             @Override
