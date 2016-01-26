@@ -1,5 +1,5 @@
 /*
-Copyright 2009-2015 Urban Airship Inc. All rights reserved.
+Copyright 2009-2016 Urban Airship Inc. All rights reserved.
 
 
 Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,6 @@ import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -43,19 +42,12 @@ public class SettingsActivity extends AppCompatActivity {
             actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP, ActionBar.DISPLAY_HOME_AS_UP);
         }
 
-        // Display the fragment as the menu_main content.
-        getFragmentManager().beginTransaction()
-                            .replace(android.R.id.content, new SettingsFragment())
-                            .commit();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-            return true;
+        if (savedInstanceState == null) {
+            // Display the fragment as the menu_main content.
+            getFragmentManager().beginTransaction()
+                                .replace(android.R.id.content, new SettingsFragment())
+                                .commit();
         }
-        return false;
     }
 
     public static class SettingsFragment extends PreferenceFragment {
