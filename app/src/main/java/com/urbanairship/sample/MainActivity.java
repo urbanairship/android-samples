@@ -29,7 +29,9 @@ package com.urbanairship.sample;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -38,10 +40,15 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.urbanairship.UAirship;
 import com.urbanairship.google.PlayServicesUtils;
 import com.urbanairship.messagecenter.MessageCenterFragment;
 import com.urbanairship.richpush.RichPushInbox;
+import com.urbanairship.richpush.RichPushMessage;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,8 +64,28 @@ public class MainActivity extends AppCompatActivity {
      */
     private static final String TITLE = "TITLE";
 
+    /**
+     * Remember the sent date of the last received {@link RichPushMessage}.
+     */
+    private static final String LAST_MESSAGE_SENT_DATE = "LAST_MC_SENT_DATE";
+
+    /**
+     * How long to display the Message Center indicator
+     */
+    private static final int MESSAGE_CENTER_INDICATOR_DURATION_MS = 10000; // 10 seconds
+
     private DrawerLayout drawer;
     private int currentNavPosition = -1;
+
+    private Snackbar messageCenterSnackbar;
+    private long messageCenterLastSentDate;
+
+    private RichPushInbox.Listener inboxListener = new RichPushInbox.Listener() {
+        @Override
+        public void onInboxUpdated() {
+            showMessageCenterIndicator();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             navigate(savedInstanceState.getInt(NAV_ID));
             setTitle(savedInstanceState.getString(TITLE));
+
+            messageCenterLastSentDate = savedInstanceState.getLong(LAST_MESSAGE_SENT_DATE);
         } else {
             navigation.setCheckedItem(R.id.nav_home);
             navigate(R.id.nav_home);
@@ -95,10 +124,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(NAV_ID, currentNavPosition);
         outState.putString(TITLE, String.valueOf(getTitle()));
+        outState.putLong(LAST_MESSAGE_SENT_DATE, messageCenterLastSentDate);
+
     }
 
     @Override
@@ -117,6 +154,16 @@ public class MainActivity extends AppCompatActivity {
             // Clear the action so we don't handle it again
             getIntent().setAction(null);
         }
+
+        UAirship.shared().getInbox().addListener(inboxListener);
+
+        showMessageCenterIndicator();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        UAirship.shared().getInbox().removeListener(inboxListener);
     }
 
     @Override
@@ -170,6 +217,12 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_message_center:
                 setTitle(R.string.message_center_title);
                 fragment = new MessageCenterFragment();
+
+                // Dismiss this Message Center indicator if it's being displayed
+                if (messageCenterSnackbar != null && messageCenterSnackbar.isShownOrQueued()){
+                    messageCenterSnackbar.dismiss();
+                }
+
                 break;
             case R.id.nav_location:
                 setTitle(R.string.location_title);
@@ -187,5 +240,45 @@ public class MainActivity extends AppCompatActivity {
                                    .commit();
 
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    /**
+     * Shows a Message Center indicator.
+     */
+    private void showMessageCenterIndicator() {
+        List<RichPushMessage> unreadMessage = UAirship.shared().getInbox().getUnreadMessages();
+
+        // Skip showing the indicator if we have no unread messages or no new messages since the last display
+        if (unreadMessage.isEmpty() || messageCenterLastSentDate >= unreadMessage.get(0).getSentDateMS()) {
+            return;
+        }
+
+        // Track the message sent date to track if we have a new message
+        messageCenterLastSentDate = unreadMessage.get(0).getSentDateMS();
+
+        // Skip showing the indicator if its already displaying
+        if (messageCenterSnackbar != null && messageCenterSnackbar.isShownOrQueued()) {
+            return;
+        }
+
+        // Skip showing the indicator if the activity is already showing the Message Center
+        if (currentNavPosition == R.id.nav_message_center) {
+            return;
+        }
+
+        String text = getResources().getQuantityString(R.plurals.mc_indicator_text, unreadMessage.size(), unreadMessage.size());
+
+        //noinspection ResourceType - For the duration field of the snackbar when defining a custom duration
+        messageCenterSnackbar = Snackbar.make(findViewById(R.id.coordinatorLayout), text, MESSAGE_CENTER_INDICATOR_DURATION_MS)
+                                        .setActionTextColor(ContextCompat.getColor(this, R.color.color_accent))
+                                        .setAction(R.string.view, new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                messageCenterSnackbar.dismiss();
+                                                UAirship.shared().getInbox().startInboxActivity();
+                                            }
+                                        });
+
+        messageCenterSnackbar.show();
     }
 }

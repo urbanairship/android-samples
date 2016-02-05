@@ -6,10 +6,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="settings">Settings</string>
-    <string name="no_messages">No messages</string>
-    <string name="add_message">Add Message</string>
     <string name="delete">Delete</string>
-
     <string name="ok">OK</string>
     <string name="push_preference_category_title">Push Preferences</string>
     <string name="location_preference_category_title">Location Preferences</string>
@@ -41,5 +38,12 @@
     <string name="button_preferences">Preferences</string>
     <string name="button_view_location">View Location</string>
     <string name="toast_channel_clipboard">Channel copied to clipboard</string>
-    <string name="empty_view_text">No messages found…</string>
+
+    <!-- Message Center Indicator -->
+    <string name="view">View</string>
+    <plurals name="mc_indicator_text">
+        <item quantity="one">%d unread message</item>
+        <item quantity="other">%d unread messages</item>
+    </plurals>
+
 </resources>
