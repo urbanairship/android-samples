@@ -43,7 +43,6 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         if (savedInstanceState == null) {
-            // Display the fragment as the menu_main content.
             getFragmentManager().beginTransaction()
                                 .replace(android.R.id.content, new SettingsFragment())
                                 .commit();

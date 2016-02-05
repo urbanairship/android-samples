@@ -28,11 +28,11 @@ package com.urbanairship.sample;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.urbanairship.richpush.RichPushInbox;
+import com.urbanairship.UAirship;
 
 /**
  * An activity that creates and launches a task stack from a deep link uri.
@@ -72,47 +72,42 @@ public class ParseDeepLinkActivity extends Activity {
         // Parse the deep link
         String deepLink = getDeepLink();
 
+        // If deep link is null start the MainActivity
         if (deepLink == null) {
-            // Fall back to main activity
             startActivity(new Intent(this, MainActivity.class));
             finish();
             return;
         }
 
-        Intent intent;
-
         switch (deepLink) {
             case "/preferences":
-                intent = new Intent(this, SettingsActivity.class);
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
 
             case "/home":
-                intent = new Intent(this, MainActivity.class);
+                startActivity(new Intent(this, MainActivity.class));
                 break;
 
             case "/inbox":
                 // Check for an optional Message ID
                 String messageId = getDeepLinkQueryParameter("message_id");
                 if (messageId != null && messageId.length() > 0) {
-                    intent = new Intent(RichPushInbox.VIEW_MESSAGE_INTENT_ACTION)
-                            .setData(Uri.fromParts(RichPushInbox.MESSAGE_DATA_SCHEME, messageId, null))
-                            .setPackage(getPackageName());
+                    UAirship.shared().getInbox().startMessageActivity(messageId);
                 } else {
-                    intent = new Intent(RichPushInbox.VIEW_INBOX_INTENT_ACTION)
-                            .setPackage(getPackageName());
+                    UAirship.shared().getInbox().startInboxActivity();
                 }
                 break;
 
             default:
                 Log.e(TAG, "Unknown deep link: " + deepLink + ". Falling back to main activity.");
-                intent  = new Intent(this, MainActivity.class);
+                startActivity(new Intent(this, MainActivity.class));
                 break;
         }
 
-        startActivity(intent);
         finish();
     }
 
+    @Nullable
     private String getDeepLink() {
         Intent intent = getIntent();
         if (intent != null && intent.getData() != null) {
