@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Snackbar messageCenterSnackbar;
     private long messageCenterLastSentDate;
+    private NavigationView navigation;
 
     private RichPushInbox.Listener inboxListener = new RichPushInbox.Listener() {
         @Override
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         toggle.syncState();
 
         // Navigation view
-        NavigationView navigation = (NavigationView) findViewById(R.id.nav_view);
+        navigation = (NavigationView) findViewById(R.id.nav_view);
         navigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
@@ -203,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void navigate(int id) {
         currentNavPosition = id;
+        navigation.setCheckedItem(id);
 
         if (getSupportFragmentManager().findFragmentByTag("content_frag" + id) != null) {
             return;
