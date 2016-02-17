@@ -10,7 +10,6 @@ gen/
 build/
 build.properties
 .settings/
-airshipconfig.properties
 local.properties
 location.properties
 deploy/build.properties
