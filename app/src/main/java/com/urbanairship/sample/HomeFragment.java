@@ -104,7 +104,7 @@ public class HomeFragment extends Fragment {
         // Use local broadcast manager to receive registration events to update the channel
         IntentFilter channelIdUpdateFilter;
         channelIdUpdateFilter = new IntentFilter();
-        channelIdUpdateFilter.addAction(AirshipReceiver.ACTION_UPDATE_CHANNEL);
+        channelIdUpdateFilter.addAction(SampleAirshipReceiver.ACTION_UPDATE_CHANNEL);
         locationBroadcastManager.registerReceiver(channelIdUpdateReceiver, channelIdUpdateFilter);
 
         // Update the channel field

@@ -74,7 +74,7 @@
 
         <!-- Optional: Receives push and registration events from the Urban Airship SDK. -->
         <receiver
-            android:name=".AirshipReceiver"
+            android:name=".SampleAirshipReceiver"
             android:exported="false">
 
             <intent-filter>

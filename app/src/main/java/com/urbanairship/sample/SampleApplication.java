@@ -29,10 +29,8 @@ package com.urbanairship.sample;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
 
 import com.urbanairship.UAirship;
-import com.urbanairship.push.notifications.DefaultNotificationFactory;
 
 public class SampleApplication extends Application {
 
@@ -42,51 +40,36 @@ public class SampleApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        final boolean isFirstRun = preferences.getBoolean(FIRST_RUN_KEY, true);
+        if (isFirstRun) {
+            preferences.edit().putBoolean(FIRST_RUN_KEY, false).apply();
+        }
+
         /*
           Optionally, customize your config at runtime:
 
-          AirshipConfigOptions options = new AirshipConfigOptions.Builder()
-                .setInProduction(!BuildConfig.DEBUG)
-                .setDevelopmentAppKey("Your Development App Key")
-                .setDevelopmentAppSecret("Your Development App Secret")
-                .setProductionAppKey("Your Production App Key")
-                .setProductionAppSecret("Your Production App Secret")
-                .build();
+             AirshipConfigOptions options = new AirshipConfigOptions.Builder()
+                    .setInProduction(!BuildConfig.DEBUG)
+                    .setDevelopmentAppKey("Your Development App Key")
+                    .setDevelopmentAppSecret("Your Development App Secret")
+                    .setProductionAppKey("Your Production App Key")
+                    .setProductionAppSecret("Your Production App Secret")
+                    .setNotificationAccentColor(ContextCompat.getColor(this, R.color.color_accent))
+                    .setNotificationIcon(R.drawable.ic_notification)
+                    .build();
 
-          UAirship.takeOff(this, options);
+            UAirship.takeOff(this, options);
          */
+
 
         UAirship.takeOff(this, new UAirship.OnReadyCallback() {
             @Override
             public void onAirshipReady(UAirship airship) {
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                boolean isFirstRun = preferences.getBoolean(FIRST_RUN_KEY, true);
                 if (isFirstRun) {
-                    preferences.edit().putBoolean(FIRST_RUN_KEY, false).apply();
+                    airship.getPushManager().setUserNotificationsEnabled(true);
                 }
-
-                configureAirship(airship, isFirstRun);
             }
         });
-    }
-
-    /**
-     * Called when UAirship is finished taking off.
-     * @param airship The UAirship singleton.
-     * @param isFirstRun Flag indicating if this is a first app run.
-     */
-    private void configureAirship(UAirship airship, boolean isFirstRun) {
-        // Customize the notification factory with the
-        DefaultNotificationFactory factory = new DefaultNotificationFactory(this);
-        factory.setColor(ContextCompat.getColor(this, R.color.color_primary));
-        factory.setSmallIconId(R.drawable.ic_notification);
-
-        // Set the custom factory
-        airship.getPushManager().setNotificationFactory(factory);
-
-        // Enable user notifications by default on first run
-        if (isFirstRun) {
-            airship.getPushManager().setUserNotificationsEnabled(true);
-        }
     }
 }

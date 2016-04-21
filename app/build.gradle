@@ -28,5 +28,5 @@ dependencies {
     // Allows Urban Airship location services to use Fused Location
     compile 'com.google.android.gms:play-services-location:8.4.0'
 
-    compile 'com.urbanairship.android:urbanairship-sdk:7.0.+'
+    compile 'com.urbanairship.android:urbanairship-sdk:7.1.+'
 }
