@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         // App drawer
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         // Navigation view
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Handle the "com.urbanairship.VIEW_RICH_PUSH_INBOX" intent action.
         if (RichPushInbox.VIEW_INBOX_INTENT_ACTION.equals(getIntent().getAction())) {
-            navigate(R.id.nav_location);
+            navigate(R.id.nav_message_center);
 
             // Clear the action so we don't handle it again
             getIntent().setAction(null);

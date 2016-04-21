@@ -28,15 +28,16 @@ package com.urbanairship.sample;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.urbanairship.push.BaseIntentReceiver;
+import com.urbanairship.AirshipReceiver;
 import com.urbanairship.push.PushMessage;
 
-public class AirshipReceiver extends BaseIntentReceiver {
+public class SampleAirshipReceiver extends AirshipReceiver {
 
-    private static final String TAG = "AirshipReceiver";
+    private static final String TAG = "SampleAirshipReceiver";
     
     /**
      * Intent action sent as a local broadcast to update the channel.
@@ -57,26 +58,26 @@ public class AirshipReceiver extends BaseIntentReceiver {
     }
 
     @Override
-    protected void onPushReceived(Context context, PushMessage message, int notificationId) {
-        Log.i(TAG, "Received push notification. Alert: " + message.getAlert() + ". Notification ID: " + notificationId);
+    protected void onPushReceived(@NonNull Context context, @NonNull PushMessage message, boolean notificationPosted) {
+        Log.i(TAG, "Received push message. Alert: " + message.getAlert() + ". posted notification: " + notificationPosted);
     }
 
     @Override
-    protected void onBackgroundPushReceived(Context context, PushMessage message) {
-        Log.i(TAG, "Received background push message: " + message);
+    protected void onNotificationPosted(@NonNull Context context, @NonNull NotificationInfo notificationInfo) {
+        Log.i(TAG, "Notification posted. Alert: " + notificationInfo.getMessage().getAlert() + ". NotificationId: " + notificationInfo.getNotificationId());
     }
 
     @Override
-    protected boolean onNotificationOpened(Context context, PushMessage message, int notificationId) {
-        Log.i(TAG, "User clicked notification. Alert: " + message.getAlert());
+    protected boolean onNotificationOpened(@NonNull Context context, @NonNull NotificationInfo notificationInfo) {
+        Log.i(TAG, "Notification opened. Alert: " + notificationInfo.getMessage().getAlert() + ". NotificationId: " + notificationInfo.getNotificationId());
 
         // Return false here to allow Urban Airship to auto launch the launcher activity
         return false;
     }
 
     @Override
-    protected boolean onNotificationActionOpened(Context context, PushMessage message, int notificationId, String buttonId, boolean isForeground) {
-        Log.i(TAG, "User clicked notification button. Button ID: " + buttonId + " Alert: " + message.getAlert());
+    protected boolean onNotificationOpened(@NonNull Context context, @NonNull NotificationInfo notificationInfo, @NonNull ActionButtonInfo actionButtonInfo) {
+        Log.i(TAG, "Notification action button opened. Button ID: " + actionButtonInfo.getButtonId() + ". NotificationId: " + notificationInfo.getNotificationId());
 
         // Return false here to allow Urban Airship to auto launch the launcher
         // activity for foreground notification action buttons
@@ -84,7 +85,7 @@ public class AirshipReceiver extends BaseIntentReceiver {
     }
 
     @Override
-    protected void onNotificationDismissed(Context context, PushMessage message, int notificationId) {
-        Log.i(TAG, "Notification dismissed. Alert: " + message.getAlert() + ". Notification ID: " + notificationId);
+    protected void onNotificationDismissed(@NonNull Context context, @NonNull NotificationInfo notificationInfo) {
+        Log.i(TAG, "Notification dismissed. Alert: " + notificationInfo.getMessage().getAlert() + ". Notification ID: " + notificationInfo.getNotificationId());
     }
 }
